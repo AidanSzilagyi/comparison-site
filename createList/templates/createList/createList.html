@@ -1,0 +1,186 @@
+{% extends "./base.html" %}
+{% block extra_head %}
+    <title>Head2Head</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+    
+    <script>
+        let numThings = 2;
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelector('.js-thing-adder').addEventListener('click', () => {
+                document.querySelector('.js-list-of-things').innerHTML += `
+                    <div class="thing-container" id="container-${numThings}">
+                        <input class="thing-name-input" type="text" placeholder="Enter a thing">
+                        <input style="display: none;" type="file" id="file-input">
+                        <label class="thing-file-input" for="file-input">Choose Image</label>
+                        <div class="trash-can-icon-container">
+                            <img class="trash-can-icon-image" src="../../static/images/trash-can-icon.png">
+                        </div>
+                        <div class="info-icon-container">
+                            <img class="info-icon-image" src="../../static/images/info-icon-a.png">
+                        </div>
+                    </div>
+                `;
+                document.querySelector('.')
+                numThings++;
+            });
+
+            document.querySelector('.js-list-of-things').addEventListener('click', (e) => {
+                if (e.target.closest('.trash-can-icon-container')) {
+                    const container = e.target.closest('.thing-container');
+                    if (container) container.remove();
+                }
+            });
+
+        });
+    </script>
+    <style>
+    /* Convert px to rem?*/
+        :root {
+            --primary: #0a092c;
+            --secondary: #2e3855;
+            --tertiary: #1a1d27;
+            --highlight: #f6f7fb;
+            --selected: #adb6f7;
+            --greyedout: #757575;
+            --logo-red: #ff2850;
+            --logo-blue: #3278ff;
+            font-family: Outfit;
+        }
+        input[type='file'] {
+            color: transparent;
+        }
+        body {
+            background-color: var(--primary);
+            margin: 0px 0px 0px 0px;
+        }
+        .list-of-things-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .thing-container {
+            border-radius: 10px;
+            height: 40px;
+            width: 500px;
+            /* border-width: 1px;
+            border-style: solid; */
+            background-color: var(--secondary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .thing-name-input {
+            margin: 0px 5px 0px 5px;
+            padding: 0px 5px 0px 5px;
+            height: 26px;
+            width: 296px;
+            border-style: hidden;
+            border-color: var(--tertiary);
+            border-radius: 8px;
+            font-weight:100;
+            background-color: var(--primary);
+            color: var(--highlight); 
+        }
+        .thing-name-input::placeholder {
+            color: var(--highlight);
+            font-weight:100;
+        }
+        .thing-name-input:focus {
+            outline: 1px solid var(--selected);
+        }
+        .thing-file-input {
+            margin: 0px 5px 0px 5px;
+            padding: 0px 5px 0px 5px;
+            height: 26px;
+            border-style: hidden;
+            border-color: var(--tertiary);
+            border-radius: 8px;
+            background-color: var(--primary);
+            color: var(--highlight); 
+            font-weight:300;   
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;        
+        }
+        .trash-can-icon-container {
+            margin: 0px 5px 0px 5px;
+            height: 26px;
+            border-radius: 8px;
+            background-color: var(--primary);
+        }
+        .trash-can-icon-image {
+            height: 26px;
+        }
+        .info-icon-container {
+            margin: 0px 5px 0px 5px;
+            height: 26px;
+            border-radius: 8px;
+            background-color: var(--primary);
+        }
+        .info-icon-image {
+            height: 26px;
+        }
+        .add-new-thing-container {
+            /* margin-left: 1.5px; */
+            margin-top: 10px;
+            border-style: dashed;
+            border-radius: 8px;
+            border-width: 1.5px;
+            height: 40px;
+            width: 497px;
+            border-color: var(--highlight);
+            color: var(--highlight);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .page-header {
+            position: sticky;
+            top: 0;
+            background-color: var(--primary);
+            z-index: 100; 
+            color: var(--highlight);
+            font-weight:500px;
+        }
+        .main-container {
+            margin: 8px 0px 0px 8px;
+        }
+    </style>
+{% endblock %}
+{% block main %}
+	<main class="main-container">
+        <div class="page-header">
+            <div class="page-title"></div>
+                Create a new thing list
+            </div>
+            <div class="create-list-button-container">
+
+            </div>
+        </div>
+        <div class="list-details">
+            <input class="thing-name-input" type="text" placeholder="Title">
+        </div>
+        <form>
+            <div class="list-of-things-container js-list-of-things">
+                <div class="thing-container" id="container-0">
+                    <input class="thing-name-input" type="text" placeholder="Enter a thing">
+                    <input style="display: none;" type="file" id="file-input">
+                    <label class="thing-file-input" for="file-input">Choose Image</label>
+                    <div class="trash-can-icon-container">
+                        <img class="trash-can-icon-image" src="../../static/images/trash-can-icon.png">
+                    </div>
+                    <div class="info-icon-container">
+                        <img class="info-icon-image" src="../../static/images/info-icon-a.png">
+                    </div>
+                </div>
+            </div>
+            <div class="add-new-thing-container js-thing-adder">
+                        <label class="add-new-thing-text">Add new thing</label>
+            </div>
+        </form>
+	</main>
+{% endblock %}

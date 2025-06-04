@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        {% load static %}
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+        <style>
+			.website-header {
+				height: 34px;
+				display: flex;
+				align-items: center;
+				justify-content: left;
+				gap: 20px;
+				color: var(--highlight);
+				background-color: var(--tertiary);
+				padding: 5px 8px 5px 8px;
+			}
+			.website-logo-image {
+				height: 34px;
+				margin-top: 4px;
+			}
+
+			.create-button-container {
+				display: flex;
+				align-items: center;
+				justify-content: left;
+			}
+			.create-plus-image {
+				height: 26px;
+			}
+			.create-plus-word {
+				
+			}
+		</style>
+        {% block extra_head %}{% endblock %}
+    </head>
+    <body>
+        <header class="website-header">
+			<div class="website-logo-container">
+				<img class="website-logo-image" src="{% static 'images/arrow-logo.png' %}">
+			</div>
+			<div class="website-title">
+				Head2Head
+			</div>
+			<div class="create-button-container">
+				<img class="create-plus-image" src="{% static 'images/plus-icon.png' %}">
+				<div class="create-plus-word">Create</div>
+			</div>
+			<div class="rank-button-container">
+				Rank
+			</div>
+			<div class="your-lists-button-container">
+				Your Lists
+			</div>
+		</header>
+        {% block main %}{% endblock %}
+    </body>
+</html>
