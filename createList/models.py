@@ -6,8 +6,8 @@ from django.utils import timezone
 
 class List(models.Model):
     name = models.CharField(max_length=100, unique=True) #Note uniqueness
-    image = models.ImageField(upload_to='media/list_images')
-    description = models.CharField(max_length=1000)
+    image = models.ImageField(upload_to='media/list_images', blank=True, null=True)
+    description = models.CharField(max_length=1000, blank=True, null=True)
     
     date_created = models.DateTimeField(default=timezone.now)
     last_updated = models.DateTimeField(auto_now=True)
@@ -15,8 +15,8 @@ class List(models.Model):
     slug = models.SlugField(default="", null=False, unique=True)
 
 class Thing(models.Model):
-    name = models.CharField(max_length=1000)
-    image = models.ImageField(upload_to='media/thing_images')
+    name = models.CharField(max_length=1000, blank=True, null=True)
+    image = models.ImageField(upload_to='media/thing_images', blank=True, null=True)
     list = models.ForeignKey(List, on_delete=models.CASCADE)
     date_created = models.DateTimeField(auto_now_add=True)
     # Match History
