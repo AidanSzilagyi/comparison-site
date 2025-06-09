@@ -5,34 +5,9 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
-        <style>
-			.website-header {
-				height: 34px;
-				display: flex;
-				align-items: center;
-				justify-content: left;
-				gap: 20px;
-				color: var(--highlight);
-				background-color: var(--tertiary);
-				padding: 5px 8px 5px 8px;
-			}
-			.website-logo-image {
-				height: 34px;
-				margin-top: 4px;
-			}
 
-			.create-button-container {
-				display: flex;
-				align-items: center;
-				justify-content: left;
-			}
-			.create-plus-image {
-				height: 26px;
-			}
-			.create-plus-word {
-				
-			}
-		</style>
+        <link rel="stylesheet" href="{% static 'styles/general.css' %}">
+
         {% block extra_head %}{% endblock %}
     </head>
     <body>
