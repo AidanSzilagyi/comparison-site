@@ -4,6 +4,7 @@
     --tertiary: #1a1d27;
     --highlight: #f6f7fb;
     --selected: #adb6f7;
+    --important: #4056f9;
     --greyedout: #757575;
     --logo-red: #ff2850;
     --logo-blue: #3278ff;
@@ -106,7 +107,20 @@ body {
     z-index: 100; 
     color: var(--highlight);
     font-weight:500px;
+    display: flex;
+    gap: 50px;
+    justify-content: left;
+    align-items: center;
 }
+.create-list-button-container {
+    
+}
+.create-list-button {
+    background-color: var(--important);
+    color: var(--highlight);
+    border-radius: 5px;
+}
+
 .main-container {
     margin: 8px 0px 0px 8px;
 }
@@ -114,7 +128,7 @@ body {
 
 }
 .list-file-input {
-
+    color: white;
 }
 .list-description-input {
     

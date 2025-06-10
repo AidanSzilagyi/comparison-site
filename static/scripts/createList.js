@@ -1,5 +1,5 @@
 
-
+/*
 let numThings = 1; // change this to 2 at some point
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('.js-thing-adder').addEventListener('click', () => {
@@ -26,15 +26,15 @@ document.addEventListener('DOMContentLoaded', () => {
             if (container) container.remove();
         }
     });
-});
+});*/
 
 
 
 document.addEventListener("DOMContentLoaded", () => {
     const formContainer = document.getElementById("list-of-things-container");
-    const emptyForm = document.getElementById("empty-form-template");
+    const emptyForm = document.getElementById("empty-form-template").innerHTML;
     const totalFormNum = document.querySelector('input[name="form-TOTAL_FORMS"]');
-
+    
     document.getElementById("add-thing-button").addEventListener("click", () => {
         const formCount = parseInt(totalFormNum.value);
         const newFormHTML = emptyForm.replace(/__prefix__/g, formCount);
@@ -42,3 +42,37 @@ document.addEventListener("DOMContentLoaded", () => {
         totalFormNum.value = formCount + 1;
     });
 });
+
+
+
+
+/*
+
+document.addEventListener("DOMContentLoaded", function () {
+    const formContainer = document.getElementById("thing-forms-container");
+    const emptyForm = document.getElementById("empty-form-template").innerHTML;
+    const totalFormsInput = document.querySelector('input[name="form-TOTAL_FORMS"]');
+    const formCount = parseInt(totalFormsInput.value);
+
+    document.getElementById("add-thing-button").addEventListener("click", () => {
+        
+        const newFormHtml = emptyForm.replace(/__prefix__/g, formCount);
+        formContainer.insertAdjacentHTML("beforeend", newFormHtml);
+        totalFormsInput.value = ++formCount;
+    });
+});
+
+
+const formContainer = document.querySelector('.js-list-of-things');
+const totalFormsInput = document.querySelector('input[name="form-TOTAL_FORMS"]');
+let formCount = parseInt(totalFormsInput.value);
+
+document.querySelector('.js-thing-adder').addEventListener('click', () => {
+    const emptyFormHtml = document.getElementById('empty-form-template').innerHTML;
+    const newFormHtml = emptyFormHtml.replace(/__prefix__/g, formCount);
+    formContainer.insertAdjacentHTML('beforeend', newFormHtml);
+    formCount++;
+    totalFormsInput.value = formCount;
+});
+
+*/
