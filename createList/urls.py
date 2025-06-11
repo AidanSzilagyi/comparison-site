@@ -8,4 +8,5 @@ urlpatterns = [
     path("<slug:slug>/info/", views.list_info, name="list_info"),
     path("<slug:slug>/compare/", views.list_compare, name="list_compare"),
     path("<slug:slug>/edit/", views.list_edit, name="list_edit"),
+    path("all-lists/", views.all_lists, name="all_lists")
 ]

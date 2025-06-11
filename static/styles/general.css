@@ -1,22 +1,57 @@
+:root {
+    --primary: #0a092c;
+    --secondary: #2e3855;
+    --tertiary: #1a1d27;
+    --highlight: #f6f7fb;
+    --selected: #adb6f7;
+    --important: #4056f9;
+    --greyedout: #757575;
+    --logo-red: #ff2850;
+    --logo-blue: #3278ff;
+    font-family: Outfit;
+
+    color: var(--highlight);
+    background-color: var(--primary);
+}
+input[type='file'] {
+    color: transparent;
+}
+body {
+    margin: 0px 0px 0px 0px;
+}
+a:link, a:visited, a:hover, a:active {
+    color: inherit;
+    text-decoration: none;
+}
+
+
+/* Header Styling */
 .website-header {
-    height: 34px;
+    height: 50px;
     display: flex;
     align-items: center;
     justify-content: left;
     gap: 20px;
     color: var(--highlight);
     background-color: var(--tertiary);
-    padding: 5px 8px 5px 8px;
 }
 .website-logo-image {
     height: 34px;
     margin-top: 4px;
+    margin-left: 8px;
 }
 
 .create-button-container {
     display: flex;
     align-items: center;
     justify-content: left;
+    height: 50px;
+    transition: background-color 0.2s;
+    padding-right: 10px;
+}
+.create-button-container:hover {
+    background-color: var(--secondary);
+    cursor: pointer;
 }
 .create-plus-image {
     height: 26px;

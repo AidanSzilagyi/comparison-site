@@ -63,7 +63,10 @@ def create_list(request):
             'empty_form': thing_forms.empty_form,
         }) 
     return HttpResponse("Neither GET nor POST")   
-    
+
+def all_lists(request):
+    all_lists = List.objects.all()
+    return render(request, 'createList/all-lists.html', {all_lists})
             
   
     

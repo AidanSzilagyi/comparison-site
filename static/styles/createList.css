@@ -1,22 +1,3 @@
-:root {
-    --primary: #0a092c;
-    --secondary: #2e3855;
-    --tertiary: #1a1d27;
-    --highlight: #f6f7fb;
-    --selected: #adb6f7;
-    --important: #4056f9;
-    --greyedout: #757575;
-    --logo-red: #ff2850;
-    --logo-blue: #3278ff;
-    font-family: Outfit;
-}
-input[type='file'] {
-    color: transparent;
-}
-body {
-    background-color: var(--primary);
-    margin: 0px 0px 0px 0px;
-}
 .list-of-things-container {
     display: flex;
     flex-direction: column;
