@@ -1,0 +1,71 @@
+{% extends "./base.html" %}
+{% load static %}
+{% block extra_head %}
+    <style>
+        html, body {
+            margin: 0;
+            height: 100%;
+        }
+        .main-container {
+            margin: 0;
+            height: calc(100vh - 60px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .comparison-boxes {
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            text-align: center;
+
+        }
+        .thing-box {
+            padding: 8px 8px 8px 8px;
+            background-color: var(--secondary);
+            width: 400px;
+            border-radius: 8px;
+            justify-self: center;
+            max-height: 40vh;
+        }
+        .thing-box:hover {
+            border-color: var(--selected);
+        }
+        .thing-image {
+            border-radius: 8px;
+            max-width: 400px;
+            max-height: 300px;
+        }
+    </style>
+{% endblock %}
+{% block main %}
+<main class="main-container">
+    <div class="comparison-boxes">
+        Choose the better thing
+        <div class="thing-box">
+            <img class="thing-image" src="{% static 'images/test-hori.png' %}">
+            <div>157 Character Limit, sit amet consectetur adipisicing elit. Quae, cumque quas! Quam voluptate, quod autem modi ea iste? Totam exercitationem sapiente rem earum</div>
+        </div>
+        <div>or</div>
+        <div class="thing-box">
+            <img class="thing-image" src="{% static 'images/test-vert.png' %}">
+            <div>Beer</div>
+        </div>
+    </div>
+    <!--
+    <div class="comparison-boxes">
+        <div class="thing-box">
+            <img class="thing-image" src="{% static 'images/test-hori.png' %}">
+            <div>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quae, cumque quas! Quam voluptate, quod autem modi ea iste? Totam exercitationem sapiente rem earum ratione asperiores iste omnis non recusandae pariatur.</div>
+        </div>
+        <div>or</div>
+        <div class="thing-box">
+            <img class="thing-image" src="{% static 'images/test-vert.png' %}">
+        </div>
+    </div>-->
+
+</main>
+{% endblock %}

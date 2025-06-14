@@ -66,13 +66,14 @@ def create_list(request):
 
 def all_lists(request):
     all_lists = List.objects.all()
-    return render(request, 'createList/all-lists.html', {all_lists})
+    return render(request, 'createList/all-lists.html', {"all_lists": all_lists})
             
   
     
 def list_info(request, slug):
     return render(request, 'createList/home.html')
-def list_compare(request, slug):
-    return render(request, 'createList/home.html')
+def list_rank(request, slug):
+    
+    return render(request, 'createList/rank.html')
 def list_edit(request, slug):
     return render(request, 'createList/home.html')

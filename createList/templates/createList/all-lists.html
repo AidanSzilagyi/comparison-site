@@ -1,4 +1,168 @@
 {% extends "./base.html" %}
+{% load static %}
+{% block extra_head %}
+    <style>
+        
+        .main-container {
+            --preview-width-min: 300px; /* 260 - 300 */
+            --preview-width-max: 350px;
+            --preview-height: 200px;
+            --grid-gap: 10px;
+            max-width: calc(var(--preview-width-max) * 3 + 2 * var(--grid-gap));
+            margin: 0 auto;
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+        .list-grid {
+            margin: var(--grid-gap) 0px var(--grid-gap) 0px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--grid-gap);
+            justify-content: center;
+
+        }
+        .list-preview-box {
+            flex: 1 1 var(--preview-width-min);
+            max-width: var(--preview-width-max);
+            aspect-ratio: 1.6 / 1;
+            box-sizing: border-box;
+
+            /*
+            width: 100%;
+            max-width: 100%;
+            */
+
+            padding: 8px 8px 8px 8px;
+            border-radius: 8px;
+            border-color: var(--tertiary);
+            background-color: var(--secondary);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 4px;
+        }
+        .non-title-info {
+            display: flex;
+            justify-content: space-between;
+            gap: 5px;
+            height: 80%;
+            box-sizing: border-box;
+        }
+        .text-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 4px;
+            width: 50%
+        }
+        .list-title {
+            font-weight: 500;
+            align-self: center;
+        }
+        .list-author {
+            font-weight: 200;
+        }
+        .num-things {
+            font-weight: 200;
+        }
+        .image-container {
+            box-sizing: border-box;
+            max-width: 47%;
+        }
+        .list-image {
+            width: 100%;
+            max-height: 100%;
+            border-radius: 8px;
+        }
+        .info-rank-buttons {
+            display: flex;
+            visibility: hidden;
+            gap: 5px;
+        }
+        .info-button, .rank-button {
+            width: 100%;
+            border-radius: 8px;
+            background-color: var(--tertiary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 40px;
+        }
+        /* Buttons appear on hover */
+        list-preview-box:hover .info-rank-buttons, .info-rank-buttons:hover {
+            visibility: visible;
+        }
+
+    </style>
+{% endblock %}
 {% block main %}
-    
+    <main class="main-container">
+        <div class="list-grid">
+            {% for list in all_lists %} 
+                <a class="list-preview-box" href="{% url 'list_rank' list.slug %}"> 
+                    <div class="list-title">
+                        {{list.name}}
+                    </div>
+                    <div class="non-title-info">
+                        <div class="text-info">
+                            <div>
+                                <div class="list-author">
+                                    By {{list.author.username}}
+                                </div>
+                                <div class="num-things">
+                                    {{list.num_things}} Things
+                                </div>
+                            </div>
+                            <div class="info-rank-buttons">
+                                <div class="info-button">
+                                    Info
+                                </div>
+                                <div class="rank-button">
+                                    Rank
+                                </div>
+                            </div>
+                        </div>
+                        <div class="image-container">
+                            <img class="list-image" src="{{list.image}}">
+                        </div>
+                    </div>
+                </a>
+            {% endfor %}
+            <div class="list-preview-box"> 
+                <div class="list-title">
+                    Club Running All of the Things
+                </div>
+                <div class="non-title-info">
+                   <div class="text-info">
+                        <div>
+                            <div class="list-author">
+                                By Aidan Szilagyi
+                            </div>
+                            <div class="num-things">
+                                1,071 Things
+                            </div>
+                        </div>
+                        <!--
+                        <div class="info-rank-buttons">
+                            <div class="info-button">
+                                Info
+                            </div>
+                            <div class="rank-button">
+                                Rank
+                            </div>
+                        </div>-->
+                    </div>
+                    <div class="image-container">
+                        <img class="list-image" src="{% static 'images/test-vert.png' %}">
+                    </div>
+                </div>
+            </div>
+            <div class="list-preview-box"></div>
+            <div class="list-preview-box"></div>
+            <div class="list-preview-box"></div>
+            <div class="list-preview-box"></div>
+            <div class="list-preview-box"></div>
+            <div class="list-preview-box"></div>
+        </div>
+    </main>    
 {% endblock %}
