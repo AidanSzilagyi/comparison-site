@@ -5,6 +5,7 @@ from django.forms import modelformset_factory
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET
+import json
 
 # Create your views here.
 def homepage_redirect(request):
@@ -72,7 +73,9 @@ def all_lists(request):
 
 def list_rank(request, slug):
     List.objects.get(slug=slug)
-    return render(request, 'createList/rank.html', {"list_slug": slug})
+    initial_things = json.dumps(generate_comparisons(request.user, slug, limit=10))
+    print(initial_things)
+    return render(request, 'createList/rank.html', {"initial_things": initial_things, "list_slug": slug})
 
 @require_GET
 def get_comparisons(request, slug):

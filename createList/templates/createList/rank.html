@@ -3,6 +3,7 @@
 {% block extra_head %}
     <script>
         window.listSlug = "{{ list_slug }}";
+        window.initialThings = {{ initial_things|safe }}
     </script>
     <script type="module" src="{% static 'scripts/rank.js' %}"></script>
     <style>
@@ -53,13 +54,9 @@
     <div class="comparison-boxes">
         Choose the better thing
         <div id="thing-box-1" class="thing-box">
-            <img class="thing-image" src="{% static 'images/test-hori.png' %}">
-            <div class="thing-text">157 Character Limit, sit amet consectetur adipisicing elit. Quae, cumque quas! Quam voluptate, quod autem modi ea iste? Totam exercitationem sapiente rem earum</div>
         </div>
         <div>or</div>
         <div id="thing-box-2" class="thing-box">
-            <img class="thing-image" src="{% static 'images/test-vert.png' %}">
-            <div class="thing-text">Beer</div>
         </div>
     </div>
 </main>

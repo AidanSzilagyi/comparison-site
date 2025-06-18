@@ -4,8 +4,10 @@ let comparisonQueue = [];
 let loadingComparisons = false;
 let csrftoken = getCookie('csrftoken');
 const listSlug = window.listSlug;
+comparisonQueue.push(...window.initialThings);
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    loadNewComparison();
     document.getElementById('thing-box-1').addEventListener('click', () => {
         handleChoice(1);
     });
@@ -25,15 +27,7 @@ async function fetchComparisons() {
         loadingComparisons = false;
     }
 }
-
-async function handleChoice(choice) {
-    fetch(`/${listSlug}/complete-comparison/`, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json', 'X-CSRFToken': csrftoken},
-        body: JSON.stringify({choice: choice})
-    });
-
-    await fetchComparisons(); // remove await + async
+function loadNewComparison() {
     const comparison = comparisonQueue.shift();
     if (comparison) {
         document.getElementById('thing-box-1').innerHTML = `
@@ -43,6 +37,16 @@ async function handleChoice(choice) {
             <div class="thing-text">${comparison.thing2.name}</div>
         `
     }
+}
+
+function handleChoice(choice) {
+    fetch(`/${listSlug}/complete-comparison/`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json', 'X-CSRFToken': csrftoken},
+        body: JSON.stringify({choice: choice})
+    });
+    fetchComparisons();
+    loadNewComparison();
 }
 
 //<img class="thing-image" src="${comparison.thing2.image}"></img>
