@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.text import slugify
 from django.contrib.auth.models import User
+import uuid
 
 # Create your models here.
 class Profile(models.Model):
@@ -9,6 +10,7 @@ class Profile(models.Model):
     username = models.CharField(max_length=20, blank=True, null=True) # REMOVE LATER
 
 class List(models.Model):
+    id = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
     name = models.CharField(max_length=100, blank=True, null=True) #Note uniqueness
     image = models.ImageField(upload_to='media/list_images', blank=True, null=True)
     description = models.CharField(max_length=1000, blank=True, null=True)
@@ -39,6 +41,7 @@ class Thing(models.Model):
 class MatchUp(models.Model):
     winner = models.ForeignKey(Thing, null=True, on_delete=models.SET_NULL, related_name='matchups_won')
     loser = models.ForeignKey(Thing, null=True, on_delete=models.SET_NULL, related_name='matchups_lost')
+    judge = models.ForeignKey(Profile, null=True, blank=True, on_delete=models.SET_NULL)
     date_created = models.DateTimeField(auto_now_add=True)
     def __str__(self):
         return f"{self.winner} vs {self.loser}"

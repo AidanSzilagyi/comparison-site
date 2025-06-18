@@ -3,6 +3,8 @@ from .models import Thing, List
 from .forms import ListForm, ThingForm
 from django.forms import modelformset_factory
 from django.http import HttpResponse
+from django.http import JsonResponse
+from django.views.decorators.http import require_GET
 
 # Create your views here.
 def homepage_redirect(request):
@@ -67,13 +69,51 @@ def create_list(request):
 def all_lists(request):
     all_lists = List.objects.all()
     return render(request, 'createList/all-lists.html', {"all_lists": all_lists})
-            
-  
-    
+
+def list_rank(request, slug):
+    List.objects.get(slug=slug)
+    return render(request, 'createList/rank.html', {"list_slug": slug})
+
+@require_GET
+def get_comparisons(request, slug):
+    list_slug = slug
+    if not list_slug:
+        return JsonResponse({'error': 'Missing list_id'}, status=400)
+
+    comparisons = generate_comparisons(request.user, list_slug=list_slug, limit=5)
+    return JsonResponse({'comparisons': comparisons})
+
+def generate_comparisons(user, list_slug, limit):
+    total = limit * 2
+    list = List.objects.get(slug=list_slug)
+    things = Thing.objects.filter(list=list)
+    if len(things) > total:
+        things = things[:total]
+    else:
+        total = len(things)
+    comparisonJSON = []
+    for i in range(0, total - 1, 2):
+        first_thing = things[i]
+        second_thing = things[i + 1]
+        print(first_thing)
+        comparisonJSON.append({
+            "thing1": {
+                "name": first_thing.name,
+                "image":first_thing.image.url if first_thing.image else None
+            },
+            "thing2": {
+                "name": second_thing.name,
+                "image":second_thing.image.url if second_thing.image else None
+            }
+        })
+    return comparisonJSON
+
+def complete_comparison(request, slug):
+    print("wow", slug)
+    return HttpResponse(status=204)
+
+
 def list_info(request, slug):
     return render(request, 'createList/home.html')
-def list_rank(request, slug):
-    
-    return render(request, 'createList/rank.html')
 def list_edit(request, slug):
     return render(request, 'createList/home.html')
