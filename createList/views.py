@@ -6,6 +6,7 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET
 import json
+from .rank_systems import generate_comparisons
 
 # Create your views here.
 def homepage_redirect(request):
@@ -35,11 +36,6 @@ def create_list(request):
         thing_forms = thing_form_set(request.POST, request.FILES, queryset=Thing.objects.none())
         if thing_forms.is_valid() and list_form.is_valid():
             things = [form for form in thing_forms if form.cleaned_data and not form.cleaned_data.get('DELETE')]
-            print("Raw POST data:", request.POST)
-            print("\n", [form for form in thing_forms if form.cleaned_data])
-            print(thing_forms.data)
-            print(form for form in thing_forms)
-            print("\nManagement forms:",thing_forms.management_form.errors)
             if len(things) < 3:
                 return render(request, 'createList/create-list.html', {
                     'list_form': list_form,
@@ -72,44 +68,18 @@ def all_lists(request):
     return render(request, 'createList/all-lists.html', {"all_lists": all_lists})
 
 def list_rank(request, slug):
-    List.objects.get(slug=slug)
-    initial_things = json.dumps(generate_comparisons(request.user, slug, limit=10))
-    print(initial_things)
+    list = List.objects.get(slug=slug)
+    initial_things = json.dumps(generate_comparisons(request.user, list, limit=10))
     return render(request, 'createList/rank.html', {"initial_things": initial_things, "list_slug": slug})
 
 @require_GET
 def get_comparisons(request, slug):
-    list_slug = slug
-    if not list_slug:
-        return JsonResponse({'error': 'Missing list_id'}, status=400)
+    list = List.objects.get(slug=slug)
+    if not list:
+        return JsonResponse({'error': 'Unknown list slug'}, status=400)
 
-    comparisons = generate_comparisons(request.user, list_slug=list_slug, limit=5)
+    comparisons = generate_comparisons(request.user, list, limit=5)
     return JsonResponse({'comparisons': comparisons})
-
-def generate_comparisons(user, list_slug, limit):
-    total = limit * 2
-    list = List.objects.get(slug=list_slug)
-    things = Thing.objects.filter(list=list)
-    if len(things) > total:
-        things = things[:total]
-    else:
-        total = len(things)
-    comparisonJSON = []
-    for i in range(0, total - 1, 2):
-        first_thing = things[i]
-        second_thing = things[i + 1]
-        print(first_thing)
-        comparisonJSON.append({
-            "thing1": {
-                "name": first_thing.name,
-                "image":first_thing.image.url if first_thing.image else None
-            },
-            "thing2": {
-                "name": second_thing.name,
-                "image":second_thing.image.url if second_thing.image else None
-            }
-        })
-    return comparisonJSON
 
 def complete_comparison(request, slug):
     print("wow", slug)

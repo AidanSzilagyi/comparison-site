@@ -16,6 +16,13 @@ class List(models.Model):
     description = models.CharField(max_length=1000, blank=True, null=True)
     author = models.ForeignKey('Profile', on_delete=models.CASCADE, blank=True, null=True) # REMOVE LATER
     num_things = models.IntegerField(default=0)
+    comparison_method = models.CharField(
+        choices= [
+            ('bradley_terry', 'Bradley-Terry Model'),
+            ('crowd-bt', 'Crowd-BT Model'),
+        ],
+        default='bradley_terry'
+    )
     
     date_created = models.DateTimeField(default=timezone.now)
     last_updated = models.DateTimeField(auto_now=True)
