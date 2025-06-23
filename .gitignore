@@ -8,5 +8,6 @@ storage.html
 *.log
 *.pot
 *.pyc
-__pycache__
+**/__pychache__/
+
 db.sqlite3

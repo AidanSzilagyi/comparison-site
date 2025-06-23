@@ -23,7 +23,9 @@ class List(models.Model):
         ],
         default='bradley_terry'
     )
-    
+    batch_countdown = models.IntegerField(default=0)
+    comparisons_made = models.IntegerField(default=0)
+    comparisons_needed = models.IntegerField(default=0)
     date_created = models.DateTimeField(default=timezone.now)
     last_updated = models.DateTimeField(auto_now=True)
     # ^ Must call model.save() when any element of List is updated
@@ -41,18 +43,30 @@ class Thing(models.Model):
     image = models.ImageField(upload_to='media/thing_images', blank=True, null=True)
     list = models.ForeignKey(List, on_delete=models.CASCADE)
     date_created = models.DateTimeField(auto_now_add=True)
-    # Match History
+    in_use = models.BooleanField(default=False) # prevents other comparisons from using it after a comparison with it has been created
+    
+    rating = models.IntegerField(default=0)
+    times_compared = models.IntegerField(default=0)
+    
+    # Match History?
     def __str__(self):
         return self.name
 
-class MatchUp(models.Model):
+class Matchup(models.Model):
     winner = models.ForeignKey(Thing, null=True, on_delete=models.SET_NULL, related_name='matchups_won')
     loser = models.ForeignKey(Thing, null=True, on_delete=models.SET_NULL, related_name='matchups_lost')
     judge = models.ForeignKey(Profile, null=True, blank=True, on_delete=models.SET_NULL)
     date_created = models.DateTimeField(auto_now_add=True)
     def __str__(self):
-        return f"{self.winner} vs {self.loser}"
+        return f"{self.winner.name} vs {self.loser.name}"
 # User/List owner field?
+
+class SeenThing(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    thing = models.ForeignKey(Thing, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = [('user', 'thing')]
 
 from django.db.models import Q
 
