@@ -5,6 +5,7 @@ let loadingComparisons = false;
 let csrftoken = getCookie('csrftoken');
 const listSlug = window.listSlug;
 comparisonQueue.push(...window.initialThings);
+let currentMatchupID = 0;
 
 document.addEventListener('DOMContentLoaded', async () => {
     loadNewComparison();
@@ -36,6 +37,7 @@ function loadNewComparison() {
         document.getElementById('thing-box-2').innerHTML = `
             <div class="thing-text">${comparison.thing2.name}</div>
         `
+        currentMatchupID = comparison.id
     }
 }
 
@@ -43,7 +45,10 @@ function handleChoice(choice) {
     fetch(`/${listSlug}/complete-comparison/`, {
         method: 'POST',
         headers: {'Content-Type': 'application/json', 'X-CSRFToken': csrftoken},
-        body: JSON.stringify({choice: choice})
+        body: JSON.stringify({
+            "id": currentMatchupID,
+            "choice": choice,
+        })
     });
     fetchComparisons();
     loadNewComparison();

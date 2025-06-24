@@ -16,15 +16,15 @@ def get_comparisons(user, list, total):
         id__in=SeenThing.objects.filter(user=user).values('thing_id')).order_by('rating')
     info_dict = {}
     for i in range(len(available_things) - 1):
-        info_dict.append(1, calculate_info(available_things[i], available_things[i + 1]))
+        info_dict.append(i, calculate_info(available_things[i], available_things[i + 1]))
     info_list = sorted(info_dict.items(), key=lambda item: item[1], reverse=True)
     
     comparisons = []
     i = 0
     while (len(comparisons) < total):
         # make sure two things haven't already been compared
-        Matchup.objects.filter()
-        comparisons.append([available_things[info_list[i]], available_things[info_list[i + 1]]])
+        # Matchup.objects.filter()
+        comparisons.append([available_things[info_list[i][0]], available_things[info_list[i + 1][0]]])
         i += 1
     return comparisons
 
@@ -73,8 +73,10 @@ def batch_update(list):
         thing.save()
 
 def gradient_ascent(matchup_records, num_things):
-    ratings = [0.0 for _ in num_things], gradients = [0.0 for _ in num_things]
-    log_likelihood = 0.0, prev_log_likelihood = 1.0
+    ratings = [0.0 for _ in num_things]
+    gradients = [0.0 for _ in num_things]
+    log_likelihood = 0.0
+    prev_log_likelihood = 1.0
     iterations = 0
     while(abs(log_likelihood - prev_log_likelihood) < 1e-5 and iterations < 1000):
         for (i, j), record in matchup_records.items():

@@ -6,7 +6,7 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET
 import json
-from .rank_systems import generate_comparisons
+from .rank_systems import generate_matchup_json
 
 # Create your views here.
 def homepage_redirect(request):
@@ -43,7 +43,8 @@ def create_list(request):
                     'empty_form': thing_forms.empty_form,
                     'error': 'You must include at least 3 things.'
                 })
-                
+            
+            print(list_form)
             list = list_form.save()
             for form in things:
                 thing = form.save(commit=False)
@@ -69,20 +70,21 @@ def all_lists(request):
 
 def list_rank(request, slug):
     list = List.objects.get(slug=slug)
-    initial_things = json.dumps(generate_comparisons(request.user, list, limit=10))
+    initial_things = json.dumps(generate_matchup_json(request.user, list, limit=5))
     return render(request, 'createList/rank.html', {"initial_things": initial_things, "list_slug": slug})
 
-@require_GET
 def get_comparisons(request, slug):
     list = List.objects.get(slug=slug)
     if not list:
         return JsonResponse({'error': 'Unknown list slug'}, status=400)
 
-    comparisons = generate_comparisons(request.user, list, limit=5)
+    comparisons = generate_matchup_json(request.user, list, limit=3)
     return JsonResponse({'comparisons': comparisons})
 
 def complete_comparison(request, slug):
-    print("wow", slug)
+    id = request.POST.get('id')
+    choice =request.POST.get('choice')
+    print("Comparison Complete:", slug, choice, "    id:", id)
     return HttpResponse(status=204)
 
 
