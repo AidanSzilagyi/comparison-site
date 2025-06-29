@@ -14,7 +14,7 @@ class List(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True) #Note uniqueness
     image = models.ImageField(upload_to='media/list_images', blank=True, null=True)
     description = models.CharField(max_length=1000, blank=True, null=True)
-    author = models.ForeignKey('Profile', on_delete=models.CASCADE, blank=True, null=True) # REMOVE LATER
+    author = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True) # REMOVE LATER
     num_things = models.IntegerField(default=0)
     comparison_method = models.CharField(
         choices= [
@@ -44,18 +44,18 @@ class Thing(models.Model):
     list = models.ForeignKey(List, on_delete=models.CASCADE)
     date_created = models.DateTimeField(auto_now_add=True)
     
-    rating = models.IntegerField(default=0)
+    rating = models.DecimalField(default=0.0, max_digits=7, decimal_places=4)
     times_compared = models.IntegerField(default=0)
     
     # Match History?
     def __str__(self):
-        return self.name
+        return f"{self.name} --- {self.rating}"
 
 class Matchup(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     winner = models.ForeignKey(Thing, null=True, on_delete=models.SET_NULL, related_name='matchups_won')
     loser = models.ForeignKey(Thing, null=True, on_delete=models.SET_NULL, related_name='matchups_lost')
-    judge = models.ForeignKey(Profile, null=True, blank=True, on_delete=models.SET_NULL)
+    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
     date_created = models.DateTimeField(auto_now_add=True)
     awaiting_response = models.BooleanField(default=True)
     def __str__(self):
@@ -63,7 +63,7 @@ class Matchup(models.Model):
 class SeenThing(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     thing = models.ForeignKey(Thing, on_delete=models.CASCADE)
-
+    date_created = models.DateTimeField(auto_now_add=True)
     class Meta:
         unique_together = [('user', 'thing')]
 

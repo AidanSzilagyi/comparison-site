@@ -20,11 +20,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 async function fetchComparisons() {
     if (comparisonQueue.length < 5 && !loadingComparisons) {
         loadingComparisons = true;
-        const response = await fetch(`/${listSlug}/get-comparisons`);
+        let matchupIDs = currentMatchupID;
+        comparisonQueue.forEach((comparison) => {
+            matchupIDs += "," + comparison.id
+        })
+        console.log(matchupIDs)
+        const response = await fetch(`/${listSlug}/get-comparisons?ids=${matchupIDs}`);
         const data = await response.json();
-        console.log(data)
-        console.log(data.comparisons)
-        comparisonQueue.push(...data.comparisons);
+        comparisonQueue.push(...JSON.parse(data.comparisons));
         loadingComparisons = false;
     }
 }
@@ -38,10 +41,14 @@ function loadNewComparison() {
             <div class="thing-text">${comparison.thing2.name}</div>
         `
         currentMatchupID = comparison.id
+    } else {
+        currentMatchupID = ""
+        // Load next matchup after fetch
     }
 }
 
 function handleChoice(choice) {
+    console.log(comparisonQueue)
     fetch(`/${listSlug}/complete-comparison/`, {
         method: 'POST',
         headers: {'Content-Type': 'application/json', 'X-CSRFToken': csrftoken},

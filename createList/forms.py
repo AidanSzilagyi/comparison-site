@@ -1,5 +1,5 @@
 from django import forms
-from .models import Thing, List
+from .models import Thing, List, Profile
 
 class ListForm(forms.ModelForm):
     class Meta:
@@ -10,3 +10,8 @@ class ThingForm(forms.ModelForm):
     class Meta:
         model = Thing
         fields = ['name', 'image']
+        
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['username']

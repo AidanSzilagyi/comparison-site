@@ -1,0 +1,35 @@
+{% extends "./base.html" %}
+{% load static %}
+{% block extra_head %}  
+    <style>
+        .profile-name-input {
+            margin: 20px;
+            color: var(--highlight);
+            background-color: var(--secondary);
+        }
+        .profile-name-input:hover {
+            outline: 1px solid var(--selected);
+        }
+
+        .profile-form-submit {
+            margin-left: 20px;
+            color: var(--hightlight);
+            background-color: var(--secondary);
+        }
+    </style>
+{% endblock %}
+
+{% block main %}
+	<main class="main-container">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label style="display: none;" for="{{profile_form.username.id_for_label}}">List Title</label>
+                <input class="profile-name-input" 
+                    id="{{profile_form.username.id_for_label}}" 
+                    name="{{profile_form.username.name}}" 
+                    value="{{profile_form.username.value|default_if_none:''}}"
+                    type="text" placeholder="Username">
+            <input class="profile-form-submit" type="submit">
+        </form>
+	</main>
+{% endblock %}

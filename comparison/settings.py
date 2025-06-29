@@ -14,6 +14,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 import dj_database_url
 import os
+from django.urls import reverse
 
 load_dotenv()
 
@@ -47,18 +48,24 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'createList.apps.CreatelistConfig',
     'storages',
+    'social_django',
+    #'allauth', # REMOVE
+    #'allauth.account', # REMOVE
+    #'allauth.socialaccount', # REMOVE
+    #'allauth.socialaccount.providers.google', # REMOVE
 ]
 
 MIDDLEWARE = [
+    # 'allauth.account.middleware.AccountMiddleware', # REMOVE
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'createList.middleware.SaveURLBeforeAuthMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
 ROOT_URLCONF = 'comparison.urls'
 
 TEMPLATES = [
@@ -77,6 +84,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'comparison.wsgi.application'
+
 
 
 # Database
@@ -118,6 +126,42 @@ USE_I18N = True
 
 USE_TZ = True
 
+# Google OAuth
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get('OAUTH_CLIENT_ID')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get('OAUTH_CLIENT_SECRET')
+
+LOGIN_URL = '/auth/login/google-oauth2/'
+LOGIN_REDIRECT_URL = '/profile-check/'
+LOGOUT_REDIRECT_URL = '/'
+
+AUTHENTICATION_BACKENDS = [
+    'social_core.backends.google.GoogleOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+]
+# Old OAuth
+
+#AUTHENTICATION_BACKENDS = [
+#    'django.contrib.auth.backends.ModelBackend',
+#    'allauth.account.auth_backends.AuthenticationBackend',
+#]
+
+#SOCIALACCOUNT_PROVIDERS = {
+#    'google': {
+        # For each OAuth based provider, either add a ``SocialApp``
+        # (``socialaccount`` app) containing the required client
+        # credentials, or list them here:
+#        'APP': {
+#            'client_id': os.environ.get('OAUTH_CLIENT_ID'),
+#            'secret': os.environ.get('OAUTH_CLIENT_SECRET'),
+#            'key': ''
+#        }
+#    }
+#}
+
+# SOCIALACCOUNT_LOGIN_ON_GET = True
+# LOGIN_REDIRECT_URL = '/home/'
+# LOGOUT_REDIRECT_URL = 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/

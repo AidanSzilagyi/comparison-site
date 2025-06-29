@@ -1,12 +1,15 @@
 from django.shortcuts import render, redirect
-from .models import Thing, List
-from .forms import ListForm, ThingForm
+from .models import Thing, List, Profile, Matchup
+from .forms import ListForm, ThingForm, ProfileForm
 from django.forms import modelformset_factory
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET
+from .rank_systems import generate_matchup_json, process_matchup_result
+from django.contrib.auth.decorators import login_required
 import json
-from .rank_systems import generate_matchup_json
+import uuid
+
 
 # Create your views here.
 def homepage_redirect(request):
@@ -19,7 +22,32 @@ def homepage(request):
 # return render(request, 'mainmenu/profile.html', context)
 # Head2Head (two arrows facing one another)
 
+def profile_check(request):
+    next_url = request.session.get('next_url', '/')
 
+    if not getattr(request.user, 'profile', None):
+        Profile.objects.create(user=request.user)
+        #next_url = request.GET.get('next') or '/'
+        #request.session['next_url'] = next_url
+        return redirect('create_profile')
+    elif not request.user.profile.username:
+        #next_url = request.GET.get('next') or '/'
+        #request.session['next_url'] = next_url
+        return redirect('create_profile')
+    return redirect(next_url)
+
+
+def create_profile(request):
+    if request.method == 'GET':
+        profile_form = ProfileForm()
+    if request.method == 'POST':
+        profile_form = ProfileForm(request.POST, instance=request.user.profile)
+        if profile_form.is_valid():
+            profile = profile_form.save()
+            return redirect(request.session.pop('next_url', '/'))
+    return render(request, 'createList/create-profile.html', {'profile_form': profile_form})
+
+@login_required
 def create_list(request):
     thing_form_set = modelformset_factory(Thing, form=ThingForm, extra=0, can_delete=True)
     if request.method == 'GET':
@@ -44,7 +72,6 @@ def create_list(request):
                     'error': 'You must include at least 3 things.'
                 })
             
-            print(list_form)
             list = list_form.save()
             for form in things:
                 thing = form.save(commit=False)
@@ -70,21 +97,32 @@ def all_lists(request):
 
 def list_rank(request, slug):
     list = List.objects.get(slug=slug)
-    initial_things = json.dumps(generate_matchup_json(request.user, list, limit=5))
+    initial_things = generate_matchup_json(request.user, list)
     return render(request, 'createList/rank.html', {"initial_things": initial_things, "list_slug": slug})
 
 def get_comparisons(request, slug):
     list = List.objects.get(slug=slug)
     if not list:
         return JsonResponse({'error': 'Unknown list slug'}, status=400)
+    
+    sent_matchups = []
+    if request.GET.get("ids", ""):
+        ids = request.GET.get("ids").split(",")
+        if ids:
+            uuids = [uuid.UUID(id) for id in ids if id]
+            sent_matchups = Matchup.objects.filter(id__in=uuids)
+        print(sent_matchups)
 
-    comparisons = generate_matchup_json(request.user, list, limit=3)
+    Matchup.objects.filter(id__in=ids)
+    comparisons = generate_matchup_json(request.user, list, sent_matchups)
     return JsonResponse({'comparisons': comparisons})
 
 def complete_comparison(request, slug):
-    id = request.POST.get('id')
-    choice =request.POST.get('choice')
-    print("Comparison Complete:", slug, choice, "    id:", id)
+    list = List.objects.get(slug=slug)
+    if not list or not body.get('id'):
+        return JsonResponse({'error': 'Unknown list slug'}, status=400)
+    body = json.loads(request.body)
+    process_matchup_result(request.user, list, body.get('id'), body.get('choice'))
     return HttpResponse(status=204)
 
 

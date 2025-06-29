@@ -1,6 +1,11 @@
 {% extends "./base.html" %}
+{% block extra_head %}
+
+{% endblock %}
 {% block main %}
 <main class="">
     <a href="{% url 'all_lists' %}">All Lists</a>
+    <br>
+    <a href="{% url 'social:begin' 'google-oauth2' %}">Login with Google</a>
 </main>
 {% endblock %}
