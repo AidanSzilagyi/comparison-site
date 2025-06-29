@@ -7,6 +7,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_GET
 from .rank_systems import generate_matchup_json, process_matchup_result
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout
 import json
 import uuid
 
@@ -21,9 +22,13 @@ def homepage(request):
 
 # return render(request, 'mainmenu/profile.html', context)
 # Head2Head (two arrows facing one another)
+def start_login(request):
+    logout(request)
+    return redirect('social:begin', backend='google-oauth2')
 
 def profile_check(request):
     next_url = request.session.get('next_url', '/')
+    print("getattr:", getattr(request.user, 'profile', "No Profile"))
 
     if not getattr(request.user, 'profile', None):
         Profile.objects.create(user=request.user)
