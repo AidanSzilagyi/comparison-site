@@ -28,8 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });*/
 
-
-
 document.addEventListener("DOMContentLoaded", () => {
     const formContainer = document.getElementById("list-of-things-container");
     const emptyForm = document.getElementById("empty-form-template").innerHTML;
@@ -40,6 +38,17 @@ document.addEventListener("DOMContentLoaded", () => {
         const newFormHTML = emptyForm.replace(/__prefix__/g, formCount);
         formContainer.insertAdjacentHTML("beforeend", newFormHTML);
         totalFormNum.value = formCount + 1;
+    });
+
+    document.querySelector('.js-list-of-things').addEventListener('click', (e) => {
+        if (e.target.closest('.trash-can-icon-container')) {
+            const container = e.target.closest('.thing-container');
+            const deleteCheckbox = container.querySelector('.delete-checkbox');
+            if (container && deleteCheckbox) {
+                container.style.display = 'none';
+                deleteCheckbox.checked = true;
+            }
+        }
     });
 });
 

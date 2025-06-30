@@ -58,7 +58,7 @@
                     Description: {{list_form.description.errors}}
                 </div>
             </div>
-            <div class="list-of-things-container" id="list-of-things-container">
+            <div class="list-of-things-container js-list-of-things" id="list-of-things-container">
                 {% for thing_form in thing_forms %}
                 <div class="thing-container">
                     <label style="display: none;" for="{{thing_form.name.id_for_label}}">Thing Name</label>
@@ -77,6 +77,7 @@
                     
                     <div class="trash-can-icon-container">
                         <img class="trash-can-icon-image" src="{% static 'images/trash-can-icon.png' %}">
+                        <input type="checkbox" name="{{ form.DELETE.html_name }}" class="delete-checkbox" hidden>
                     </div>
                     <div class="info-icon-container">
                         <img class="info-icon-image" src="{% static 'images/info-icon-a.png' %}">
@@ -101,6 +102,7 @@
                     
                     <div class="trash-can-icon-container">
                         <img class="trash-can-icon-image" src="{% static 'images/trash-can-icon.png' %}">
+                        <input type="checkbox" name="{{ empty_form.DELETE.html_name }}" class="delete-checkbox" hidden>
                     </div>
                     <div class="info-icon-container">
                         <img class="info-icon-image" src="{% static 'images/info-icon-a.png' %}">
