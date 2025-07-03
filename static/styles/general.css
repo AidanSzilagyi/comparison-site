@@ -20,6 +20,13 @@ html, body {
     margin: 0;
     height: 100%;
 }
+.body-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+}
 
 a:link, a:visited, a:hover, a:active {
     color: inherit;

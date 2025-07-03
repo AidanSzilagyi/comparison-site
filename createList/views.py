@@ -130,8 +130,12 @@ def complete_comparison(request, slug):
     process_matchup_result(request.user, list, body.get('id'), body.get('choice'))
     return HttpResponse(status=204)
 
-
 def list_info(request, slug):
-    return render(request, 'createList/home.html')
+    context = {
+        "list_slug": slug
+    }
+    return render(request, 'createList/list-info.html', context)
+
+
 def list_edit(request, slug):
     return render(request, 'createList/home.html')

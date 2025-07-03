@@ -7,14 +7,10 @@
     </script>
     <script type="module" src="{% static 'scripts/rank.js' %}"></script>
     <style>
-        .main-container {
-            margin: 0;
+        .comparison-boxes {
             height: calc(100vh - 60px);
-            display: flex;
             justify-content: center;
             align-items: center;
-        }
-        .comparison-boxes {
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -46,14 +42,11 @@
     </style>
 {% endblock %}
 {% block main %}
-<main class="main-container">
     <div class="comparison-boxes">
         Choose the better thing
         <div id="thing-box-1" class="thing-box">
         </div>
         <div>or</div>
         <div id="thing-box-2" class="thing-box">
-        </div>
     </div>
-</main>
 {% endblock %}
