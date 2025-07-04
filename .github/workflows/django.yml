@@ -28,18 +28,17 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      DEBUG: "False"
 
     steps:
     - uses: actions/checkout@v4
 
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
-
-    - name: Wait for PostgreSQL
-      run: |
-        until pg_isready -h localhost -U ${{ secrets.DB_USER }}; do sleep 1; done
 
     - name: Install Dependencies
       run: |
@@ -50,5 +49,3 @@ jobs:
       run: |
         python manage.py makemigrations --merge
         python manage.py migrate
-      env:
-        DATABASE_URL: ${{ secrets.DB_URL }}
