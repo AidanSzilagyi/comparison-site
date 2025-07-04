@@ -21,7 +21,7 @@ class List(models.Model):
             ('bradley_terry', 'Bradley-Terry Model'),
             ('crowd-bt', 'Crowd-BT Model'),
         ],
-        default='bradley_terry'
+        default='bradley_terry', max_length=20
     )
     batch_countdown = models.IntegerField(default=0)
     comparisons_made = models.IntegerField(default=0)
