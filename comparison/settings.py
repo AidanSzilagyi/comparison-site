@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'createList.apps.CreatelistConfig',
     'storages',
     'social_django',
+    'mathfilters',
     #'allauth', # REMOVE
     #'allauth.account', # REMOVE
     #'allauth.socialaccount', # REMOVE

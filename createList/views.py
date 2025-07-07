@@ -76,8 +76,10 @@ def create_list(request):
                     'empty_form': thing_forms.empty_form,
                     'error': 'You must include at least 3 things.'
                 })
-            
             list = list_form.save()
+            list.num_things = len(things)
+            list.user = request.user
+            list.save()
             for form in things:
                 thing = form.save(commit=False)
                 thing.list = list
@@ -131,11 +133,21 @@ def complete_comparison(request, slug):
     return HttpResponse(status=204)
 
 def list_info(request, slug):
+    list = List.objects.get(slug=slug)
+    all_things = Thing.objects.filter(list=list).order_by('rating')
+    top_five = all_things[0:5]
+    bottom_five = all_things[list.num_things - 5:]
+    
+    # if <15 things, show the whole list
     context = {
-        "list_slug": slug
+        "list": list,
+        "top_five": top_five,
+        "bottom_five": bottom_five,
     }
     return render(request, 'createList/list-info.html', context)
 
+def view_profile(request, slug):
+    return render(request, 'createList/home.html')
 
 def list_edit(request, slug):
     return render(request, 'createList/home.html')

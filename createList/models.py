@@ -14,7 +14,7 @@ class List(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True) #Note uniqueness
     image = models.ImageField(upload_to='media/list_images', blank=True, null=True)
     description = models.CharField(max_length=1000, blank=True, null=True)
-    author = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True) # REMOVE LATER
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True) # REMOVE LATER
     num_things = models.IntegerField(default=0)
     comparison_method = models.CharField(
         choices= [
@@ -28,6 +28,13 @@ class List(models.Model):
     comparisons_needed = models.IntegerField(default=0)
     date_created = models.DateTimeField(default=timezone.now)
     last_updated = models.DateTimeField(auto_now=True)
+    permission = models.CharField(
+        choices = [
+            ('public', 'Public'),
+            ('protected', 'View Only'),
+            ('private', 'Private'),
+        ]
+    )
     # ^ Must call model.save() when any element of List is updated
     slug = models.SlugField(unique=True)
     def save(self, *args, **kwargs):
@@ -46,6 +53,9 @@ class Thing(models.Model):
     
     rating = models.DecimalField(default=0.0, max_digits=7, decimal_places=4)
     times_compared = models.IntegerField(default=0)
+    
+    wins = models.IntegerField(default=0)
+    losses = models.IntegerField(default=0)
     
     # Match History?
     def __str__(self):
@@ -84,7 +94,7 @@ class Meta:
 def generate_list_slug(list):
     slug = slugify(list.name)
     if List.objects.filter(slug=slug).exists():
-        slug = slugify(list.name + list.author.username)
+        slug = slugify(list.name + list.user.username)
     return slug
         
     

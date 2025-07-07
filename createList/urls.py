@@ -13,5 +13,6 @@ urlpatterns = [
     path("<slug:slug>/edit/", views.list_edit, name="list_edit"),
     path("all-lists/", views.all_lists, name="all_lists"),
     path("create-profile/", views.create_profile, name="create_profile"),
-    path("profile-check/", views.profile_check, name="profile_check")
+    path("profile-check/", views.profile_check, name="profile_check"),
+    path("user/<slug:slug>/", views.view_profile, name="view_profile")
 ]

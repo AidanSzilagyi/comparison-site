@@ -12,6 +12,10 @@ def process_matchup_result(user, list, matchup_id, choice):
         matchup.winner = matchup.loser
         matchup.loser = temp
     matchup.save()
+    matchup.winner.wins += 1
+    matchup.loser.losses += 1
+    matchup.winner.save()
+    matchup.loser.save()
     get_comparison_model(list).update_rankings(user, list, matchup)
 
 def generate_matchup_json(user, list, sent_matchups=[]):
