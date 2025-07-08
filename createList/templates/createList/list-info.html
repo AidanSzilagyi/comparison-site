@@ -47,7 +47,15 @@
                 <div class="highlight-thing">
                     <div class="highlight-position-number">{{forloop.counter}}.</div>
                     <div class="highlight-thing-name">{{thing.name}}</div>
-                    <div class="highlight-thing-record">W{{thing.wins}}-L{{thing.losses}}</div>
+                    <div class="highlight-thing-record">
+                        <img class="W-win" src="{% static 'image/W-Win.png' %}">{{thing.wins}}-<img class="l-lose" src="{% static 'image/L-Lose.png' %}">{{thing.losses}}
+                        <div class="past-matchup-sheet">
+                            <div class="past-matchup"><img class="W-win" src="{% static 'image/W-Win.png' %}"> vs. Buttered Bread</div>
+                            <div class="past-matchup"><img class="l-lose" src="{% static 'image/L-Lose.png' %}"> vs. Unbuttered Bread</div>
+                            <div class="past-matchup"><img class="W-win" src="{% static 'image/W-Win.png' %}"> vs. Buttered Bread</div>
+                            <div class="past-matchup"><img class="l-lose" src="{% static 'image/L-Lose.png' %}"> vs. Unbuttered Bread</div>
+                        </div>
+                    </div>
                 </div>
                 {% endfor %}
             </div>
@@ -59,7 +67,15 @@
                 <div class="highlight-thing">
                     <div class="highlight-position-number">{{list.num_things|sub:"5"|add:forloop.counter}}.</div>
                     <div class="highlight-thing-name">{{thing.name}}</div>
-                    <div class="highlight-thing-record">W{{thing.wins}}-L{{thing.losses}}</div>
+                    <div class="highlight-thing-record">
+                        W{{thing.wins}}-L{{thing.losses}}
+                        <div class="past-matchup-sheet">
+                            <div class="past-matchup">Win vs. Buttered Bread</div>
+                            <div class="past-matchup">Loss vs. Unbuttered Bread</div>
+                            <div class="past-matchup">Win vs. Buttered Bread</div>
+                            <div class="past-matchup">Loss vs. Unbuttered Bread</div>
+                        </div>
+                    </div>
                 </div>
                 {% endfor %}
             </div>

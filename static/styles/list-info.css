@@ -94,3 +94,41 @@
     display: inline-block;
     text-align: right;
 }
+
+.highlight-thing-record .past-matchup-sheet {
+    opacity: 0;
+    transition: opacity 0.15s;
+    position: absolute;
+    transform: translateX(-65%);
+    margin-top: 5px;
+    pointer-events: none;
+    white-space: nowrap;
+    background-color: var(--secondary);
+    padding: 8px 8px;
+    border-radius: 8px;
+}
+.highlight-thing-record:hover .past-matchup-sheet {
+    opacity: 1;
+}
+
+.highlight-thing-record .past-matchup::after {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  right: 20px;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent var(--secondary) transparent;
+}
+
+.past-matchup {
+
+}
+
+.W-win {
+    height: 20px;
+}
+.l-lose {
+    height: 20px;
+}
