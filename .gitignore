@@ -3,6 +3,7 @@
 staticfiles
 storage.txt
 storage.html
+media/
 
 # Django #
 *.log

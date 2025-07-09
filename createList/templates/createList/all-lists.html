@@ -3,7 +3,7 @@
 {% block extra_head %}
     <style>
         
-        .main-container {
+        .primary-container {
             --preview-width-min: 300px; /* 260 - 300 */
             --preview-width-max: 350px;
             --preview-height: 200px;
@@ -96,7 +96,7 @@
     </style>
 {% endblock %}
 {% block main %}
-    <main class="main-container">
+    <main class="primary-container">
         <div class="list-grid">
             {% for list in all_lists %} 
                 <a class="list-preview-box" href="{% url 'list_rank' list.slug %}"> 

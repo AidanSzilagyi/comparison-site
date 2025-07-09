@@ -123,12 +123,20 @@
 }
 
 .past-matchup {
+    text-align: left;
+}
 
+.wins-losses-text {
+    display: inline-block;
 }
 
 .W-win {
-    height: 20px;
+    height: 12px;
+    display: inline-block;
+    margin: 0px 3px;
 }
 .l-lose {
-    height: 20px;
+    height: 12px;
+    display: inline-block;
+    margin: 0px 3px;
 }
