@@ -14,5 +14,6 @@ urlpatterns = [
     path("all-lists/", views.all_lists, name="all_lists"),
     path("create-profile/", views.create_profile, name="create_profile"),
     path("profile-check/", views.profile_check, name="profile_check"),
-    path("user/<slug:slug>/", views.view_profile, name="view_profile")
+    path("user/<slug:slug>/", views.view_profile, name="view_profile"),
+    path("test/card", views.list_card_test, name="list_card_test"),
 ]

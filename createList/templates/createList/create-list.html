@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block main %}
-	<main class="primary-container">
+	<main class="main-container">
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {{ thing_forms.management_form }}

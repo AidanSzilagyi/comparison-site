@@ -20,6 +20,7 @@ html, body {
     margin: 0;
     height: 100%;
 }
+
 .primary-container {
     display: flex;
     flex-direction: column;

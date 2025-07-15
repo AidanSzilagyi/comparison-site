@@ -5,81 +5,81 @@
     <link rel="stylesheet" href="{% static 'styles/list-info.css' %}">
 {% endblock %}
 {% block main %}
-    <div class="list-info-container">
-    <div class="list-name">{{list.name}}</div>
-    <div class="list-metadata">
-        <div class="list-detail-container">
-            <a href="{% url 'view_profile' list.slug %}"><div class="list-author">{{list.user.username}}</div></a><div class="dot-separator">&middot;</div>
-            <div class="list-detail-stat-value">{{list.num_things}} Things</div><div class="dot-separator">&middot;</div>
-            <div class="list-detail-stat-value">{{list.get_permission_display}}</div><br>
-            {% if list.description %}
-            <div class="list-description">{{list.description}}</div>
+    <main class="main-container">
+        <div class="list-name">{{list.name}}</div>
+        <div class="list-metadata">
+            <div class="list-detail-container">
+                <a href="{% url 'view_profile' list.slug %}"><div class="list-author">{{list.user.username}}</div></a><div class="dot-separator">&middot;</div>
+                <div class="list-detail-stat-value">{{list.num_things}} Things</div><div class="dot-separator">&middot;</div>
+                <div class="list-detail-stat-value">{{list.get_permission_display}}</div><br>
+                {% if list.description %}
+                <div class="list-description">{{list.description}}</div>
+                {% endif %}
+                <div class="list-details">
+                    <div class="list-detail-stat-name">Comparisons Made:</div><div class="list-detail-stat-value">{{list.comparisons_made}} / {{list.comparisons_needed}} (*11%)</div><br>
+                    <div class="list-detail-stat-name">Comparison Model:</div><div class="list-detail-stat-value">{{list.get_comparison_method_display }}</div><br>
+                    <div class="list-detail-stat-name">Last Comparison:</div><div class="list-detail-stat-value">{{ list.last_updated|date:"F jS, Y"}} (*11 years ago)</div><br>
+                    <div class="list-detail-stat-name">List Created:</div><div class="list-detail-stat-value">{{list.date_created|date:"F jS, Y"}} (*11 days ago)</div><br>
+                </div>
+                <div>
+                    <a href="#">
+                        <div class="all-things-button">See All Things</div>
+                    </a>
+                    <a href="{% url 'list_rank' list.slug %}">
+                        <div class="rank-button">Rank</div>
+                    </a>
+                    <a href="{% url 'list_edit' list.slug %}">
+                        <div class="edit-button">Edit</div>
+                    </a>
+                </div> 
+            </div>
+            {% if list.image %}
+                <div class="list-image-container">
+                    <img class="list-image" src="{% static 'images/test-hori.png' %}">
+                </div>
             {% endif %}
-            <div class="list-details">
-                <div class="list-detail-stat-name">Comparisons Made:</div><div class="list-detail-stat-value">{{list.comparisons_made}} / {{list.comparisons_needed}} (*11%)</div><br>
-                <div class="list-detail-stat-name">Comparison Model:</div><div class="list-detail-stat-value">{{list.get_comparison_method_display }}</div><br>
-                <div class="list-detail-stat-name">Last Comparison:</div><div class="list-detail-stat-value">{{ list.last_updated|date:"F jS, Y"}} (*11 years ago)</div><br>
-                <div class="list-detail-stat-name">List Created:</div><div class="list-detail-stat-value">{{list.date_created|date:"F jS, Y"}} (*11 days ago)</div><br>
-            </div>
-            <div>
-                <a href="#">
-                    <div class="all-things-button">See All Things</div>
-                </a>
-                <a href="{% url 'list_rank' list.slug %}">
-                    <div class="rank-button">Rank</div>
-                </a>
-                <a href="{% url 'list_edit' list.slug %}">
-                    <div class="edit-button">Edit</div>
-                </a>
-            </div> 
         </div>
-        {% if list.image %}
-            <div class="list-image-container">
-                <img class="list-image" src="{% static 'images/test-hori.png' %}">
-            </div>
-        {% endif %}
-    </div>
-    <div class="multiple-highlight-container">
-        <div class="highlight-container">
-            <div class="highlight-title">Best 5 Things</div>
-            <div class="highlight-five-things-group">
-                {% for thing in top_five %}
-                <div class="highlight-thing">
-                    <div class="highlight-position-number">{{forloop.counter}}.</div>
-                    <div class="highlight-thing-name">{{thing.name}}</div>
-                    <div class="highlight-thing-record">
-                        <img class="W-win" src="{% static 'images/W-Win.png' %}"><div class="wins-losses-text">{{thing.wins}} -</div><img class="l-lose" src="{% static 'images/L-Lose.png' %}"><div class="wins-losses-text">{{thing.losses}}</div>
-                        <div class="past-matchup-sheet">
-                            <div class="past-matchup"><img class="W-win" src="{% static 'images/W-Win.png' %}"> vs. Buttered Bread</div>
-                            <div class="past-matchup"><img class="l-lose" src="{% static 'images/L-Lose.png' %}"> vs. Unbuttered Bread</div>
-                            <div class="past-matchup"><img class="W-win" src="{% static 'images/W-Win.png' %}"> vs. Buttered Bread</div>
-                            <div class="past-matchup"><img class="l-lose" src="{% static 'images/L-Lose.png' %}"> vs. Unbuttered Bread</div>
+        <div class="multiple-highlight-container">
+            <div class="highlight-container">
+                <div class="highlight-title">Best 5 Things</div>
+                <div class="highlight-five-things-group">
+                    {% for thing in top_five %}
+                    <div class="highlight-thing">
+                        <div class="highlight-position-number">{{forloop.counter}}.</div>
+                        <div class="highlight-thing-name">{{thing.name}}</div>
+                        <div class="highlight-thing-record">
+                            <img class="W-win" src="{% static 'images/W-Win.png' %}"><div class="wins-losses-text">{{thing.wins}} -</div><img class="l-lose" src="{% static 'images/L-Lose.png' %}"><div class="wins-losses-text">{{thing.losses}}</div>
+                            <div class="past-matchup-sheet">
+                                <div class="past-matchup"><img class="W-win" src="{% static 'images/W-Win.png' %}"> vs. Buttered Bread</div>
+                                <div class="past-matchup"><img class="l-lose" src="{% static 'images/L-Lose.png' %}"> vs. Unbuttered Bread</div>
+                                <div class="past-matchup"><img class="W-win" src="{% static 'images/W-Win.png' %}"> vs. Buttered Bread</div>
+                                <div class="past-matchup"><img class="l-lose" src="{% static 'images/L-Lose.png' %}"> vs. Unbuttered Bread</div>
+                            </div>
                         </div>
                     </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
             </div>
-        </div>
-        <div class="highlight-container">
-            <div class="highlight-title">Worst 5 Things</div>
-            <div class="highlight-five-things-group">
-                {% for thing in bottom_five %}
-                <div class="highlight-thing">
-                    <div class="highlight-position-number">{{list.num_things|sub:"5"|add:forloop.counter}}.</div>
-                    <div class="highlight-thing-name">{{thing.name}}</div>
-                    <div class="highlight-thing-record">
-                        W{{thing.wins}}-L{{thing.losses}}
-                        <div class="past-matchup-sheet">
-                            <div class="past-matchup">Win vs. Buttered Bread</div>
-                            <div class="past-matchup">Loss vs. Unbuttered Bread</div>
-                            <div class="past-matchup">Win vs. Buttered Bread</div>
-                            <div class="past-matchup">Loss vs. Unbuttered Bread</div>
+            <div class="highlight-container">
+                <div class="highlight-title">Worst 5 Things</div>
+                <div class="highlight-five-things-group">
+                    {% for thing in bottom_five %}
+                    <div class="highlight-thing">
+                        <div class="highlight-position-number">{{list.num_things|sub:"5"|add:forloop.counter}}.</div>
+                        <div class="highlight-thing-name">{{thing.name}}</div>
+                        <div class="highlight-thing-record">
+                            W{{thing.wins}}-L{{thing.losses}}
+                            <div class="past-matchup-sheet">
+                                <div class="past-matchup">Win vs. Buttered Bread</div>
+                                <div class="past-matchup">Loss vs. Unbuttered Bread</div>
+                                <div class="past-matchup">Win vs. Buttered Bread</div>
+                                <div class="past-matchup">Loss vs. Unbuttered Bread</div>
+                            </div>
                         </div>
                     </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
             </div>
         </div>
-    </div>
-    </div>
+    </main>
 {% endblock %}

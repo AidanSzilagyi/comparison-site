@@ -1,0 +1,188 @@
+{% extends "./base.html" %}
+{% block extra_head %}
+<style>
+    :root {
+    --primary: #0a092c;
+    --secondary: #2e3855;
+    --tertiary: #1a1d27;
+    --highlight: #f6f7fb;
+    --selected: #adb6f7;
+    --important: #4056f9;
+    --greyedout: #757575;
+    --logo-red: #ff2850;
+    --logo-blue: #3278ff;
+    font-family: Outfit;
+
+    --preview-width-min: 300px; /* 260 - 300 */
+    --preview-width-max: 350px;
+    --preview-height: 200px;
+    --grid-gap: 10px;
+
+    color: var(--highlight);
+    background-color: var(--primary);
+}
+    input[type='file'] {
+        color: transparent;
+    }
+    html, body {
+        margin: 0;
+        height: 100%;
+    }
+    .list-preview-box {
+        margin-bottom: 20px; /* REMOVE LATER */
+
+        /*flex: 1 1 var(--preview-width-min); */
+        max-width: var(--preview-width-max);
+        aspect-ratio: 1.6 / 1;
+        /*
+        width: 100%;
+        max-width: 100%;
+        */
+        height: 230px;
+
+        padding: 8px 8px 8px 8px;
+        border-radius: 8px;
+        border-color: var(--tertiary);
+        background-color: var(--secondary);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 4px;
+    }
+    .list-title {
+        font-weight: 500;
+        text-align: center;
+        text-wrap: balance;
+        overflow: hidden;
+        font-size: 20px;
+    }
+    .non-title-info {
+        display: flex;
+        justify-content: space-between;
+        gap: 5px;
+        height: calc(100% - 80px); /* subtract bottom-items height */
+    }
+    .text-info {
+        width: 50%;
+    }
+    .list-author {
+        font-weight: 200;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .author-pfp {
+        height: 20px;
+        width: 20px;
+        object-fit: cover;
+        border-radius: 10px;
+        display: inline;
+    }
+    .author-name {
+        display: inline;
+        font-size: 14px;
+    }
+
+    .list-description {
+        height: calc(100% - 24px); /* subtract author height, prevent partial lines */
+        text-wrap: balance;
+        overflow: hidden;
+        font-size: 14px;
+        margin-top: 3px;
+        /* Add  text-overflow: ellipsis; via django? */
+    }
+    .image-container {
+        width: 100%;
+    }
+    .list-image {
+        width: 100%;
+        max-height: 100%;
+        border-radius: 8px;
+        object-fit: contain;
+    }
+    .disable {
+        display: inline-block;
+    }
+    .bottom-items {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+    }
+    .num-things {
+        display: inline-block;
+    }
+    .num-comparisons {
+        display: inline-block;
+    }
+</style>
+{% endblock %}
+{% block main %}
+<div class="list-preview-box"> 
+    <div class="list-title">
+        Heres a pretty long list name. Not much will really exceed this. /If it somehow does, it truncates
+    </div>
+    <div class="non-title-info">
+        <div class="text-info">
+            <div class="list-author">
+                <img class="author-pfp" src="../../../static/images/arrow-logo.png">
+                <div class="author-name">aidan_szilagyi12232</div>
+            </div>
+            <div class="list-description">
+                This is an extremely long description. This is an extremely long description. This is an extremely long description. It gets longer though and longer and longer
+            </div>
+        </div>
+        <div class="image-container">
+            <img class="list-image" src="../../../static/images/test-hori.png">
+        </div>
+    </div>
+    <div class="bottom-items">
+        <div class="num-things">10212 Things</div> <div class="num-comparisons"> 14023/12312 Comparisons </div>
+    </div>
+</div>
+<div class="list-preview-box"> 
+    <div class="list-title">
+        Short list
+    </div>
+    <div class="non-title-info">
+        <div class="text-info">
+            <div>
+                <div class="list-author">
+                    short123
+                </div>
+                <div class="list-description">
+                    Pretty short
+                </div>
+            </div>
+        </div>
+        <div class="image-container">
+            <img class="list-image" src="../../../static/images/test-vert.png">
+        </div>
+    </div>
+    <div class="bottom-items">
+        <div class="num-things">11 Things</div> <div class="num-comparisons"> 12/50 Comparisons </div>
+    </div>
+</div>
+<div class="list-preview-box"> 
+    <div class="list-title">
+        Short description but a really long name
+    </div>
+    <div class="non-title-info">
+        <div class="text-info">
+            <div>
+                <div class="list-author">
+                    short123
+                </div>
+                <div class="list-description">
+                    Pretty short
+                </div>
+            </div>
+        </div>
+        <div class="image-container">
+            <img class="list-image" src="../../../static/images/L-Square.png">
+        </div>
+    </div>
+    <div class="bottom-items">
+        <div class="num-things">11 Things</div> <div class="num-comparisons"> 12/50 Comparisons </div>
+    </div>
+</div>
+{% endblock %}

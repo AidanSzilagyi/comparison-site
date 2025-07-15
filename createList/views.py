@@ -147,7 +147,12 @@ def list_info(request, slug):
     return render(request, 'createList/list-info.html', context)
 
 def view_profile(request, slug):
-    return render(request, 'createList/home.html')
+    lists = List.objects.all()
+    context = {"lists": lists}
+    return render(request, 'createList/profile.html', context)
 
 def list_edit(request, slug):
     return render(request, 'createList/home.html')
+
+def list_card_test(request):
+    return render(request, 'createList/list-card-prototype.html')

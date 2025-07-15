@@ -20,7 +20,7 @@
 {% endblock %}
 
 {% block main %}
-	<main class="primary-container">
+	<main class="main-container">
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <label style="display: none;" for="{{profile_form.username.id_for_label}}">List Title</label>
