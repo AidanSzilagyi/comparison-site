@@ -5,6 +5,7 @@ html {
     background-color: rgb(0, 0, 56);
 }
 .main-container {
+    margin: 8px 15px 0px 15px;
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -31,6 +32,7 @@ html {
 }
 .section-heading {
     font-size: 24px;
+    margin-bottom: 5px;
 }
 .list-of-containers {
     display: flex;
@@ -45,7 +47,7 @@ html {
             <img class="profile-image" src="../../../static/images/test-vert.png">
         </div>
         <div class="profile-name">
-            WWW lll wwwww LLLLL
+            {{profile.username}}
         </div>
     </div>
     <div class="recently-compared-lists">
@@ -53,7 +55,13 @@ html {
             Recently Compared Lists
         </div>
         <div class="list-of-containers">
-            
+
+            {% for list in recent_lists %}
+                {% include "./list-card.html" with list=list %}
+            {% empty %}
+                <div><i>No lists created</i></div>
+            {% endfor %}
+
         </div>
     </div>
     <div class="recently-compared-lists">
@@ -61,8 +69,10 @@ html {
             Created Lists
         </div>
         <div class="list-of-containers">
-            {% for list in lists %}
+            {% for list in user_lists %}
                 {% include "./list-card.html" with list=list %}
+            {% empty %}
+                <div><i>No lists created</i></div>
             {% endfor %}
         </div>
     </div>

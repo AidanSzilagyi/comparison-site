@@ -12,12 +12,14 @@ import json
 import uuid
 
 
-# Create your views here.
-def homepage_redirect(request):
+def home(request):
     return render(request, 'createList/home.html')
 
-def homepage(request):
-    return render(request, 'createList/home.html')
+def explore(request):
+    return redirect('home')
+
+def recent(request):
+    return redirect('home')
 
 
 # return render(request, 'mainmenu/profile.html', context)
@@ -118,7 +120,6 @@ def get_comparisons(request, slug):
         if ids:
             uuids = [uuid.UUID(id) for id in ids if id]
             sent_matchups = Matchup.objects.filter(id__in=uuids)
-        print(sent_matchups)
 
     Matchup.objects.filter(id__in=ids)
     comparisons = generate_matchup_json(request.user, list, sent_matchups)
@@ -146,9 +147,20 @@ def list_info(request, slug):
     }
     return render(request, 'createList/list-info.html', context)
 
+@login_required
+def my_profile(request):
+    return redirect('home')
+
 def view_profile(request, slug):
-    lists = List.objects.all()
-    context = {"lists": lists}
+    profile = Profile.objects.get(slug=slug)
+    if not list:
+        not_found(request, "That user does not exist.")
+    lists = List.objects.filter(user=profile.user)
+    context = {
+        "profile": profile,
+        "recent_lists": None,
+        "user_lists": lists,
+    }
     return render(request, 'createList/profile.html', context)
 
 def list_edit(request, slug):
@@ -156,3 +168,8 @@ def list_edit(request, slug):
 
 def list_card_test(request):
     return render(request, 'createList/list-card-prototype.html')
+
+def not_found(request, reason):
+    if not reason:
+        reason = "We could not find that page."
+    return JsonResponse({'error': reason}, status=404)

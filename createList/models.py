@@ -9,6 +9,11 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     username = models.CharField(max_length=20, blank=True, null=True) # REMOVE LATER
     image = models.ImageField(upload_to='media/profile_images', blank=True, null=True)
+    slug = models.SlugField(unique=True)
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = generate_profile_slug(self)
+        super().save(*args, **kwargs)
 
 class List(models.Model):
     id = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
@@ -91,11 +96,21 @@ class Meta:
         )
     ]
 
+def generate_profile_slug(profile):
+    slug = slugify(profile.username)
+    counter = 1
+    while Profile.objects.filter(slug=slug).exists():
+        slug = slugify(profile.username + "-" + counter)
+        counter += 1
+    return slug
 
 def generate_list_slug(list):
     slug = slugify(list.name)
     if List.objects.filter(slug=slug).exists():
-        slug = slugify(list.name + list.user.username)
+        slug = slugify(list.name + "-" + list.user.username)
+    counter = 1
+    while List.objects.filter(slug=slug).exists():
+        slug = slugify(list.name + "-" + list.user.username + "-" + counter)
     return slug
         
     

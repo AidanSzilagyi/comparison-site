@@ -34,38 +34,82 @@ a:link, a:visited, a:hover, a:active {
     text-decoration: none;
 }
 
+.user-image {
+    object-fit: contain;
+    object-position: center;
+}
+
 
 /* Header Styling */
-.website-header {
+.website-header-background {
     height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: left;
-    gap: 20px;
     color: var(--highlight);
     background-color: var(--tertiary);
+    font-size: 24px;
+    display: flex;
+    justify-content: center;
+    text-wrap: nowrap;
 }
-.website-logo-image {
-    height: 34px;
-    margin-top: 4px;
-    margin-left: 8px;
+.website-header {
+    width: min(800px, 100vb);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
-
-.create-button-container {
+.website-header-button {
+    padding: 0px 10px;
     display: flex;
     align-items: center;
     justify-content: left;
     height: 50px;
     transition: background-color 0.2s;
-    padding-right: 10px;
 }
-.create-button-container:hover {
+.website-header-button:hover {
     background-color: var(--secondary);
     cursor: pointer;
 }
-.create-plus-image {
-    height: 26px;
+
+.left-side-header {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+}
+.right-side-header {
+    display: flex;
+    align-items: center;
+    justify-content: right;
+}
+
+.website-logo-image {
+    height: 34px;
+    margin-top: 4px;
+}
+
+.create-button-container {
+
+}
+.create-button-container:hover {
+
+}
+.create-icon {
+    height: 20px;
+    margin-right: 5px;
+}
+.explore-icon {
+    height: 20px;
+    margin-right: 5px;
+}
+.recent-icon {
+    height: 20px;
+    margin-right: 5px;
 }
 .create-plus-word {
     
+}
+.profile-image-container {
+    border-radius: 15px;
+    height: 30px;
+}
+.profile-image {
+    height: 30px;
 }

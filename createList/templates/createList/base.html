@@ -14,23 +14,54 @@
         {% block extra_head %}{% endblock %}
     </head>
     <body>
-        <header class="website-header">
-			<div class="website-logo-container">
-				<img class="website-logo-image" src="{% static 'images/arrow-logo.png' %}">
-			</div>
-			<div class="website-title">
-				Head2Head
-			</div>
-			<a class="create-button-container" href="{% url 'create_list' %}">
-				<img class="create-plus-image" src="{% static 'images/plus-icon.png' %}">
-				<div class="create-plus-word">Create</div>
-            </a>
-			<div class="rank-button-container">
-				Rank
-			</div>
-			<div class="your-lists-button-container">
-				Your Lists
-			</div>
+        <header class="website-header-background">
+            <div class="website-header">
+                <div class="left-side-header">
+                    <a href="{% url 'home' %}">
+                        <div class="website-logo-container website-header-button">
+                            <img class="website-logo-image" src="{% static 'images/arrow-logo.png' %}">
+                        </div>
+                    </a>
+                    <a href="{% url 'create_list' %}">
+                        <div class="create-button-container website-header-button">
+                            <img class="create-icon" src="{% static 'images/plus-icon.png' %}">
+                            <div class="create-plus-word">Create</div>
+                        </div>
+                    </a>
+                    <a href="{% url 'explore' %}">
+                        <div class="website-header-button">
+                            <img class="explore-icon" src="{% static 'images/explore-icon.png' %}">
+                            <div>Explore</div>
+                        </div>
+                    </a>
+                    <a href="{% url 'recent' %}">
+                        <div class=" website-header-button">
+                            <img class="recent-icon" src="{% static 'images/recent-icon.png' %}">
+                            <div>Recent</div>
+                        </div>
+                    </a>
+                </div>
+                <div class="right-side-header">
+                    {% if active_profile %}
+                        <a href="{% url 'my_profile' %}">
+                            <div class="profile-button-container website-header-button">
+                                <div class="profile-username">
+                                    {{active_profile.username}}
+                                </div>
+                                <div class="profile-image-container">
+                                    <img class="profile-image user-image" src="{{active_profile.image}}">
+                                </div>
+                            </div>
+                        <a>
+                    {% else %}
+                    <a href="{% url 'create_profile' %}">
+                        <div class="login-button website-header-button">
+                            Log In
+                        </div>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
 		</header>
         <div class="primary-container">
             {% block main %}{% endblock %}

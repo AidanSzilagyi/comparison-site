@@ -19,9 +19,6 @@ class SaveURLBeforeAuthMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        print("Saving URL Check")
-        print("request method = GET:", request.method == 'GET')
-        print("User autheticated:", request.user.is_authenticated)
         if request.method == 'GET' and not request.user.is_authenticated:
             path = request.get_full_path()
             if not path.startswith(('/auth/', '/check-profile/', '/set-username/')):
