@@ -43,7 +43,7 @@ def profile_check(request):
         return redirect('create_profile')
     return redirect(next_url)
 
-
+@login_required
 def create_profile(request):
     if request.method == 'GET':
         profile_form = ProfileForm()

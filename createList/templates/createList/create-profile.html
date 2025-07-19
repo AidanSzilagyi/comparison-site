@@ -2,6 +2,22 @@
 {% load static %}
 {% block extra_head %}  
     <style>
+        .main-container {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .form-box {
+            border-radius: 15px;
+            padding: 15px 15px;
+            background-color: var(--secondary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 50px;
+        }
         .profile-name-input {
             margin: 20px;
             color: var(--highlight);
@@ -12,9 +28,34 @@
         }
 
         .profile-form-submit {
-            margin-left: 20px;
             color: var(--hightlight);
-            background-color: var(--secondary);
+            background-color: var(--important);
+        }
+
+        .profile-image-container {
+            position: relative;
+            height: 160px;
+            width: 160px;
+            clip-path: circle(50% at 50% 50%);
+        }
+        .profile-image {
+            height: 100%;
+            width: 100%;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .profile-image-tooltip {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            font-size: 12px;
+            padding: 0 0 10px 0;
+            border-bottom-left-radius: 50%;
+            border-bottom-right-radius: 80px;
+            pointer-events: none;
         }
     </style>
 {% endblock %}
@@ -22,14 +63,28 @@
 {% block main %}
 	<main class="main-container">
         <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <label style="display: none;" for="{{profile_form.username.id_for_label}}">List Title</label>
-                <input class="profile-name-input" 
-                    id="{{profile_form.username.id_for_label}}" 
-                    name="{{profile_form.username.name}}" 
-                    value="{{profile_form.username.value|default_if_none:''}}"
-                    type="text" placeholder="Username">
-            <input class="profile-form-submit" type="submit">
+            <div class="form-box"> 
+                {% csrf_token %}
+                
+                <label class="profile-image-container" for="{{profile_form.image.id_for_label}}">
+                    <img class="profile-image user-image" src="../../../static/images/test-vert.png">
+                    <div class="profile-image-tooltip">Change Image</div>
+                </label>  
+
+                <input style="display: none;" 
+                        id="{{profile_form.image.id_for_label}}"
+                        name="{{profile_form.image.name}}"
+                        value="{{profile_form.image.value}}" 
+                        type="file">
+
+                <label style="display: none;" for="{{profile_form.username.id_for_label}}">List Title</label>
+                    <input class="profile-name-input" 
+                        id="{{profile_form.username.id_for_label}}" 
+                        name="{{profile_form.username.name}}" 
+                        value="{{profile_form.username.value|default_if_none:''}}"
+                        type="text" placeholder="Username">
+                <input class="profile-form-submit" type="submit">
+            </div>
         </form>
 	</main>
 {% endblock %}

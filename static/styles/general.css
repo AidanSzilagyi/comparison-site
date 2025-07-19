@@ -27,6 +27,7 @@ html, body {
     align-items: center;
     flex-wrap: wrap;
     width: 100%;
+    height: calc(100% - 50px);
 }
 
 a:link, a:visited, a:hover, a:active {
@@ -35,7 +36,7 @@ a:link, a:visited, a:hover, a:active {
 }
 
 .user-image {
-    object-fit: contain;
+    object-fit: cover;
     object-position: center;
 }
 
