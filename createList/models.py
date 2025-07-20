@@ -8,7 +8,7 @@ import uuid
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     username = models.CharField(max_length=20, blank=True, null=True) # REMOVE LATER
-    image = models.ImageField(upload_to='media/profile_images', blank=True, null=True)
+    image = models.ImageField(upload_to='profile_images/', blank=True, null=True)
     slug = models.SlugField(unique=True)
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -18,7 +18,7 @@ class Profile(models.Model):
 class List(models.Model):
     id = models.UUIDField(primary_key = True, default = uuid.uuid4, editable = False)
     name = models.CharField(max_length=100, blank=True, null=True) #Note uniqueness
-    image = models.ImageField(upload_to='media/list_images', blank=True, null=True)
+    image = models.ImageField(upload_to='list_images/', blank=True, null=True)
     description = models.CharField(max_length=1000, blank=True, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True) # REMOVE LATER
     num_things = models.IntegerField(default=0)
@@ -53,7 +53,7 @@ class List(models.Model):
 
 class Thing(models.Model):
     name = models.CharField(max_length=1000, blank=True, null=True)
-    image = models.ImageField(upload_to='media/thing_images', blank=True, null=True)
+    image = models.ImageField(upload_to='thing_images/', blank=True, null=True)
     list = models.ForeignKey(List, on_delete=models.CASCADE)
     date_created = models.DateTimeField(auto_now_add=True)
     

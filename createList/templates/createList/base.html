@@ -19,43 +19,43 @@
                 <div class="left-side-header">
                     <a href="{% url 'home' %}">
                         <div class="website-logo-container website-header-button">
-                            <img class="website-logo-image" src="{% static 'images/arrow-logo.png' %}">
+                            <img class="header-logo-image user-image" src="{% static 'images/arrow-logo.png' %}">
                         </div>
                     </a>
                     <a href="{% url 'create_list' %}">
-                        <div class="create-button-container website-header-button">
-                            <img class="create-icon" src="{% static 'images/plus-icon.png' %}">
-                            <div class="create-plus-word">Create</div>
+                        <div class="header-create-button-container website-header-button">
+                            <img class="header-create-icon" src="{% static 'images/plus-icon.png' %}">
+                            <div class="header-create-plus-word">Create</div>
                         </div>
                     </a>
                     <a href="{% url 'explore' %}">
                         <div class="website-header-button">
-                            <img class="explore-icon" src="{% static 'images/explore-icon.png' %}">
+                            <img class="header-explore-icon" src="{% static 'images/explore-icon.png' %}">
                             <div>Explore</div>
                         </div>
                     </a>
                     <a href="{% url 'recent' %}">
-                        <div class=" website-header-button">
-                            <img class="recent-icon" src="{% static 'images/recent-icon.png' %}">
+                        <div class="website-header-button">
+                            <img class="header-recent-icon" src="{% static 'images/recent-icon.png' %}">
                             <div>Recent</div>
                         </div>
                     </a>
-                </div>
+                </div> 
                 <div class="right-side-header">
                     {% if active_profile %}
                         <a href="{% url 'my_profile' %}">
-                            <div class="profile-button-container website-header-button">
-                                <div class="profile-username">
+                            <div class="header-profile-button-container website-header-button">
+                                <div class="header-profile-username">
                                     {{active_profile.username}}
                                 </div>
-                                <div class="profile-image-container">
-                                    <img class="profile-image user-image" src="{{active_profile.image}}">
+                                <div class="header-profile-image-container">
+                                    <img class="header-profile-image user-image" src="{{active_profile.image.url}}">
                                 </div>
                             </div>
                         <a>
                     {% else %}
                     <a href="{% url 'start-login' %}">
-                        <div class="login-button website-header-button">
+                        <div class="header-login-button website-header-button">
                             Log In
                         </div>
                     </a>

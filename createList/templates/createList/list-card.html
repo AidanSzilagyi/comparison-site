@@ -122,7 +122,7 @@
         <div class="text-info">
             <div class="list-author">
                 {% if list.user.image %}
-                    <img class="author-pfp" src="{{list.user.image}}">
+                    <img class="author-pfp" src="{{list.user.image.url}}">
                 {% endif %}
                 <div class="author-name">{{list.user.username}}</div>
             </div>
@@ -136,7 +136,7 @@
         </div>
         <div class="image-container">
             {% if list.image %}
-                <img class="list-image" src="{{list.image}}">
+                <img class="list-image" src="{{list.image.url}}">
             {% endif %}
         </div>
     </div>

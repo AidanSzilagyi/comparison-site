@@ -79,38 +79,46 @@ a:link, a:visited, a:hover, a:active {
     display: flex;
     align-items: center;
     justify-content: right;
+    gap: 10px;
 }
 
-.website-logo-image {
+.header-logo-image {
     height: 34px;
     margin-top: 4px;
 }
 
-.create-button-container {
+.header-create-button-container {
 
 }
-.create-button-container:hover {
+.header-create-button-container:hover {
 
 }
-.create-icon {
+.header-create-icon {
     height: 20px;
     margin-right: 5px;
 }
-.explore-icon {
+.header-explore-icon {
     height: 20px;
     margin-right: 5px;
 }
-.recent-icon {
+.header-recent-icon {
     height: 20px;
     margin-right: 5px;
 }
-.create-plus-word {
+.header-create-plus-word {
     
 }
-.profile-image-container {
-    border-radius: 15px;
-    height: 30px;
+.header-profile-button-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
-.profile-image {
-    height: 30px;
+.header-profile-image-container {
+    height: 34px;
+}
+
+.header-profile-image {
+    height: 34px;
+    width: 34px;
+    border-radius: 17px;
 }

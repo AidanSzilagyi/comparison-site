@@ -21,8 +21,6 @@ html {
     height: 100px;
     width: 100px;
     border-radius: 50px;
-    object-fit: cover;
-    object-position: center;
 }
 .profile-name {
     font-size: 40px;
@@ -44,14 +42,14 @@ html {
 <main class="main-container">
     <div class="profile-heading">
         <div class="profile-image-container">
-            <img class="profile-image" src="../../../static/images/test-vert.png">
+            <img class="profile-image user-image" src="{{profile.image.url}}">
         </div>
         <div class="profile-name">
             {{profile.username}}
         </div>
     </div>
-    <a href="{% url 'create_profile' %}">
-        <div>
+    <a href="{% url 'edit_profile' %}">
+        <div class="header-edit-profile-button">
             Edit
         </div>
     </a>

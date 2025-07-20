@@ -63,11 +63,9 @@ def profile_check(request):
 @login_required
 def create_profile(request):
     profile = request.user.profile
-
     if request.method == 'POST':
         profile_form = ProfileForm(request.POST, request.FILES, instance=profile)
         if profile_form.is_valid():
-            print("valid")
             profile_form.save()
             return redirect(request.session.pop('next_url', '/'))
     else:
@@ -75,6 +73,9 @@ def create_profile(request):
 
     return render(request, 'createList/create-profile.html', {'profile_form': profile_form})
 
+@login_required
+def edit_profile(request):
+    return create_profile(request)
 
 @login_required
 def create_list(request):
