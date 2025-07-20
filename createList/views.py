@@ -8,6 +8,7 @@ from django.views.decorators.http import require_GET
 from .rank_systems import generate_matchup_json, process_matchup_result
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
+from django.utils.http import urlencode
 import json
 import uuid
 import random
@@ -38,13 +39,13 @@ def logout_button(request):
 @login_required
 def profile_check(request):
     user = request.user
-    next_url = request.session.pop('next_url', '/')
+    next_url = request.GET.get('next')
+    #next_url = request.session.pop('next_url', '/')
     try:
         profile = user.profile
         if not profile.username:
-            raise Profile.DoesNotExist  # treat as incomplete
+            raise Profile.DoesNotExist
     except Profile.DoesNotExist:
-        # Pull from Google extra_data
         social = user.social_auth.get(provider='google-oauth2')
         extra = social.extra_data
 
@@ -57,6 +58,10 @@ def profile_check(request):
             username=username,
             image=picture_url
         )
+        
+        if next_url:
+            query = urlencode({'next': next_url})
+            return redirect(f'/create-profile/?{query}')
         return redirect('create_profile')
     return redirect(next_url)
 
@@ -67,7 +72,10 @@ def create_profile(request):
         profile_form = ProfileForm(request.POST, request.FILES, instance=profile)
         if profile_form.is_valid():
             profile_form.save()
-            return redirect(request.session.pop('next_url', '/'))
+            next_url = request.GET.get('next')
+            if next_url:
+                return redirect(next_url)
+            return redirect('my_profile')
     else:
         profile_form = ProfileForm(instance=profile)
 

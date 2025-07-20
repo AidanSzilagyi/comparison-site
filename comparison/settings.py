@@ -63,7 +63,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'createList.middleware.SaveURLBeforeAuthMiddleware',
+    #'createList.middleware.SaveURLBeforeAuthMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -148,8 +148,8 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get('OAUTH_CLIENT_ID')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get('OAUTH_CLIENT_SECRET')
 
 LOGIN_URL = '/auth/login/google-oauth2/'
-LOGIN_REDIRECT_URL = '/profile-check/'
-LOGOUT_REDIRECT_URL = '/'
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/explore/'
+SOCIAL_AUTH_NEW_USER_REDIRECT_URL = '/profile-check/'
 
 AUTHENTICATION_BACKENDS = [
     'social_core.backends.google.GoogleOAuth2',
@@ -204,8 +204,8 @@ STORAGES = {
     },
     "staticfiles": {
         "BACKEND": (
-            "django.contrib.staticfiles.storage.StaticFilesStorage"
-            if DEBUG else
+            #"django.contrib.staticfiles.storage.StaticFilesStorage"
+            #if DEBUG else
             "storages.backends.s3boto3.S3StaticStorage"
         )
     }

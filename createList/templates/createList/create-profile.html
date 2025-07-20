@@ -67,7 +67,7 @@
                 {% csrf_token %}
                 
                 <label class="profile-image-container" for="{{profile_form.image.id_for_label}}">
-                    <img class="profile-image user-image" src="{{profile_form.image.value}}">
+                    <img class="profile-image user-image" src="{{profile_form.image.value.url}}">
                     <div class="profile-image-tooltip">Change Image</div>
                 </label>  
 
