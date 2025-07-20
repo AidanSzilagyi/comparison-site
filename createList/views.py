@@ -51,7 +51,7 @@ def profile_check(request):
 
         username =  user.first_name or 'user' + str(random.randint(1, 99999999))
         pfp_colors = ["blue", "cyan", "green", "purple", "red", "yellow"]
-        picture_url = "/static/images/default-pfp/" + random.choice(pfp_colors) + ".png"
+        picture_url = "media/profile_images/default-pfp/" + random.choice(pfp_colors) + ".png"
 
         profile = Profile.objects.create(
             user=user,
