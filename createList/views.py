@@ -10,6 +10,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 import json
 import uuid
+import random
+
 
 
 def home(request):
@@ -28,31 +30,51 @@ def start_login(request):
     logout(request)
     return redirect('social:begin', backend='google-oauth2')
 
-def profile_check(request):
-    next_url = request.session.get('next_url', '/')
-    print("getattr:", getattr(request.user, 'profile', "No Profile"))
+@login_required
+def logout_button(request):
+    logout(request)
+    return redirect('home')
 
-    if not getattr(request.user, 'profile', None):
-        Profile.objects.create(user=request.user)
-        #next_url = request.GET.get('next') or '/'
-        #request.session['next_url'] = next_url
-        return redirect('create_profile')
-    elif not request.user.profile.username:
-        #next_url = request.GET.get('next') or '/'
-        #request.session['next_url'] = next_url
+@login_required
+def profile_check(request):
+    user = request.user
+    next_url = request.session.pop('next_url', '/')
+    try:
+        profile = user.profile
+        if not profile.username:
+            raise Profile.DoesNotExist  # treat as incomplete
+    except Profile.DoesNotExist:
+        # Pull from Google extra_data
+        social = user.social_auth.get(provider='google-oauth2')
+        extra = social.extra_data
+
+        username =  user.first_name or 'user' + str(random.randint(1, 99999999))
+        pfp_colors = ["blue", "cyan", "green", "purple", "red", "yellow"]
+        picture_url = "/static/images/default-pfp/" + random.choice(pfp_colors) + ".png"
+
+        profile = Profile.objects.create(
+            user=user,
+            username=username,
+            image=picture_url
+        )
         return redirect('create_profile')
     return redirect(next_url)
 
 @login_required
 def create_profile(request):
-    if request.method == 'GET':
-        profile_form = ProfileForm()
+    profile = request.user.profile
+
     if request.method == 'POST':
-        profile_form = ProfileForm(request.POST, instance=request.user.profile)
+        profile_form = ProfileForm(request.POST, request.FILES, instance=profile)
         if profile_form.is_valid():
-            profile = profile_form.save()
+            print("valid")
+            profile_form.save()
             return redirect(request.session.pop('next_url', '/'))
+    else:
+        profile_form = ProfileForm(instance=profile)
+
     return render(request, 'createList/create-profile.html', {'profile_form': profile_form})
+
 
 @login_required
 def create_list(request):
@@ -149,11 +171,18 @@ def list_info(request, slug):
 
 @login_required
 def my_profile(request):
-    return redirect('home')
+    lists = List.objects.filter(user=request.user)
+    context = {
+        "profile": request.user.profile,
+        "recent_lists": None,
+        "user_lists": lists,
+        "owner": True,
+    }
+    return render(request, 'createList/profile.html', context)
 
 def view_profile(request, slug):
     profile = Profile.objects.get(slug=slug)
-    if not list:
+    if not profile:
         not_found(request, "That user does not exist.")
     lists = List.objects.filter(user=profile.user)
     context = {

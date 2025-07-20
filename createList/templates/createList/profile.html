@@ -50,6 +50,11 @@ html {
             {{profile.username}}
         </div>
     </div>
+    <a href="{% url 'create_profile' %}">
+        <div>
+            Edit
+        </div>
+    </a>
     <div class="recently-compared-lists">
         <div class="section-heading">
             Recently Compared Lists
@@ -59,7 +64,7 @@ html {
             {% for list in recent_lists %}
                 {% include "./list-card.html" with list=list %}
             {% empty %}
-                <div><i>No lists created</i></div>
+                <div><i>No lists compared</i></div>
             {% endfor %}
 
         </div>
