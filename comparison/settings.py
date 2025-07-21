@@ -204,8 +204,8 @@ STORAGES = {
     },
     "staticfiles": {
         "BACKEND": (
-            #"django.contrib.staticfiles.storage.StaticFilesStorage"
-            #if DEBUG else
+            "django.contrib.staticfiles.storage.StaticFilesStorage"
+            if DEBUG else
             "storages.backends.s3boto3.S3StaticStorage"
         )
     }

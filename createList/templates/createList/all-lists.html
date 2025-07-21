@@ -18,7 +18,6 @@
             flex-wrap: wrap;
             gap: var(--grid-gap);
             justify-content: center;
-
         }
         .list-preview-box {
             flex: 1 1 var(--preview-width-min);
@@ -52,7 +51,7 @@
             flex-direction: column;
             justify-content: space-between;
             gap: 4px;
-            width: 50%
+            width: 50%;
         }
         .list-title {
             font-weight: 500;
@@ -73,25 +72,6 @@
             max-height: 100%;
             border-radius: 8px;
         }
-        .info-rank-buttons {
-            display: flex;
-            visibility: hidden;
-            gap: 5px;
-        }
-        .info-button, .rank-button {
-            width: 100%;
-            border-radius: 8px;
-            background-color: var(--tertiary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 40px;
-        }
-        /* Buttons appear on hover */
-        list-preview-box:hover .info-rank-buttons, .info-rank-buttons:hover {
-            visibility: visible;
-        }
-
     </style>
 {% endblock %}
 {% block main %}
@@ -141,15 +121,6 @@
                                 1,071 Things
                             </div>
                         </div>
-                        <!--
-                        <div class="info-rank-buttons">
-                            <div class="info-button">
-                                Info
-                            </div>
-                            <div class="rank-button">
-                                Rank
-                            </div>
-                        </div>-->
                     </div>
                     <div class="image-container">
                         <img class="list-image" src="{% static 'images/test-vert.png' %}">

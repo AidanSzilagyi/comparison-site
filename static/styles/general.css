@@ -52,7 +52,7 @@ a:link, a:visited, a:hover, a:active {
     text-wrap: nowrap;
 }
 .website-header {
-    width: min(800px, 100vb);
+    width: min(1100px, 100%);
     display: flex;
     align-items: center;
     justify-content: space-between;

@@ -9,7 +9,22 @@ html {
     display: flex;
     flex-direction: column;
     gap: 10px;
+
+     --preview-width-min: 300px; /* 260 - 300 */
+    --preview-width-max: 350px;
+    --preview-height: 200px;
+    --grid-gap: 10px;
 }
+.list-grid {
+    display: grid;
+    gap: 15px;
+    width: calc(100vw - 30px);
+    grid-template-columns: repeat(auto-fit, 366px);
+    max-width: calc(4 * 366px + 3 * 15px);
+    justify-items: start;
+    grid-auto-flow: row;
+}
+
 .profile-heading {
     display: flex;
     align-items: end;
@@ -57,21 +72,19 @@ html {
         <div class="section-heading">
             Recently Compared Lists
         </div>
-        <div class="list-of-containers">
-
+        <div class="list-grid">
             {% for list in recent_lists %}
                 {% include "./list-card.html" with list=list %}
             {% empty %}
                 <div><i>No lists compared</i></div>
             {% endfor %}
-
         </div>
     </div>
     <div class="recently-compared-lists">
         <div class="section-heading">
             Created Lists
         </div>
-        <div class="list-of-containers">
+        <div class="list-grid">
             {% for list in user_lists %}
                 {% include "./list-card.html" with list=list %}
             {% empty %}

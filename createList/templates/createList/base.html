@@ -52,13 +52,13 @@
                                     <img class="header-profile-image user-image" src="{{active_profile.image.url}}">
                                 </div>
                             </div>
-                        <a>
+                        </a>
                     {% else %}
-                    <a href="{% url 'start-login' %}">
-                        <div class="header-login-button website-header-button">
-                            Log In
-                        </div>
-                    </a>
+                        <a href="{% url 'start-login' %}">
+                            <div class="header-login-button website-header-button">
+                                Log In
+                            </div>
+                        </a>
                     {% endif %}
                 </div>
             </div>
