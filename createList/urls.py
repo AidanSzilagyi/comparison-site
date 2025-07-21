@@ -16,9 +16,9 @@ urlpatterns = [
     path("all-lists/", views.all_lists, name="all_lists"),
     path("create-profile/", views.create_profile, name="create_profile"),
     path("profile-check/", views.profile_check, name="profile_check"),
-    path("profile", views.my_profile, name="my_profile"),
+    path("profile/", views.my_profile, name="my_profile"),
     path("profile/edit", views.edit_profile, name="edit_profile"),
     path("user/<slug:slug>/", views.view_profile, name="view_profile"),
-    path("test/card", views.list_card_test, name="list_card_test"),
-    path("not-found", views.not_found, name="not_found"),
+    path("test/card/", views.list_card_test, name="list_card_test"),
+    path("not-found/", views.not_found, name="not_found"),
 ]

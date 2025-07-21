@@ -44,6 +44,8 @@
         flex-direction: column;
         justify-content: space-between;
         gap: 4px;
+
+        position: relative;
     }
     .list-title {
         font-weight: 500;
@@ -66,6 +68,9 @@
         display: flex;
         align-items: center;
         gap: 6px;
+
+        position: relative;
+        z-index: 2;
     }
     .author-pfp {
         height: 20px;
@@ -110,35 +115,44 @@
     .num-comparisons {
         display: inline-block;
     }
+    .card-overlay-link{
+        position: absolute;
+        width: 366px;
+        height: 246px;
+        border-radius: 8px;
+        z-index: 1;
+    }
 </style>
-
-<div class="list-preview-box"> 
-    <div class="list-title">
-        {{list.name}}
-    </div>
-    <div class="non-title-info">
-        <div class="text-info">
-            <div class="list-author">
-                {% if list.user.image %}
-                    <img class="author-pfp" src="{{list.user.image.url}}">
-                {% endif %}
-                <div class="author-name">{{list.user.username}}</div>
+<div class="list-card-container">
+    <a class="card-overlay-link" href="{% url 'list_info' list.slug %}"></a>
+    <div class="list-preview-box"> 
+        <div class="list-title">
+            {{list.name}}
+        </div>
+        <div class="non-title-info">
+            <div class="text-info">
+                <a class="list-author" href="{% url 'view_profile' list.user.profile.slug %}" onclick="event.stopPropagation()">
+                    {% if list.user.image %}
+                        <img class="author-pfp" src="{{list.user.image.url}}">
+                    {% endif %}
+                    <div class="author-name">{{list.user.username}}</div>
+                </a>
+                <div class="list-description">
+                    {% if list.description %}
+                        {{list.description}}
+                    {% else %}
+                        <i>No description provided</i>
+                    {% endif %}
+                </div>
             </div>
-            <div class="list-description">
-                {% if list.description %}
-                    {{list.description}}
-                {% else %}
-                    <i>No description provided</i>
+            <div class="image-container">
+                {% if list.image %}
+                    <img class="list-image" src="{{list.image.url}}">
                 {% endif %}
             </div>
         </div>
-        <div class="image-container">
-            {% if list.image %}
-                <img class="list-image" src="{{list.image.url}}">
-            {% endif %}
+        <div class="bottom-items">
+            <div class="num-things">{{list.num_things}} Things</div> <div class="num-comparisons"> {{list.comparisons_made}}/{{list.comparisons_needed}} Comparisons </div>
         </div>
-    </div>
-    <div class="bottom-items">
-        <div class="num-things">{{list.num_things}} Things</div> <div class="num-comparisons"> {{list.comparisons_made}}/{{list.comparisons_needed}} Comparisons </div>
     </div>
 </div>
