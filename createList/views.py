@@ -32,7 +32,7 @@ def start_login(request):
     return redirect('social:begin', backend='google-oauth2')
 
 @login_required
-def logout_button(request):
+def start_logout(request):
     logout(request)
     return redirect('home')
 

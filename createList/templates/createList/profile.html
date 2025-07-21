@@ -5,22 +5,19 @@ html {
     background-color: rgb(0, 0, 56);
 }
 .main-container {
-    margin: 8px 15px 0px 15px;
+    margin: 15px 15px 0px 15px;
     display: flex;
     flex-direction: column;
     gap: 10px;
 
-     --preview-width-min: 300px; /* 260 - 300 */
-    --preview-width-max: 350px;
-    --preview-height: 200px;
-    --grid-gap: 10px;
+    --list-card-width: 366px;
+    --grid-gap: 15px;
 }
 .list-grid {
     display: grid;
     gap: 15px;
-    width: calc(100vw - 30px);
     grid-template-columns: repeat(auto-fit, 366px);
-    max-width: calc(4 * 366px + 3 * 15px);
+    max-width: min(calc(100vw - 30px), calc(4 * 366px + 3 * 15px));
     justify-items: start;
     grid-auto-flow: row;
 }
@@ -40,6 +37,17 @@ html {
 .profile-name {
     font-size: 40px;
 }
+.profile-buttons-container {
+    display: flex;
+    gap: 15px;
+}
+.profile-button {
+    border-radius: 5px;
+    background-color: var(--secondary);
+    padding: 5px 5px;
+    font-size: 20px;
+}
+
 .recently-compared-lists {
 
 }
@@ -63,11 +71,18 @@ html {
             {{profile.username}}
         </div>
     </div>
-    <a href="{% url 'edit_profile' %}">
-        <div class="header-edit-profile-button">
-            Edit
-        </div>
-    </a>
+    <div class="profile-buttons-container">
+        <a href="{% url 'edit_profile' %}">
+            <div class="profile-button">
+                Edit
+            </div>
+        </a>
+        <a href="{% url 'start_logout' %}">
+            <div class="profile-button">
+                Logout
+            </div>
+        </a>
+    </div>
     <div class="recently-compared-lists">
         <div class="section-heading">
             Recently Compared Lists

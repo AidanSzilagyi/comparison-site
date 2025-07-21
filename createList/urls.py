@@ -12,6 +12,7 @@ urlpatterns = [
     path("<slug:slug>/complete-comparison/", views.complete_comparison, name="complete_comparison"),
     path("<slug:slug>/edit/", views.list_edit, name="list_edit"),
     path("start-login/", views.start_login, name="start-login"),
+    path("start-logout/", views.start_logout, name="start_logout"),
     path("all-lists/", views.all_lists, name="all_lists"),
     path("create-profile/", views.create_profile, name="create_profile"),
     path("profile-check/", views.profile_check, name="profile_check"),
