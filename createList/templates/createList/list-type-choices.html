@@ -1,4 +1,7 @@
+{% extends "./base.html" %}
+{% block extra_head %}
 <style>
+    
     html {
         height: 100%;
         width: 100%;
@@ -44,11 +47,54 @@
         text-wrap: balance;
         font-size: 18px;
     }
+    .below-option-box{
+        display: flex;
+        justify-content: center;
+    }
+    .csv-upload-form {
+        display: none;
+    }
+    .upload-form-container{
+        border-radius: 8px;
+        background-color: var(--secondary);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        width: 250px;
+    }
+    .file-input {
+        width: 100px;
+        border-radius: 5px;
+        color: var(--highlight);
+        margin-left: 50px;
+        background-color: var(--tertiary);
+    }
+    .file-submit {
+        width: 100px;
+        border-radius: 5px;
+        color: var(--highlight);
+        background-color: var(--tertiary);
+        border-style: none;
+    }
 </style>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("js-import-file").addEventListener("click", () => {
+            if (document.getElementById("js-csv-reveal").style.display === "none") {
+                document.getElementById("js-csv-reveal").style.display = 'flex';
+            } else {
+                document.getElementById("js-csv-reveal").style.display = 'none';
+            }
+        });
+    });
+</script>
+{% endblock %}
+{% block main %}
 <main class="main-container">
     <div class="body-heading">How do you want to create your list?</div>
     <div class="all-option-boxes">
-        <div class="single-option-box">
+        <a class="single-option-box" href="{% url 'manual_create' %}">
             <div class="option-name">
                 Manually Create
             </div>
@@ -58,8 +104,8 @@
             <div class="option-description">
                 Create a list from scratch
             </div>
-        </div>
-        <div class="single-option-box">
+        </a>
+        <div class="single-option-box" id="js-import-file">
             <div class="option-name">
                 Import File
             </div>
@@ -67,10 +113,10 @@
                 <img class="option-image" src="../../../static/images/L-Square.png">
             </div>
             <div class="option-description">
-                Upload a .csv or .txt file to generate the text automatically
+                Upload a .txt file to generate the text automatically
             </div>
         </div>
-        <div class="single-option-box">
+        <a class="single-option-box" href="{% url 'images_only_create' %}">
             <div class="option-name">
                 Images Only
             </div>
@@ -80,6 +126,17 @@
             <div class="option-description">
                 Create a list that uses images and no text
             </div>
-        </div>
+        </a>
+    </div>
+    <div class="below-option-box">
+        <form method="post" enctype="multipart/form-data" class="csv-upload-form" id="js-csv-reveal">
+            {% csrf_token %}
+            <div class="upload-form-container">
+                <div>Upload .txt File</div>
+                <input type="file" name="file-input" class="Upload">
+                <button type="submit" class="file-submit">Submit</button>
+            </div>
+        </form>
     </div>
 </main>
+{% endblock %}

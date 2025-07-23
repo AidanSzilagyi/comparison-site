@@ -12,8 +12,10 @@ from django.utils.http import urlencode
 import json
 import uuid
 import random
+import csv
+from io import TextIOWrapper
 
-
+NUM_STARTING_FORMS = 10
 
 def home(request):
     return render(request, 'createList/home.html')
@@ -86,7 +88,30 @@ def edit_profile(request):
     return create_profile(request)
 
 @login_required
-def create_list(request):
+def list_type_choices(request):
+    if request.method == 'POST' and 'file-input' in request.FILES:
+        input_file = request.FILES['file-input']
+        file_wrapper = TextIOWrapper(input_file.file, encoding='utf-8')
+        file_data = []
+        if input_file.name.endswith('.csv') or input_file.name.endswith('.txt'):
+            for line in file_wrapper:
+                file_data.append({"name": line.strip(), "image": None})
+        else:
+            return render(request, 'createList/list-type-choices.html', {"error": "You may only upload a .csv or .txt file"})
+        list_form = ListForm()
+        blank_forms_needed = NUM_STARTING_FORMS if len(file_data) < NUM_STARTING_FORMS else len(file_data)
+        print("\n\n", file_data)
+        thing_form_set = modelformset_factory(Thing, form=ThingForm, extra=blank_forms_needed, can_delete=True)
+        thing_forms = thing_form_set(queryset=Thing.objects.none(), initial=file_data)
+        return render(request, 'createList/create-list.html', {
+            'list_form': list_form, 
+            'thing_forms': thing_forms,
+            'empty_form': thing_forms.empty_form,
+        })
+    return render(request, 'createList/list-type-choices.html')
+
+@login_required
+def manual_create_list(request):
     thing_form_set = modelformset_factory(Thing, form=ThingForm, extra=0, can_delete=True)
     if request.method == 'GET':
         
@@ -130,6 +155,14 @@ def create_list(request):
             'empty_form': thing_forms.empty_form,
         }) 
     return HttpResponse("Neither GET nor POST")   
+
+@login_required
+def images_only_create_list(request):
+    return render(request, 'createList/home.html')
+
+@login_required
+def list_edit(request, slug):
+    return render(request, 'createList/home.html')
 
 def all_lists(request):
     all_lists = List.objects.all()

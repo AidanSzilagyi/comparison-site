@@ -7,7 +7,7 @@
 
 {% block main %}
 	<main class="main-container">
-        <form method="post" enctype="multipart/form-data">
+        <form method="post" action="{% url 'manual_create' %}" enctype="multipart/form-data">
             {% csrf_token %}
             {{ thing_forms.management_form }}
             <div class="page-header">
