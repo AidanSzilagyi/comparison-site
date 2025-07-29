@@ -27,6 +27,9 @@
     </div>
     {{thing_form.name.errors}} {{thing_form.image.errors}}
     {% endfor %}
+    <div class="add-new-thing-container" id="js-add-thing-button">
+        <label class="add-new-thing-text">Add new thing</label>
+    </div>
 </div>
 <div id="empty-form-template" style="display: none;">
     <div class="thing-container">
@@ -50,8 +53,4 @@
             <img class="info-icon-image" src="{% static 'images/info-icon-a.png' %}">
         </div>
     </div>
-</div>
-
-<div class="add-new-thing-container" id="add-thing-button">
-    <label class="add-new-thing-text">Add new thing</label>
 </div>

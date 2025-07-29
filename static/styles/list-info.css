@@ -2,7 +2,7 @@
     width: 710px;
 }
 .list-name {
-    font-size: 36px;
+    font-size: 40px;
     margin: 5px 0px;
 }
 .list-metadata{
@@ -32,12 +32,22 @@
 .list-details {
     display: inline-block;
 }
+.important-details, .list-author-link {
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    gap: 5px;
+}
+.profile-picture {
+    height: 18px;
+    width: 18px;
+    border-radius: 9px;
+}
 .list-author {
     display: inline-block;
 }
 .dot-separator {
     display: inline-block;
-    margin: 0px 7px;
 }
 .list-detail-stat-name {
     display: inline-block;

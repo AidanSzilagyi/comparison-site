@@ -9,9 +9,16 @@
         <div class="list-name">{{list.name}}</div>
         <div class="list-metadata">
             <div class="list-detail-container">
-                <a href="{% url 'view_profile' list.slug %}"><div class="list-author">{{list.user.username}}</div></a><div class="dot-separator">&middot;</div>
-                <div class="list-detail-stat-value">{{list.num_things}} Things</div><div class="dot-separator">&middot;</div>
-                <div class="list-detail-stat-value">{{list.get_permission_display}}</div><br>
+                <div class="important-details">
+                    <a class="list-author-link" href="{% url 'view_profile' list.user.profile.slug %}">
+                        <img src="{{list.user.profile.image.url}}" class="profile-picture user-image">
+                        <div class="list-author">{{list.user.profile.username}}</div>
+                    </a>
+                    <div class="dot-separator">&middot;</div>
+                    
+                    <div class="list-detail-stat-value">{{list.num_things}} Things</div><div class="dot-separator">&middot;</div>
+                    <div class="list-detail-stat-value">{{list.get_permission_display}}</div><br>
+                </div>
                 {% if list.description %}
                 <div class="list-description">{{list.description}}</div>
                 {% endif %}
