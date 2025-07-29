@@ -1,0 +1,88 @@
+.list-of-things-container {
+    display: grid;
+    gap: 15px;
+    grid-template-columns: repeat(auto-fit, 303px);
+    max-width: min(calc(100vw - 30px), calc(3 * 303px + 2 * 15px));
+    justify-items: start;
+    grid-auto-flow: row;
+}
+.thing-container {
+    border-radius: 10px;
+    width: 303px;
+    height: 157px;
+    /* border-width: 1px;
+    border-style: solid; */
+    background-color: var(--secondary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.thing-image-container {
+    width: 250px;
+    margin-right: 8px;
+    aspect-ratio: 16 / 9;
+    border-radius: 8px;
+    /* background-color: var(--primary); */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+.selected-thing-image {
+    width: 250px;
+    aspect-ratio: 16 / 9;
+    border-radius: 8px;
+    object-fit: contain;
+}
+.unselected-thing-image {
+    
+}
+
+.vertical-buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 141px;
+    margin-left: 4px;
+}
+.thing-number {
+    text-align: center;
+}
+.bottom-vertical-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.trash-can-icon-container {
+    margin: 0px 5px 0px 5px;
+    height: 26px;
+    border-radius: 8px;
+    background-color: var(--primary);
+}
+.trash-can-icon-image {
+    height: 26px;
+}
+.info-icon-container {
+    margin: 0px 5px 0px 5px;
+    height: 26px;
+    border-radius: 8px;
+    background-color: var(--primary);
+}
+.info-icon-image {
+    height: 26px;
+}
+.add-new-thing-container {
+    /* margin-left: 1.5px; */
+    border-style: dashed;
+    border-radius: 8px;
+    border-width: 1.5px;
+    height: 154px;
+    width: 300px;
+    border-color: var(--highlight);
+    color: var(--highlight);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

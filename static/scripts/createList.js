@@ -1,46 +1,20 @@
-
-/*
-let numThings = 1; // change this to 2 at some point
-document.addEventListener('DOMContentLoaded', () => {
-    document.querySelector('.js-thing-adder').addEventListener('click', () => {
-        document.querySelector('.js-list-of-things').innerHTML += `
-                <div class="thing-container"">
-                    <input class="thing-name-input" name="thing-${numThings}-name" type="text" placeholder="Enter a thing">
-                    <input style="display: none;" name="thing-${numThings}-image" type="file" id="file-input-${numThings}">
-                    <label class="thing-file-input" for="file-input-${numThings}">Choose Image</label>
-                    <div class="trash-can-icon-container">
-                        <img class="trash-can-icon-image" src="{% static 'images/trash-can-icon.png' %}">
-                    </div>
-                    <div class="info-icon-container">
-                        <img class="info-icon-image" src="{% static 'images/info-icon-a.png' %}">
-                    </div>
-                </div>
-        `;
-        document.querySelector('.')
-        numThings++;
-    });
-
-    document.querySelector('.js-list-of-things').addEventListener('click', (e) => {
-        if (e.target.closest('.trash-can-icon-container')) {
-            const container = e.target.closest('.thing-container');
-            if (container) container.remove();
-        }
-    });
-});*/
-
 document.addEventListener("DOMContentLoaded", () => {
-    const formContainer = document.getElementById("list-of-things-container");
+    const formContainer = document.getElementById("js-list-of-things");
     const emptyForm = document.getElementById("empty-form-template").innerHTML;
     const totalFormNum = document.querySelector('input[name="form-TOTAL_FORMS"]');
     
-    document.getElementById("add-thing-button").addEventListener("click", () => {
+    document.getElementById("js-add-thing-button").addEventListener("click", () => {
         const formCount = parseInt(totalFormNum.value);
         const newFormHTML = emptyForm.replace(/__prefix__/g, formCount);
-        formContainer.insertAdjacentHTML("beforeend", newFormHTML);
+
+        const newFormElement = document.createElement('template');
+        newFormElement.innerHTML = newFormHTML.trim(); 
+        const newFormNode = newFormElement.content.firstChild;
+        formContainer.insertBefore(newFormNode, document.getElementById("js-add-thing-button"));
         totalFormNum.value = formCount + 1;
     });
 
-    document.querySelector('.js-list-of-things').addEventListener('click', (e) => {
+    formContainer.addEventListener('click', (e) => {
         if (e.target.closest('.trash-can-icon-container')) {
             const container = e.target.closest('.thing-container');
             const deleteCheckbox = container.querySelector('.delete-checkbox');
@@ -50,38 +24,25 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
     });
-});
+    formContainer.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            
+            const container = e.target.closest('.thing-container');
+            const selectedImage = container.querySelector('.js-selected-thing-image');
+            const unselectedImage = container.querySelector('.js-unselected-thing-image');
+            
+            console.log("change detected");
+            console.log(container);
+            console.log(selectedImage)
+            console.log(unselectedImage)
 
-
-
-
-/*
-
-document.addEventListener("DOMContentLoaded", function () {
-    const formContainer = document.getElementById("thing-forms-container");
-    const emptyForm = document.getElementById("empty-form-template").innerHTML;
-    const totalFormsInput = document.querySelector('input[name="form-TOTAL_FORMS"]');
-    const formCount = parseInt(totalFormsInput.value);
-
-    document.getElementById("add-thing-button").addEventListener("click", () => {
-        
-        const newFormHtml = emptyForm.replace(/__prefix__/g, formCount);
-        formContainer.insertAdjacentHTML("beforeend", newFormHtml);
-        totalFormsInput.value = ++formCount;
+            if (selectedImage && unselectedImage) {
+                console.log("We're doing it!")
+                selectedImage.src = URL.createObjectURL(file);
+                selectedImage.style.display = 'block';
+                unselectedImage.style.display = 'none';
+            }
+        }
     });
 });
-
-
-const formContainer = document.querySelector('.js-list-of-things');
-const totalFormsInput = document.querySelector('input[name="form-TOTAL_FORMS"]');
-let formCount = parseInt(totalFormsInput.value);
-
-document.querySelector('.js-thing-adder').addEventListener('click', () => {
-    const emptyFormHtml = document.getElementById('empty-form-template').innerHTML;
-    const newFormHtml = emptyFormHtml.replace(/__prefix__/g, formCount);
-    formContainer.insertAdjacentHTML('beforeend', newFormHtml);
-    formCount++;
-    totalFormsInput.value = formCount;
-});
-
-*/

@@ -58,6 +58,18 @@
             pointer-events: none;
         }
     </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            document.querySelector(".js-image-input").addEventListener("change", function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const img = document.getElementById("js-profile-image");
+                    img.src = URL.createObjectURL(file);
+                    img.style.display = "block";
+                }
+            });
+        });
+    </script>
 {% endblock %}
 
 {% block main %}
@@ -67,11 +79,11 @@
                 {% csrf_token %}
                 
                 <label class="profile-image-container" for="{{profile_form.image.id_for_label}}">
-                    <img class="profile-image user-image" src="{{profile_form.image.value.url}}">
+                    <img class="profile-image user-image" id="js-profile-image" src="{{profile_form.image.value.url}}">
                     <div class="profile-image-tooltip">Change Image</div>
                 </label>  
 
-                <input style="display: none;" 
+                <input style="display: none;" class="js-image-input"
                         id="{{profile_form.image.id_for_label}}"
                         name="{{profile_form.image.name}}"
                         value="{{profile_form.image.value}}" 

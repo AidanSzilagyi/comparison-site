@@ -1,4 +1,4 @@
-{% extends "./base.html" %}
+{% extends "../base.html" %}
 {% block extra_head %}
 <style>
     
@@ -94,7 +94,7 @@
 <main class="main-container">
     <div class="body-heading">How do you want to create your list?</div>
     <div class="all-option-boxes">
-        <a class="single-option-box" href="{% url 'manual_create' %}">
+        <a class="single-option-box" href="{% url 'create_text_list' %}">
             <div class="option-name">
                 Manually Create
             </div>
@@ -116,7 +116,7 @@
                 Upload a .txt file to generate the text automatically
             </div>
         </div>
-        <a class="single-option-box" href="{% url 'images_only_create' %}">
+        <a class="single-option-box" href="{% url 'create_image_list' %}">
             <div class="option-name">
                 Images Only
             </div>

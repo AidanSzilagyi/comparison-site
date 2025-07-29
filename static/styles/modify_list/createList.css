@@ -1,0 +1,33 @@
+.page-header {
+    position: sticky;
+    top: 50px;
+    background-color: var(--primary);
+    z-index: 100; 
+    color: var(--highlight);
+    font-weight:500px;
+    display: flex;
+    gap: 50px;
+    justify-content: left;
+    align-items: center;
+}
+.create-list-button-container {
+    
+}
+.create-list-button {
+    background-color: var(--important);
+    color: var(--highlight);
+    border-radius: 5px;
+}
+
+.main-container {
+    margin-top: 8px;
+}
+.list-name-input {
+
+}
+.list-file-input {
+    color: white;
+}
+.list-description-input {
+    
+}

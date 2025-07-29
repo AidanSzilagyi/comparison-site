@@ -43,6 +43,8 @@ a:link, a:visited, a:hover, a:active {
 
 /* Header Styling */
 .website-header-background {
+    position: sticky;
+    top: 0;
     height: 50px;
     color: var(--highlight);
     background-color: var(--tertiary);

@@ -1,0 +1,74 @@
+{% extends "../base.html" %}
+{% load static %}
+{% block extra_head %}  
+    <script src="{% static 'scripts/createList.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'styles/modify_list/createList.css' %}">
+    {% if list_type == "text" %}
+        <link rel="stylesheet" href="{% static 'styles/modify_list/text-create.css' %}">
+    {% elif list_type == "image" %}
+        <link rel="stylesheet" href="{% static 'styles/modify_list/image-create.css' %}">
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+	<main class="main-container">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ thing_forms.management_form }}
+            <div class="page-header">
+                <div class="page-title">
+                    Create a new thing list
+                </div>
+                <div class="create-list-button-container">
+                    <button class="create-list-button" type="submit">Create</button>
+                </div>
+            </div>
+            <div class="list-details">
+                <label style="display: none;" for="{{list_form.name.id_for_label}}">List Title</label>
+                <input class="list-name-input" 
+                    id="{{list_form.name.id_for_label}}" 
+                    name="{{list_form.name.html_name}}" 
+                    value="{{list_form.name.value|default_if_none:''}}"
+                    type="text" placeholder="Title">
+                
+                <label class="list-file-input" for="{{list_form.image.id_for_label}}">Choose Image</label>   
+                <input style="display: none;" 
+                    id="{{list_form.image.id_for_label}}"
+                    name="{{list_form.image.html_name}}"
+                    value="{{list_form.image.value}}" 
+                    type="file">
+                
+                <label style="display: none;" for="{{list_form.description.id_for_label}}">List Description</label>
+                <input class="list-description-input" 
+                    id="{{list_form.description.id_for_label}}" 
+                    name="{{list_form.description.html_name }}" 
+                    value="{{list_form.description.value|default_if_none:''}}"
+                    type="text" placeholder="Description">
+                <div class="list-errors" style="color: white;">
+                    regular error: {{ error }}
+                    {% for error in list_form.non_field_errors %}
+                        {{ error }}
+                    {% endfor %}
+                    Thing Errors:
+                    {% if thing_form.errors %}
+                        {% for field in thing_form %}
+                            {% for error in field.errors %}
+                                    {{field.label}}: {{ error|escape }}
+                            {% endfor %}
+                        {% endfor %}
+                    {% endif %}
+                    List Errors:
+                    Name: {{list_form.name.errors}}
+                    Image: {{list_form.image.errors}}
+                    Description: {{list_form.description.errors}}
+                </div>
+            </div>
+            {{list_type}}
+            {% if list_type == 'text' %}
+                {% include "./text-create.html" with thing_forms=thing_forms %}
+            {% elif list_type == 'image' %}
+                {% include "./image-create.html" with thing_forms=thing_forms %}
+            {% endif %}
+        </form>
+	</main>
+{% endblock %}

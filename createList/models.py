@@ -22,6 +22,13 @@ class List(models.Model):
     description = models.CharField(max_length=1000, blank=True, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True) # REMOVE LATER
     num_things = models.IntegerField(default=0)
+    type = models.CharField(
+        choices = [
+            ('image', 'Images Only'),
+            ('text', 'Text and Images'),
+        ],
+        default='text',
+    )
     comparison_method = models.CharField(
         choices= [
             ('bradley_terry', 'Bradley-Terry Model'),

@@ -1,0 +1,57 @@
+{% load static %}
+<div class="list-of-things-container" id="js-list-of-things">
+    {% for thing_form in thing_forms %}
+    <div class="thing-container">
+        <label style="display: none;" for="{{thing_form.name.id_for_label}}">Thing Name</label>
+        <input class="thing-name-input" 
+            id="{{thing_form.name.id_for_label}}" 
+            name="{{thing_form.name.html_name}}" 
+            value="{{thing_form.name.value}}"
+            type="text" placeholder="Enter a thing">
+        
+        <label class="thing-file-input" for="{{thing_form.image.id_for_label}}">Choose Image</label>
+        <input style="display: none;" 
+            id="{{thing_form.image.id_for_label}}"
+            name="{{thing_form.image.html_name}}" 
+            value="{{thing_form.image.value}}"
+            type="file">
+        
+        <div class="trash-can-icon-container">
+            <img class="trash-can-icon-image" src="{% static 'images/trash-can-icon.png' %}">
+            <input type="checkbox" name="{{ thing_form.DELETE.html_name }}" class="delete-checkbox" hidden>
+        </div>
+        <div class="info-icon-container">
+            <img class="info-icon-image" src="{% static 'images/info-icon-a.png' %}">
+        </div>
+        <input type="hidden" name="{{ thing_form.prefix }}-id" value="{{ thing_form.instance.id }}">
+    </div>
+    {{thing_form.name.errors}} {{thing_form.image.errors}}
+    {% endfor %}
+</div>
+<div id="empty-form-template" style="display: none;">
+    <div class="thing-container">
+        <label style="display: none;" for="{{thing_forms.empty_form.name.id_for_label}}">Thing Name</label>
+        <input class="thing-name-input" 
+            id="{{thing_forms.empty_form.name.id_for_label}}" 
+            name="{{thing_forms.empty_form.name.html_name}}" 
+            type="text" placeholder="Enter a thing">
+        
+        <label class="thing-file-input" for="{{thing_forms.empty_form.image.id_for_label}}">Choose Image</label>
+        <input style="display: none;" 
+            id="{{thing_forms.empty_form.image.id_for_label}}"
+            name="{{thing_forms.empty_form.image.html_name}}" 
+            type="file">
+        
+        <div class="trash-can-icon-container">
+            <img class="trash-can-icon-image" src="{% static 'images/trash-can-icon.png' %}">
+            <input type="checkbox" name="{{thing_forms.empty_form.DELETE.html_name}}" class="delete-checkbox" hidden>
+        </div>
+        <div class="info-icon-container">
+            <img class="info-icon-image" src="{% static 'images/info-icon-a.png' %}">
+        </div>
+    </div>
+</div>
+
+<div class="add-new-thing-container" id="add-thing-button">
+    <label class="add-new-thing-text">Add new thing</label>
+</div>

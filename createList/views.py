@@ -105,37 +105,38 @@ def list_type_choices(request):
         return render(request, 'createList/create-list.html', {
             'list_form': list_form, 
             'thing_forms': thing_forms,
-            'empty_form': thing_forms.empty_form,
             'new_list': True,
-            'type': "text", 
+            'list_type': "text", 
         })
-    return render(request, 'createList/list-type-choices.html')
+    return render(request, 'createList/modify_list/list-type-choices.html')
 
 @login_required
-def create_or_edit_list(request, slug=None):
+def create_text_list(request, slug=None):
+    return create_or_edit_list(request, 'text', slug)
+
+@login_required
+def create_images_list(request, slug=None):
+    return create_or_edit_list(request, 'image', slug)
+    
+@login_required
+def list_edit(request, slug):
+    list = List.objects.get(slug=slug)
+    if not list:
+        return not_found(request, "That list does not exist")
+    return create_or_edit_list(request, list.type, slug)
+
+@login_required
+def create_or_edit_list(request, list_type, slug=None):
     list = List.objects.get(slug=slug) if slug else None
     existing_things = Thing.objects.filter(list=list) if list else Thing.objects.none()
-    # type = "text"
-    # if request.resolver_match.url_name == "create/images-only" or (list and list.type):
-    #   type = "image"
-    
+        
     thing_form_set = modelformset_factory(Thing, form=ThingForm, extra=0, can_delete=True)
     if request.method == 'GET':
         list_form = ListForm(instance=list)
         thing_forms = thing_form_set(queryset=existing_things)
-        return render(request, 'createList/create-list.html', {
-            'list_form': list_form, 
-            'thing_forms': thing_forms,
-            'empty_form': thing_forms.empty_form,
-            'new_list': list != None,
-        })
     if request.method == 'POST':
         list_form = ListForm(request.POST, request.FILES, instance=list)
         thing_forms = thing_form_set(request.POST, request.FILES, queryset=existing_things)
-        print(request.POST.get('form-TOTAL_FORMS'))
-        print(request.POST.get('form-INITIAL_FORMS'))
-        print(thing_forms.is_valid())
-        print(list_form.is_valid())
         for i, form in enumerate(thing_forms):
             if not form.is_valid():
                 print(f"Form {i} errors:", form.errors)
@@ -143,17 +144,18 @@ def create_or_edit_list(request, slug=None):
         if thing_forms.is_valid() and list_form.is_valid():
             things = [form for form in thing_forms if form.cleaned_data and not form.cleaned_data.get('DELETE')]
             if len(things) < 3:
-                return render(request, 'createList/create-list.html', {
+                return render(request, 'createList/modify_list/create-list.html', {
                     'list_form': list_form,
                     'thing_forms': thing_forms,
-                    'empty_form': thing_forms.empty_form,
                     'new_list': list != None,
+                    'list_type': list_type,
                     'error': 'You must include at least 3 things.'
                 })
             
             list = list_form.save(commit=False)
             list.user = request.user
             list.num_things = len(things)
+            list.type = list_type
             list.save()
             for form in things:
                 thing = form.save(commit=False)
@@ -166,30 +168,30 @@ def create_or_edit_list(request, slug=None):
             
             return redirect('list_info', list.slug)
         
-        return render(request, 'createList/create-list.html', {
-            'list_form': list_form,
-            'thing_forms': thing_forms,
-            'empty_form': thing_forms.empty_form,
-            'new_list': list != None,
-        }) 
+    return render(request, 'createList/modify_list/create-list.html', {
+        'list_form': list_form,
+        'thing_forms': thing_forms,
+        'new_list': list != None,
+        'list_type': list_type,
+    }) 
     return HttpResponse("Neither GET nor POST")
 
 @login_required
 def images_only_create_list(request):
     return render(request, 'createList/home.html')
 
-@login_required
-def list_edit(request, slug):
-    list = List.objects.get(slug=slug)
-    thing_form_set = modelformset_factory(Thing, form=ThingForm, extra=0, can_delete=True)
-    thing_forms = thing_form_set(queryset=Thing.objects.filter(list=list))
-    
-    list_form = ListForm(instance=list)
-    return render(request, 'createList/create-list.html', {
-            'list_form': list_form,
-            'thing_forms': thing_forms,
-            'empty_form': thing_forms.empty_form,
-        }) 
+# @login_required
+# def list_edit(request, slug):
+#     list = List.objects.get(slug=slug)
+#     thing_form_set = modelformset_factory(Thing, form=ThingForm, extra=0, can_delete=True)
+#     thing_forms = thing_form_set(queryset=Thing.objects.filter(list=list))
+#    
+#     list_form = ListForm(instance=list)
+#     return render(request, 'createList/create-list.html', {
+#             'list_form': list_form,
+#             'thing_forms': thing_forms,
+#             'empty_form': thing_forms.empty_form,
+#         }) 
 
 def all_lists(request):
     all_lists = List.objects.all()
