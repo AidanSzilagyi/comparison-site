@@ -2,28 +2,50 @@
 <div class="list-of-things-container" id="js-list-of-things">
     {% for thing_form in thing_forms %}
     <div class="thing-container">
+        <div class="top-row-buttons">
+            <div class="utility-button-container">
+                <div class="thing-number">1321</div>
+                <div class="info-icon-container">
+                    <img class="info-icon-image" src="{% static 'images/info-icon-a.png' %}">
+                </div>
+                <div class="trash-can-icon-container">
+                    <img class="trash-can-icon-image" src="{% static 'images/trash-can-icon.png' %}">
+                    <input type="checkbox" name="{{ thing_form.DELETE.html_name }}" class="delete-checkbox" hidden>
+                </div>
+            </div>
+            <div class="thing-image-options-container">
+                {% if thing_form.image.value %}
+                <div class="thing-remove-image-button js-remove-image-button">
+                    Remove Image
+                </div>
+                {% else %}
+                <div style="display: none;" class="thing-remove-image-button js-remove-image-button">
+                    Remove Image
+                </div>
+                {% endif %}
+                <label class="thing-image-container" for="{{thing_form.image.id_for_label}}">
+                    {% if thing_form.image.value %}
+                    <div class="unselected-thing-image js-unselected-thing-image" style="display: none;">Choose Image</div>
+                    <img class="selected-thing-image js-selected-thing-image" src="{{thing_form.image.value.url}}">
+                    {% else %}
+                    <div class="unselected-thing-image js-unselected-thing-image">Choose Image</div>
+                    <img class="selected-thing-image js-selected-thing-image" style="display: none;" src="">
+                    {% endif %}
+                </label>
+                <input style="display: none;" class="js-image-input"
+                    id="{{thing_form.image.id_for_label}}"
+                    name="{{thing_form.image.html_name}}" 
+                    value="{{thing_form.image.value}}"
+                    type="file" accept="image/*">
+            </div>
+        </div>
         <label style="display: none;" for="{{thing_form.name.id_for_label}}">Thing Name</label>
-        <input class="thing-name-input" 
+        <input class="thing-name-input text-input" 
             id="{{thing_form.name.id_for_label}}" 
             name="{{thing_form.name.html_name}}" 
             value="{{thing_form.name.value}}"
             type="text" placeholder="Enter a thing">
-        
-        <label class="thing-file-input" for="{{thing_form.image.id_for_label}}">Choose Image</label>
-        <input style="display: none;" 
-            id="{{thing_form.image.id_for_label}}"
-            name="{{thing_form.image.html_name}}" 
-            value="{{thing_form.image.value}}"
-            type="file">
-        
-        <div class="trash-can-icon-container">
-            <img class="trash-can-icon-image" src="{% static 'images/trash-can-icon.png' %}">
-            <input type="checkbox" name="{{ thing_form.DELETE.html_name }}" class="delete-checkbox" hidden>
-        </div>
-        <div class="info-icon-container">
-            <img class="info-icon-image" src="{% static 'images/info-icon-a.png' %}">
-        </div>
-        <input type="hidden" name="{{ thing_form.prefix }}-id" value="{{ thing_form.instance.id }}">
+       {{ thing_form.id }}
     </div>
     {{thing_form.name.errors}} {{thing_form.image.errors}}
     {% endfor %}
@@ -33,24 +55,35 @@
 </div>
 <div id="empty-form-template" style="display: none;">
     <div class="thing-container">
+        <div class="top-row-buttons">
+            <div class="utility-button-container">
+                <div class="thing-number">1321</div>
+                <div class="trash-can-icon-container">
+                    <img class="trash-can-icon-image" src="{% static 'images/trash-can-icon.png' %}">
+                    <input type="checkbox" name="{{thing_forms.empty_form.DELETE.html_name}}" class="delete-checkbox" hidden>
+                </div>
+            </div>
+            <div class="thing-image-options-container">
+                <div style="display: none;" class="thing-remove-image-button js-remove-image-button">
+                    Remove Image
+                </div>
+                <label class="thing-image-container" for="{{thing_forms.empty_form.image.id_for_label}}">
+                    <div class="unselected-thing-image js-unselected-thing-image">Choose Image</div>
+                    <img class="selected-thing-image js-selected-thing-image" style="display: none;" src="{{thing_form.empty_form.image.value.url}}">
+                </label>
+                <input style="display: none;" class="js-image-input"
+                    id="{{thing_forms.empty_form.image.id_for_label}}"
+                    name="{{thing_forms.empty_form.image.html_name}}" 
+                    value="{{thing_forms.empty_form.image.value}}"
+                    type="file" accept="image/*">
+            </div>
+        </div>
         <label style="display: none;" for="{{thing_forms.empty_form.name.id_for_label}}">Thing Name</label>
-        <input class="thing-name-input" 
+        <input class="thing-name-input text-input" 
             id="{{thing_forms.empty_form.name.id_for_label}}" 
             name="{{thing_forms.empty_form.name.html_name}}" 
             type="text" placeholder="Enter a thing">
-        
-        <label class="thing-file-input" for="{{thing_forms.empty_form.image.id_for_label}}">Choose Image</label>
-        <input style="display: none;" 
-            id="{{thing_forms.empty_form.image.id_for_label}}"
-            name="{{thing_forms.empty_form.image.html_name}}" 
-            type="file">
-        
-        <div class="trash-can-icon-container">
-            <img class="trash-can-icon-image" src="{% static 'images/trash-can-icon.png' %}">
-            <input type="checkbox" name="{{thing_forms.empty_form.DELETE.html_name}}" class="delete-checkbox" hidden>
         </div>
-        <div class="info-icon-container">
-            <img class="info-icon-image" src="{% static 'images/info-icon-a.png' %}">
-        </div>
+        {{ thing_forms.empty_form.id }}
     </div>
-</div>
+</div> 

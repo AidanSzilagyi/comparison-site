@@ -43,10 +43,11 @@ class List(models.Model):
     last_updated = models.DateTimeField(auto_now=True)
     permission = models.CharField(
         choices = [
-            ('public', 'Public'),
-            ('protected', 'View Only'),
             ('private', 'Private'),
-        ]
+            ('protected', 'View Only'),
+            ('public', 'Public'),
+        ],
+        default='private'
     )
     # ^ Must call model.save() when any element of List is updated
     slug = models.SlugField(unique=True)

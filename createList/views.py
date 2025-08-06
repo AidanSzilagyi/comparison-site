@@ -140,23 +140,28 @@ def create_or_edit_list(request, list_type, slug=None):
         for i, form in enumerate(thing_forms):
             if not form.is_valid():
                 print(f"Form {i} errors:", form.errors)
-
+        print("Form may be valid")
+        print(list_form.is_valid())
+        print(thing_forms.is_valid())
         if thing_forms.is_valid() and list_form.is_valid():
+            print("form maybebe valid")
             things = [form for form in thing_forms if form.cleaned_data and not form.cleaned_data.get('DELETE')]
             if len(things) < 3:
                 return render(request, 'createList/modify_list/create-list.html', {
                     'list_form': list_form,
                     'thing_forms': thing_forms,
-                    'new_list': list != None,
+                    'new_list': list == None,
                     'list_type': list_type,
                     'error': 'You must include at least 3 things.'
                 })
+            print("form is valid!")
             
             list = list_form.save(commit=False)
             list.user = request.user
             list.num_things = len(things)
             list.type = list_type
             list.save()
+            print("List Saved", list)
             for form in things:
                 thing = form.save(commit=False)
                 thing.list = list
@@ -171,7 +176,7 @@ def create_or_edit_list(request, list_type, slug=None):
     return render(request, 'createList/modify_list/create-list.html', {
         'list_form': list_form,
         'thing_forms': thing_forms,
-        'new_list': list != None,
+        'new_list': list == None,
         'list_type': list_type,
     }) 
     return HttpResponse("Neither GET nor POST")

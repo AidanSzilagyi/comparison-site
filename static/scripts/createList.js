@@ -1,4 +1,27 @@
 document.addEventListener("DOMContentLoaded", () => {
+    const selectedListImage = document.querySelector('.js-selected-list-image');
+    const unselectedListImage = document.querySelector('.js-unselected-list-image');
+    const imageListInput = document.querySelector(".js-list-image-input");
+    const removeListImageButton = document.getElementById("js-remove-list-image");
+    if (selectedListImage && unselectedListImage && imageListInput && removeListImageButton) {
+        imageListInput.addEventListener("change", function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                selectedListImage.src = URL.createObjectURL(file);
+                selectedListImage.style.display = 'flex';
+                unselectedListImage.style.display = 'none';
+                removeListImageButton.style.display = 'flex';
+            }
+        });
+        removeListImageButton.addEventListener("click", () => {
+            selectedListImage.src = "";
+            selectedListImage.style.display = 'none';
+            unselectedListImage.style.display = 'flex';
+            imageListInput.value = "";
+            removeListImageButton.style.display = 'none';
+        });
+    }
+
     const formContainer = document.getElementById("js-list-of-things");
     const emptyForm = document.getElementById("empty-form-template").innerHTML;
     const totalFormNum = document.querySelector('input[name="form-TOTAL_FORMS"]');
@@ -42,6 +65,27 @@ document.addEventListener("DOMContentLoaded", () => {
                 selectedImage.src = URL.createObjectURL(file);
                 selectedImage.style.display = 'block';
                 unselectedImage.style.display = 'none';
+            }
+
+            const removeImageButton = container.querySelector('.js-remove-image-button')
+            if (removeImageButton) {
+                removeImageButton.style.display = 'flex';
+            }
+        }
+    });
+    formContainer.addEventListener('click', (e) => {
+        removeImageButton = e.target.closest('.js-remove-image-button');
+        if (removeImageButton) {
+            const container = e.target.closest('.thing-container');
+            const selectedImage = container.querySelector('.js-selected-thing-image');
+            const unselectedImage = container.querySelector('.js-unselected-thing-image');
+            const imageInput = container.querySelector(".js-image-input");
+            if (selectedImage && unselectedImage && imageInput) {
+                selectedImage.src = "";
+                selectedImage.style.display = 'none';
+                unselectedImage.style.display = 'flex';
+                imageInput.value = "";
+                removeImageButton.style.display = 'none';
             }
         }
     });

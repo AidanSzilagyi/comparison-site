@@ -8,17 +8,26 @@
     --greyedout: #757575;
     --logo-red: #ff2850;
     --logo-blue: #3278ff;
+    --error-red: #e02020;
     font-family: Outfit;
+    font-size: 16px;
 
     color: var(--highlight);
     background-color: var(--primary);
 }
+div, label, a, textarea {
+    font-size: inherit;
+}
+
 input[type='file'] {
     color: transparent;
 }
+textarea {
+    font-family: Outfit;
+}
+
 html, body {
     margin: 0;
-    height: 100%;
 }
 
 .primary-container {
@@ -29,7 +38,7 @@ html, body {
     padding-left: 10px;
     padding-right: 10px;
     width: calc(100% - 20px);
-    height: calc(100% - 50px);
+    height: 100%;
 }
 
 a:link, a:visited, a:hover, a:active {
@@ -42,10 +51,10 @@ a:link, a:visited, a:hover, a:active {
     object-position: center;
 }
 
-
 /* Header Styling */
 .website-header-background {
     position: sticky;
+    z-index: 10;
     top: 0;
     height: 50px;
     color: var(--highlight);

@@ -16,21 +16,21 @@
         </div>
         <div>
             <label class="thing-image-container" for="{{thing_form.image.id_for_label}}">
-                {% if thing_form.image.value.url %}
+                {% if thing_form.image.value %}
                 <div class="unselected-thing-image js-unselected-thing-image" style="display: none;">Choose Image</div>
                 <img class="selected-thing-image js-selected-thing-image" src="{{thing_form.image.value.url}}">
                 {% else %}
                 <div class="unselected-thing-image js-unselected-thing-image">Choose Image</div>
-                <img class="selected-thing-image js-selected-thing-image" style="display: none;" src="{{thing_form.image.value.url}}">
+                <img class="selected-thing-image js-selected-thing-image" style="display: none;" src="">
                 {% endif %}
             </label>
             <input style="display: none;" class="js-image-input"
                 id="{{thing_form.image.id_for_label}}"
                 name="{{thing_form.image.html_name}}" 
                 value="{{thing_form.image.value}}"
-                type="file">
+                type="file" accept="image/*">
         </div>
-        <input type="hidden" name="{{ thing_form.prefix }}-id" value="{{ thing_form.instance.id }}">
+        {{ thing_form.id }}
     </div>
     {{thing_form.name.errors}} {{thing_form.image.errors}}
     {% endfor %}
@@ -58,7 +58,8 @@
                 id="{{thing_forms.empty_form.image.id_for_label}}"
                 name="{{thing_forms.empty_form.image.html_name}}" 
                 value="{{thing_forms.empty_form.image.value}}"
-                type="file">
+                type="file" accept="image/*">
         </div>
+        {{ thing_forms.empty_form.id }}
     </div>
 </div>
