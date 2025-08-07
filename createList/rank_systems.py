@@ -25,13 +25,13 @@ def generate_matchup_json(user, list, sent_matchups=[]):
         matchup_json.append({
             "id": str(matchup.id),
             "thing1": {
-                "name": matchup.winner.name,
+                "name": matchup.winner.name if matchup.winner.name else None,
                 "image": matchup.winner.image.url if matchup.winner.image else None
             },
             "thing2": {
-                "name": matchup.loser.name,
+                "name": matchup.loser.name if matchup.loser.name else None,
                 "image": matchup.loser.image.url if matchup.loser.image else None
-            }
+            } 
         })
     return json.dumps(matchup_json)
 
@@ -43,7 +43,7 @@ def generate_matchups(user, tlist, sent_matchups):
     
     comparisons = get_comparison_model(tlist).get_comparisons(user, tlist, sent_matchups)
     if len(comparisons) > 5:
-            comparisons = comparisons[:5]
+        comparisons = comparisons[:5]
     
     matchups = list(get_matchups_awaiting_response(user, tlist, sent_matchups))
     for comparison in comparisons:

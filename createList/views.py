@@ -203,6 +203,14 @@ def all_lists(request):
     return render(request, 'createList/all-lists.html', {"all_lists": all_lists})
 
 def list_rank(request, slug):
+    #matchups = Matchup.objects.all()
+    #notdone = True
+    #for matchup in matchups:
+    #    if not matchup.loser and notdone:
+    #        print(matchup.winner.name)
+    #        matchup.delete()
+    #        notdone = False
+    
     list = List.objects.get(slug=slug)
     initial_things = generate_matchup_json(request.user, list)
     return render(request, 'createList/rank.html', {"initial_things": initial_things, "list_slug": slug})
@@ -225,9 +233,9 @@ def get_comparisons(request, slug):
 
 def complete_comparison(request, slug):
     list = List.objects.get(slug=slug)
-    if not list or not body.get('id'):
-        return JsonResponse({'error': 'Unknown list slug'}, status=400)
     body = json.loads(request.body)
+    if not body.get('id'):
+        return JsonResponse({'error': 'Missing matchup ID'}, status=400)
     process_matchup_result(request.user, list, body.get('id'), body.get('choice'))
     return HttpResponse(status=204)
 

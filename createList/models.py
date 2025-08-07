@@ -115,10 +115,10 @@ def generate_profile_slug(profile):
 def generate_list_slug(list):
     slug = slugify(list.name)
     if List.objects.filter(slug=slug).exists():
-        slug = slugify(list.name + "-" + list.user.username)
+        slug = slugify(list.name + "-" + list.user.profile.username)
     counter = 1
     while List.objects.filter(slug=slug).exists():
-        slug = slugify(list.name + "-" + list.user.username + "-" + counter)
+        slug = slugify(list.name + "-" + list.user.profile.username + "-" + counter)
     return slug
         
     
