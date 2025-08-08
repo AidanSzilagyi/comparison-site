@@ -149,3 +149,8 @@
     display: inline-block;
     margin: 0px 3px;
 }
+
+.past-matchup-author {
+    font-size: 14px;
+    color: var(--greyedout);
+}

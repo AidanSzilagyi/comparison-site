@@ -9,11 +9,12 @@ def process_matchup_result(user, list, matchup_id, choice):
     matchup.awaiting_response = False
     if choice == 2:
         temp = matchup.loser
-        matchup.winner = matchup.loser
-        matchup.loser = temp
+        matchup.loser = matchup.winner
+        matchup.winner = temp
     matchup.save()
     matchup.winner.wins += 1
     matchup.loser.losses += 1
+    print(f"winner: {matchup.winner} --- loser: {matchup.loser}")
     matchup.winner.save()
     matchup.loser.save()
     get_comparison_model(list).update_rankings(user, list, matchup)

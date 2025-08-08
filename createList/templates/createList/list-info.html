@@ -50,18 +50,28 @@
             <div class="highlight-container">
                 <div class="highlight-title">Best 5 Things</div>
                 <div class="highlight-five-things-group">
-                    {% for thing in top_five %}
+                    {% for thing, matchups in top_five %}
                     <div class="highlight-thing">
                         <div class="highlight-position-number">{{forloop.counter}}.</div>
                         <div class="highlight-thing-name">{{thing.name}}</div>
                         <div class="highlight-thing-record">
                             <img class="W-win" src="{% static 'images/W-Win.png' %}"><div class="wins-losses-text">{{thing.wins}} -</div><img class="l-lose" src="{% static 'images/L-Lose.png' %}"><div class="wins-losses-text">{{thing.losses}}</div>
-                            <div class="past-matchup-sheet">
-                                <div class="past-matchup"><img class="W-win" src="{% static 'images/W-Win.png' %}"> vs. Buttered Bread</div>
-                                <div class="past-matchup"><img class="l-lose" src="{% static 'images/L-Lose.png' %}"> vs. Unbuttered Bread</div>
-                                <div class="past-matchup"><img class="W-win" src="{% static 'images/W-Win.png' %}"> vs. Buttered Bread</div>
-                                <div class="past-matchup"><img class="l-lose" src="{% static 'images/L-Lose.png' %}"> vs. Unbuttered Bread</div>
-                            </div>
+                            {% if thing.wins != 0 or thing.losses != 0 %}
+                                <div class="past-matchup-sheet">
+                                    {% for matchup in matchups %}
+                                        <div class="past-matchup">
+                                            {% if matchup.winner.id == thing.id %}
+                                                <img class="W-win" src="{% static 'images/W-Win.png' %}"> vs. {{matchup.loser.name}}
+                                            {% else %}
+                                                <img class="l-lose" src="{% static 'images/L-Lose.png' %}"> vs. {{matchup.winner.name}} 
+                                            {% endif %}
+                                            {% if list.permission == "public" %}
+                                                <span class="past-matchup-author">by {{matchup.user.profile.username}}</span>
+                                            {% endif %}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
                     {% endfor %}
@@ -70,18 +80,28 @@
             <div class="highlight-container">
                 <div class="highlight-title">Worst 5 Things</div>
                 <div class="highlight-five-things-group">
-                    {% for thing in bottom_five %}
+                    {% for thing, matchups in bottom_five %}
                     <div class="highlight-thing">
                         <div class="highlight-position-number">{{list.num_things|sub:"5"|add:forloop.counter}}.</div>
                         <div class="highlight-thing-name">{{thing.name}}</div>
                         <div class="highlight-thing-record">
-                            W{{thing.wins}}-L{{thing.losses}}
-                            <div class="past-matchup-sheet">
-                                <div class="past-matchup">Win vs. Buttered Bread</div>
-                                <div class="past-matchup">Loss vs. Unbuttered Bread</div>
-                                <div class="past-matchup">Win vs. Buttered Bread</div>
-                                <div class="past-matchup">Loss vs. Unbuttered Bread</div>
-                            </div>
+                            <img class="W-win" src="{% static 'images/W-Win.png' %}"><div class="wins-losses-text">{{thing.wins}} -</div><img class="l-lose" src="{% static 'images/L-Lose.png' %}"><div class="wins-losses-text">{{thing.losses}}</div>
+                            {% if thing.wins != 0 or thing.losses != 0 %}
+                                <div class="past-matchup-sheet">
+                                    {% for matchup in matchups %}
+                                        <div class="past-matchup">
+                                            {% if matchup.winner.id == thing.id %}
+                                                <img class="W-win" src="{% static 'images/W-Win.png' %}"> vs. {{matchup.loser.name}}
+                                            {% else %}
+                                                <img class="l-lose" src="{% static 'images/L-Lose.png' %}"> vs. {{matchup.winner.name}} 
+                                            {% endif %}
+                                            {% if list.permission == "public" %}
+                                                <span class="past-matchup-author">by {{matchup.user.profile.username}}</span>
+                                            {% endif %}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
                     {% endfor %}

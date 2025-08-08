@@ -14,8 +14,10 @@ import uuid
 import random
 import csv
 from io import TextIOWrapper
+from django.db.models import Q
 
 NUM_STARTING_FORMS = 10
+NUM_MATCHUPS_SENT = 20
 
 def home(request):
     return render(request, 'createList/home.html')
@@ -240,18 +242,29 @@ def complete_comparison(request, slug):
     return HttpResponse(status=204)
 
 def list_info(request, slug):
-    list = List.objects.get(slug=slug)
-    all_things = Thing.objects.filter(list=list).order_by('rating')
-    top_five = all_things[0:5]
-    bottom_five = all_things[list.num_things - 5:]
+    tlist = List.objects.get(slug=slug)
+    all_things = Thing.objects.filter(list=tlist).order_by('rating')    
+    bottom_five = all_things[4::-1]
+    top_five = all_things[tlist.num_things - 1:tlist.num_things - 6:-1]
+    top_five_matchups = [get_matchups(thing) for thing in top_five]
+    bottom_five_matchups = [get_matchups(thing) for thing in top_five]
     
     # if <15 things, show the whole list
     context = {
-        "list": list,
-        "top_five": top_five,
-        "bottom_five": bottom_five,
+        "list": tlist,
+        "top_five": list(zip(top_five, top_five_matchups)),
+        "bottom_five": list(zip(bottom_five, bottom_five_matchups)),
     }
     return render(request, 'createList/list-info.html', context)
+
+def get_matchups(thing):
+    matches = Matchup.objects.filter(awaiting_response=False, winner_id=thing.id) | \
+              Matchup.objects.filter(awaiting_response=False, loser_id=thing.id)
+    matches = matches.order_by('date_created')
+    if len(matches) > NUM_MATCHUPS_SENT:
+        return matches[0:NUM_MATCHUPS_SENT]
+    return matches
+        
 
 @login_required
 def my_profile(request):
