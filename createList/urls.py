@@ -9,6 +9,7 @@ urlpatterns = [
     path("explore/", views.explore, name="explore"),
     path("recent/", views.recent, name="recent"),
     path("<slug:slug>/info/", views.list_info, name="list_info"),
+    path("<slug:slug>/get-all-things/", views.get_all_things, name="get_all_things"),
     path("<slug:slug>/rank/", views.list_rank, name="list_rank"),
     path("<slug:slug>/get-comparisons/", views.get_comparisons, name="get_comparisons"),
     path("<slug:slug>/complete-comparison/", views.complete_comparison, name="complete_comparison"),

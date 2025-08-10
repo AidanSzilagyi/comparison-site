@@ -18,6 +18,7 @@ from django.db.models import Q
 
 NUM_STARTING_FORMS = 10
 NUM_MATCHUPS_SENT = 20
+NUM_LOADED_THINGS_PER_REQUEST = 3
 
 def home(request):
     return render(request, 'createList/home.html')
@@ -241,13 +242,15 @@ def complete_comparison(request, slug):
     process_matchup_result(request.user, list, body.get('id'), body.get('choice'))
     return HttpResponse(status=204)
 
+# Note the slicing and list() calls. Allowing lazy evaluation can lead to incorrect results
 def list_info(request, slug):
     tlist = List.objects.get(slug=slug)
-    all_things = Thing.objects.filter(list=tlist).order_by('rating')    
-    bottom_five = all_things[4::-1]
-    top_five = all_things[tlist.num_things - 1:tlist.num_things - 6:-1]
+    all_things = Thing.objects.filter(list=tlist)  
+    top_five = list(all_things.order_by('-rating')[:5])
+    bottom_five = list(all_things.order_by('rating')[:5])[::-1] 
+    
     top_five_matchups = [get_matchups(thing) for thing in top_five]
-    bottom_five_matchups = [get_matchups(thing) for thing in top_five]
+    bottom_five_matchups = [get_matchups(thing) for thing in bottom_five]
     
     # if <15 things, show the whole list
     context = {
@@ -256,6 +259,26 @@ def list_info(request, slug):
         "bottom_five": list(zip(bottom_five, bottom_five_matchups)),
     }
     return render(request, 'createList/list-info.html', context)
+
+def get_all_things(request, slug):
+    list = List.objects.get(slug=slug)
+    num_things_loaded = int(request.GET.get("loaded"))
+    if num_things_loaded + NUM_LOADED_THINGS_PER_REQUEST >= list.num_things:
+        things = Thing.objects.filter(list=list).order_by("-rating")[num_things_loaded:]
+    else:
+        things = Thing.objects.filter(list=list).order_by("-rating")[num_things_loaded:num_things_loaded + NUM_LOADED_THINGS_PER_REQUEST]
+    
+    things_array = []
+    for thing in things:
+        things_array.append({
+                "name": thing.name if thing.name else None,
+                "image": thing.image.url if thing.image else None,
+                "wins": thing.wins,
+                "losses": thing.losses,
+            },
+        )
+    return JsonResponse({"things": things_array})
+
 
 def get_matchups(thing):
     matches = Matchup.objects.filter(awaiting_response=False, winner_id=thing.id) | \

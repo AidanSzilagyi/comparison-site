@@ -3,6 +3,59 @@
     {% load static %}
     {% load mathfilters %}
     <link rel="stylesheet" href="{% static 'styles/list-info.css' %}">
+    <div style="display: none;" id="list-slug">{{list.slug}}</div>
+    <div style="display: none;" id="total-num-things">{{list.num_things}}</div>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Code:ital,wght@0,300..800;1,300..800&family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+    <script>
+        let listSlug;
+        let numThingsLoaded = 0;
+        let totalNumThings;
+        let allThingsList; 
+        let allThingsButton;
+        //templates
+        let emptyBox; let textAndImage; let textOnly;
+        document.addEventListener("DOMContentLoaded", async () => {
+            totalNumThings = document.getElementById("total-num-things").textContent;
+            listSlug = document.getElementById("list-slug").textContent;
+            allThingsList = document.getElementById("all-things-list");
+
+            emptyBox = document.getElementById("empty-thing-box");
+            textAndImage = document.getElementById("text-and-image");
+            textOnly = document.getElementById("text-only");
+
+            allThingsButton = document.getElementById("all-things-button");
+            allThingsButton.addEventListener("click", () => {
+                fetchAllThings();
+            });
+        });
+        async function fetchAllThings() {
+            const response = await fetch(`/${listSlug}/get-all-things?loaded=${numThingsLoaded}`);
+            const data = await response.json();
+            console.log(data.things);
+            data.things.forEach(thing => {
+                const thingBox = emptyBox.content.cloneNode(true);
+                numThingsLoaded++;
+                thingBox.querySelector(".js-position-number").textContent = `${numThingsLoaded}.`;
+                
+                if (thing.image) {
+                    const nameBox = textAndImage.content.cloneNode(true);
+                    nameBox.querySelector(".js-thing-name").textContent = thing.name;
+                    nameBox.querySelector(".js-thing-image").src = thing.image;
+                    thingBox.getElementById("thing-box").insertBefore(nameBox, thingBox.getElementById("thing-record"));
+                } else {
+                    const nameBox = textOnly.content.cloneNode(true);
+                    nameBox.querySelector(".js-thing-name-only").textContent = thing.name;
+                    thingBox.getElementById("thing-box").insertBefore(nameBox, thingBox.getElementById("thing-record"));
+                }
+                thingBox.querySelector(".js-thing-wins").textContent = thing.wins;
+                thingBox.querySelector(".js-thing-losses").textContent = thing.losses;
+                allThingsList.appendChild(thingBox);
+            });
+        }
+    </script>
 {% endblock %}
 {% block main %}
     <main class="main-container">
@@ -53,9 +106,14 @@
                     {% for thing, matchups in top_five %}
                     <div class="highlight-thing">
                         <div class="highlight-position-number">{{forloop.counter}}.</div>
-                        <div class="highlight-thing-name">{{thing.name}}</div>
+                        {% if thing.image %}
+                            <div class="highlight-thing-name">{{thing.name}}</div>
+                            <img class="highlight-thing-image" src="{{thing.image.url}}">
+                        {% else %}
+                            <div class="highlight-thing-name-only">{{thing.name}}</div>
+                        {% endif %}
                         <div class="highlight-thing-record">
-                            <img class="W-win" src="{% static 'images/W-Win.png' %}"><div class="wins-losses-text">{{thing.wins}} -</div><img class="l-lose" src="{% static 'images/L-Lose.png' %}"><div class="wins-losses-text">{{thing.losses}}</div>
+                            <img class="W-win" src="{% static 'images/W-Win.png' %}"><div class="wins-losses-text">{{thing.wins}}</div><div class="record-dash"> -</div><img class="l-lose" src="{% static 'images/L-Lose.png' %}"><div class="wins-losses-text">{{thing.losses}}</div>
                             {% if thing.wins != 0 or thing.losses != 0 %}
                                 <div class="past-matchup-sheet">
                                     {% for matchup in matchups %}
@@ -83,9 +141,14 @@
                     {% for thing, matchups in bottom_five %}
                     <div class="highlight-thing">
                         <div class="highlight-position-number">{{list.num_things|sub:"5"|add:forloop.counter}}.</div>
-                        <div class="highlight-thing-name">{{thing.name}}</div>
+                        {% if thing.image %}
+                            <div class="highlight-thing-name">{{thing.name}}</div>
+                            <img class="highlight-thing-image" src="{{thing.image.url}}">
+                        {% else %}
+                            <div class="highlight-thing-name-only">{{thing.name}}</div>
+                        {% endif %}
                         <div class="highlight-thing-record">
-                            <img class="W-win" src="{% static 'images/W-Win.png' %}"><div class="wins-losses-text">{{thing.wins}} -</div><img class="l-lose" src="{% static 'images/L-Lose.png' %}"><div class="wins-losses-text">{{thing.losses}}</div>
+                            <img class="W-win" src="{% static 'images/W-Win.png' %}"><div class="wins-losses-text">{{thing.wins}}</div><div class="record-dash"> -</div><img class="l-lose" src="{% static 'images/L-Lose.png' %}"><div class="wins-losses-text">{{thing.losses}}</div>
                             {% if thing.wins != 0 or thing.losses != 0 %}
                                 <div class="past-matchup-sheet">
                                     {% for matchup in matchups %}
@@ -108,5 +171,23 @@
                 </div>
             </div>
         </div>
+        <div class="all-things-container">
+            <div id="all-things-list" class="highlight-five-things-group" style="width: 540px;">        
+            </div>
+        </div>
+        <button id="all-things-button" class="all-things-button">Load All Things</button>
+        <template id="empty-thing-box">
+            <div id="thing-box" class="highlight-thing">
+                <div class="highlight-position-number js-position-number"></div>
+                <!-- Do not inline this line. It messes with the styling -->
+                <div id="thing-record" class="highlight-thing-record"><img class="W-win" src="{% static 'images/W-Win.png' %}"><div class="wins-losses-text js-thing-wins"></div><div class="record-dash"> -</div><img class="l-lose" src="{% static 'images/L-Lose.png' %}"><div class="wins-losses-text js-thing-losses"></div><div class="past-matchup-sheet"></div></div></div>
+        </template>
+        <template id="text-and-image">
+            <div style="width: 328px;" class="highlight-thing-name js-thing-name"></div>
+            <img class="highlight-thing-image js-thing-image" src="">
+        </template>
+        <template id="text-only">
+            <div style="width: 387px;" class="highlight-thing-name-only js-thing-name-only"></div>
+        </template>
     </main>
 {% endblock %}
