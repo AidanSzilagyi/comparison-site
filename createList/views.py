@@ -271,14 +271,30 @@ def get_all_things(request, slug):
     things_array = []
     for thing in things:
         things_array.append({
-                "name": thing.name if thing.name else None,
-                "image": thing.image.url if thing.image else None,
-                "wins": thing.wins,
-                "losses": thing.losses,
-            },
-        )
+            "name": thing.name if thing.name else None,
+            "image": thing.image.url if thing.image else None,
+            "wins": thing.wins,
+            "losses": thing.losses,
+        })
     return JsonResponse({"things": things_array})
 
+def get_matchups_from_thing(request, slug):
+    list = List.objects.get(slug=slug)
+    ranking = int(request.GET.get("ranking")) - 1 # Account for zero-indexing
+    thing = Thing.objects.filter(list=list).order_by("-rating")[ranking]
+    
+    matchups = get_matchups(thing)
+    matchups_array = []
+    for matchup in matchups:
+        matchup_won = (matchup.winner == thing)
+        matchups_array.append({
+            "result": "win" if matchup_won else "loss",
+            "opponent": matchup.loser.name if matchup_won else matchup.winner.name,
+            "username": matchup.user.profile.username,
+        })
+    return JsonResponse({"matchups": matchups_array})
+    
+        
 
 def get_matchups(thing):
     matches = Matchup.objects.filter(awaiting_response=False, winner_id=thing.id) | \

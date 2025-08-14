@@ -15,45 +15,82 @@
         let totalNumThings;
         let allThingsList; 
         let allThingsButton;
+        let permission;
         //templates
         let emptyBox; let textAndImage; let textOnly;
         document.addEventListener("DOMContentLoaded", async () => {
             totalNumThings = document.getElementById("total-num-things").textContent;
             listSlug = document.getElementById("list-slug").textContent;
             allThingsList = document.getElementById("all-things-list");
+            permission = document.getElementById("permission").textContent;
 
             emptyBox = document.getElementById("empty-thing-box");
             textAndImage = document.getElementById("text-and-image");
             textOnly = document.getElementById("text-only");
+            wonMatchup = document.getElementById("won-matchup");
+            lostMatchup = document.getElementById("lost-matchup");
 
             allThingsButton = document.getElementById("all-things-button");
             allThingsButton.addEventListener("click", () => {
                 fetchAllThings();
             });
+            // Add initial Top/Bottom 5 Event Listeners
+            for (const thingBox of document.getElementById("js-top-five").children) {
+                addLoadMatchupsListener(thingBox);
+            }
+            for (const thingBox of document.getElementById("js-bottom-five").children) {
+                addLoadMatchupsListener(thingBox);
+            }
         });
         async function fetchAllThings() {
             const response = await fetch(`/${listSlug}/get-all-things?loaded=${numThingsLoaded}`);
             const data = await response.json();
             console.log(data.things);
-            data.things.forEach(thing => {
-                const thingBox = emptyBox.content.cloneNode(true);
+            data.things.forEach(async thing => {
+                const thingBox = emptyBox.content.cloneNode(true).querySelector("#thing-box");
                 numThingsLoaded++;
-                thingBox.querySelector(".js-position-number").textContent = `${numThingsLoaded}.`;
+                thingBox.querySelector(".js-position-number").textContent = numThingsLoaded;
                 
                 if (thing.image) {
                     const nameBox = textAndImage.content.cloneNode(true);
                     nameBox.querySelector(".js-thing-name").textContent = thing.name;
                     nameBox.querySelector(".js-thing-image").src = thing.image;
-                    thingBox.getElementById("thing-box").insertBefore(nameBox, thingBox.getElementById("thing-record"));
+                    thingBox.insertBefore(nameBox, thingBox.querySelector("#thing-record"));
                 } else {
                     const nameBox = textOnly.content.cloneNode(true);
                     nameBox.querySelector(".js-thing-name-only").textContent = thing.name;
-                    thingBox.getElementById("thing-box").insertBefore(nameBox, thingBox.getElementById("thing-record"));
+                    thingBox.insertBefore(nameBox, thingBox.querySelector("#thing-record"));
                 }
                 thingBox.querySelector(".js-thing-wins").textContent = thing.wins;
                 thingBox.querySelector(".js-thing-losses").textContent = thing.losses;
+                addLoadMatchupsListener(thingBox);
                 allThingsList.appendChild(thingBox);
             });
+            if (totalNumThings == numThingsLoaded) {
+                allThingsButton.style.display = "none";
+            }
+        }
+        function addLoadMatchupsListener(thingBox) {
+            thingBox.querySelector(".js-load-matchups").addEventListener("mouseover", async () => {
+                const matchupHistory = thingBox.querySelector(".js-matchup-history");
+                const ranking = thingBox.querySelector(".js-position-number").textContent;
+                const response = await fetch(`/${listSlug}/get-matchups-from-thing?ranking=${ranking}`);
+                const data = await response.json();
+                matchupHistory.innerHTML = "";
+                data.matchups.forEach(matchup => {
+                    let matchupBox;
+                    if (matchup.result == "win") {
+                        matchupBox = wonMatchup.content.cloneNode(true);
+                    } else {
+                        matchupBox = lostMatchup.content.cloneNode(true);
+                    }
+                    matchupBox.querySelector(".js-opponent").textContent = matchup.opponent;
+                    if (permission == "Public"){
+                        matchupBox.querySelector(".js-matchup-username").textContent = `by ${matchup.username}`;
+                    }
+                    matchupHistory.appendChild(matchupBox);
+                });
+            }, { once: true });
         }
     </script>
 {% endblock %}
@@ -70,7 +107,7 @@
                     <div class="dot-separator">&middot;</div>
                     
                     <div class="list-detail-stat-value">{{list.num_things}} Things</div><div class="dot-separator">&middot;</div>
-                    <div class="list-detail-stat-value">{{list.get_permission_display}}</div><br>
+                    <div id="permission" class="list-detail-stat-value">{{list.get_permission_display}}</div><br>
                 </div>
                 {% if list.description %}
                 <div class="list-description">{{list.description}}</div>
@@ -82,9 +119,6 @@
                     <div class="list-detail-stat-name">List Created:</div><div class="list-detail-stat-value">{{list.date_created|date:"F jS, Y"}} (*11 days ago)</div><br>
                 </div>
                 <div>
-                    <a href="#">
-                        <div class="all-things-button">See All Things</div>
-                    </a>
                     <a href="{% url 'list_rank' list.slug %}">
                         <div class="rank-button">Rank</div>
                     </a>
@@ -102,32 +136,21 @@
         <div class="multiple-highlight-container">
             <div class="highlight-container">
                 <div class="highlight-title">Best 5 Things</div>
-                <div class="highlight-five-things-group">
+                <div class="highlight-five-things-group" id="js-top-five">
                     {% for thing, matchups in top_five %}
                     <div class="highlight-thing">
-                        <div class="highlight-position-number">{{forloop.counter}}.</div>
+                        <span class="highlight-position-number"><span class="js-position-number">{{forloop.counter}}</span>.</span>
                         {% if thing.image %}
                             <div class="highlight-thing-name">{{thing.name}}</div>
                             <img class="highlight-thing-image" src="{{thing.image.url}}">
                         {% else %}
                             <div class="highlight-thing-name-only">{{thing.name}}</div>
                         {% endif %}
-                        <div class="highlight-thing-record">
+                        <div class="highlight-thing-record js-load-matchups">
                             <img class="W-win" src="{% static 'images/W-Win.png' %}"><div class="wins-losses-text">{{thing.wins}}</div><div class="record-dash"> -</div><img class="l-lose" src="{% static 'images/L-Lose.png' %}"><div class="wins-losses-text">{{thing.losses}}</div>
                             {% if thing.wins != 0 or thing.losses != 0 %}
-                                <div class="past-matchup-sheet">
-                                    {% for matchup in matchups %}
-                                        <div class="past-matchup">
-                                            {% if matchup.winner.id == thing.id %}
-                                                <img class="W-win" src="{% static 'images/W-Win.png' %}"> vs. {{matchup.loser.name}}
-                                            {% else %}
-                                                <img class="l-lose" src="{% static 'images/L-Lose.png' %}"> vs. {{matchup.winner.name}} 
-                                            {% endif %}
-                                            {% if list.permission == "public" %}
-                                                <span class="past-matchup-author">by {{matchup.user.profile.username}}</span>
-                                            {% endif %}
-                                        </div>
-                                    {% endfor %}
+                                <div class="past-matchup-sheet js-matchup-history">
+                                    Loading Matchups...
                                 </div>
                             {% endif %}
                         </div>
@@ -137,32 +160,21 @@
             </div>
             <div class="highlight-container">
                 <div class="highlight-title">Worst 5 Things</div>
-                <div class="highlight-five-things-group">
+                <div class="highlight-five-things-group" id="js-bottom-five">
                     {% for thing, matchups in bottom_five %}
                     <div class="highlight-thing">
-                        <div class="highlight-position-number">{{list.num_things|sub:"5"|add:forloop.counter}}.</div>
+                        <span class="highlight-position-number"><span class="js-position-number">{{list.num_things|sub:"5"|add:forloop.counter}}</span>.</span>
                         {% if thing.image %}
                             <div class="highlight-thing-name">{{thing.name}}</div>
                             <img class="highlight-thing-image" src="{{thing.image.url}}">
                         {% else %}
                             <div class="highlight-thing-name-only">{{thing.name}}</div>
                         {% endif %}
-                        <div class="highlight-thing-record">
+                        <div class="highlight-thing-record js-load-matchups">
                             <img class="W-win" src="{% static 'images/W-Win.png' %}"><div class="wins-losses-text">{{thing.wins}}</div><div class="record-dash"> -</div><img class="l-lose" src="{% static 'images/L-Lose.png' %}"><div class="wins-losses-text">{{thing.losses}}</div>
                             {% if thing.wins != 0 or thing.losses != 0 %}
-                                <div class="past-matchup-sheet">
-                                    {% for matchup in matchups %}
-                                        <div class="past-matchup">
-                                            {% if matchup.winner.id == thing.id %}
-                                                <img class="W-win" src="{% static 'images/W-Win.png' %}"> vs. {{matchup.loser.name}}
-                                            {% else %}
-                                                <img class="l-lose" src="{% static 'images/L-Lose.png' %}"> vs. {{matchup.winner.name}} 
-                                            {% endif %}
-                                            {% if list.permission == "public" %}
-                                                <span class="past-matchup-author">by {{matchup.user.profile.username}}</span>
-                                            {% endif %}
-                                        </div>
-                                    {% endfor %}
+                                <div class="past-matchup-sheet js-matchup-history">
+                                    Loading Matchups...
                                 </div>
                             {% endif %}
                         </div>
@@ -172,15 +184,22 @@
             </div>
         </div>
         <div class="all-things-container">
-            <div id="all-things-list" class="highlight-five-things-group" style="width: 540px;">        
-            </div>
+            <div id="all-things-list" class="highlight-five-things-group" style="width: 540px;"></div>
         </div>
-        <button id="all-things-button" class="all-things-button">Load All Things</button>
+        <div style="display: flex; justify-content: center;">
+            <div id="all-things-button" class="all-things-button">Load All Things</div>
+        </div>
+        
         <template id="empty-thing-box">
             <div id="thing-box" class="highlight-thing">
-                <div class="highlight-position-number js-position-number"></div>
-                <!-- Do not inline this line. It messes with the styling -->
-                <div id="thing-record" class="highlight-thing-record"><img class="W-win" src="{% static 'images/W-Win.png' %}"><div class="wins-losses-text js-thing-wins"></div><div class="record-dash"> -</div><img class="l-lose" src="{% static 'images/L-Lose.png' %}"><div class="wins-losses-text js-thing-losses"></div><div class="past-matchup-sheet"></div></div></div>
+                <span class="highlight-position-number"><span class="js-position-number"></span>.</span>
+                <!-- Do not change the indentation on this line. It messes with the styling -->
+                <div id="thing-record" class="highlight-thing-record js-load-matchups"><img class="W-win" src="{% static 'images/W-Win.png' %}"><div class="wins-losses-text js-thing-wins"></div><div class="record-dash"> -</div><img class="l-lose" src="{% static 'images/L-Lose.png' %}"><div class="wins-losses-text js-thing-losses"></div>
+                    <div class="past-matchup-sheet js-matchup-history">
+                        Loading Matchups...
+                    </div>
+                </div>
+            </div>
         </template>
         <template id="text-and-image">
             <div style="width: 328px;" class="highlight-thing-name js-thing-name"></div>
@@ -189,5 +208,19 @@
         <template id="text-only">
             <div style="width: 387px;" class="highlight-thing-name-only js-thing-name-only"></div>
         </template>
+
+        <template id="won-matchup">
+            <div class="past-matchup">
+                <img class="W-win" src="{% static 'images/W-Win.png' %}"> vs. <span class="js-opponent"></span>
+                <span class="past-matchup-author js-matchup-username"></span>
+            </div>
+        </template>
+        <template id="lost-matchup">
+            <div class="past-matchup">
+                <img class="l-lose" src="{% static 'images/L-Lose.png' %}"> vs. <span class="js-opponent"></span>
+                <span class="past-matchup-author js-matchup-username"></span>
+            </div>
+        </template>
+
     </main>
 {% endblock %}
