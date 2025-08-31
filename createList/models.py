@@ -3,6 +3,9 @@ from django.utils import timezone
 from django.utils.text import slugify
 from django.contrib.auth.models import User
 import uuid
+from django.db.models.signals import pre_delete
+from django.dispatch import receiver
+
 
 # Create your models here.
 class Profile(models.Model):
@@ -99,14 +102,26 @@ class Thing(models.Model):
 
 class Matchup(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    winner = models.ForeignKey(Thing, null=True, on_delete=models.SET_NULL, related_name='matchups_won')
-    loser = models.ForeignKey(Thing, null=True, on_delete=models.SET_NULL, related_name='matchups_lost')
+    winner = models.ForeignKey(Thing, null=True, on_delete=models.CASCADE, related_name='matchups_won')
+    loser = models.ForeignKey(Thing, null=True, on_delete=models.CASCADE, related_name='matchups_lost')
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
     date_created = models.DateTimeField(auto_now_add=True)
     awaiting_response = models.BooleanField(default=True)
     
     def __str__(self):
         return f"{self.winner.name} vs {self.loser.name}"
+    
+# If the winner Thing is deleted, make sure to decrement number of losses
+# for the loser Thing before the Matchup is deleted.
+@receiver(pre_delete, sender=Matchup)
+def adjust_stats_on_matchup_delete(sender, instance, **kwargs):
+    if instance.winner_id:
+        instance.winner.wins = models.F("wins") - 1
+        instance.winner.save(update_fields=["wins"])
+    if instance.loser_id:
+        instance.loser.losses = models.F("losses") - 1
+        instance.loser.save(update_fields=["losses"])
+    
         
 class RecentListInteraction(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
