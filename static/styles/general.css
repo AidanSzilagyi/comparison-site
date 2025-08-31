@@ -38,8 +38,8 @@ textarea {
     flex-direction: column;
     align-items: center;
     flex-wrap: wrap;
-    margin-left: 10px;
-    margin-right: 10px;
+    padding: 15px 15px 15px 15px;
+    box-sizing: border-box;
     width: 100%;
     min-height: calc(100vh - 60.01px);
 }
@@ -53,6 +53,16 @@ a:link, a:visited, a:hover, a:active {
     object-fit: cover;
     object-position: center;
 }
+
+.list-grid {
+    display: grid;
+    gap: 15px;
+    grid-template-columns: repeat(auto-fit, 366px);
+    max-width: min(calc(100vw - 30px), calc(3 * 366px + 2 * 15px));
+    justify-items: start;
+    grid-auto-flow: row;
+}
+
 
 /* Header Styling */
 .website-header-background {
@@ -68,7 +78,7 @@ a:link, a:visited, a:hover, a:active {
     text-wrap: nowrap;
 }
 .website-header {
-    width: min(1100px, 100%);
+    width: min(1128px, 100%);
     display: flex;
     align-items: center;
     justify-content: space-between;

@@ -1,8 +1,12 @@
-from .models import List, Thing, Matchup, SeenThing
+from django.utils import timezone
+from .models import List, Thing, Matchup, RecentListInteraction
 import random
 from .bradley_terry_model import BradleyTerryModel
 from .ranking_util import get_matchups_awaiting_response
 import json
+
+def initialize_list_model(list):
+    get_comparison_model(list).initialize_list_model(list)
 
 def process_matchup_result(user, list, matchup_id, choice):
     matchup = Matchup.objects.get(id=matchup_id)
@@ -17,10 +21,14 @@ def process_matchup_result(user, list, matchup_id, choice):
     print(f"winner: {matchup.winner} --- loser: {matchup.loser}")
     matchup.winner.save()
     matchup.loser.save()
+    
+    list.comparisons_made += 1
+    list.save()
+    update_recent_lists(user, list)
     get_comparison_model(list).update_rankings(user, list, matchup)
 
-def generate_matchup_json(user, list, sent_matchups=[]):
-    matchups = generate_matchups(user, list, sent_matchups)
+def generate_matchup_json(user, list, additional_matchups_required=0, sent_matchups=[]):
+    matchups = generate_matchups(user, list, additional_matchups_required, sent_matchups)
     matchup_json = []
     for matchup in matchups:
         matchup_json.append({
@@ -36,46 +44,33 @@ def generate_matchup_json(user, list, sent_matchups=[]):
         })
     return json.dumps(matchup_json)
 
-def generate_matchups(user, tlist, sent_matchups):
-    limit = 5
-    total = limit * 2
-    if tlist.num_things < total:
-        total = tlist.num_things - (tlist.num_things % 2)
-    
-    comparisons = get_comparison_model(tlist).get_comparisons(user, tlist, sent_matchups)
-    if len(comparisons) > 5:
-        comparisons = comparisons[:5]
+def generate_matchups(user, tlist, additional_matchups_required, sent_matchups):
+    total = get_comparison_model(tlist).get_num_matchups_to_send(tlist)
+    total += 2 - len(sent_matchups)
     
     matchups = list(get_matchups_awaiting_response(user, tlist, sent_matchups))
-    for comparison in comparisons:
+    if len(matchups) >= total:
+        print("first", matchups[:total])
+        return matchups[:total]
+        
+    comparisons = get_comparison_model(tlist).get_comparisons(user, tlist, sent_matchups)
+    for comparison in comparisons[:total - len(matchups)]:
         matchups.append(Matchup.objects.create(
             winner=comparison[0], loser=comparison[1], user=user))
+        
+    print("second", matchups)
     return matchups
-    
-    # else: return find_random_comparisons(list, total)
 
 def get_comparison_model(list):
     if list.comparison_method == 'bradley_terry':
         return BradleyTerryModel()
+
+
+def update_recent_lists(user, list):
+    RecentListInteraction.objects.update_or_create(user=user,list=list, 
+        defaults={'interaction_time': timezone.now()}
+    )
+    least_recent_ids = RecentListInteraction.objects.filter(user=user).order_by('-interaction_time') \
+                  .values_list('id', flat=True)[5:]
     
-
-
-def find_random_comparisons(thing_list, total):
-    things = list(Thing.objects.filter(list=thing_list))
-    random.shuffle(things)
-    things = things[:total]
-    comparisonJSON = []
-    for i in range(0, total - 1, 2):
-        first_thing = things[i]
-        second_thing = things[i + 1]
-        comparisonJSON.append({
-            "thing1": {
-                "name": first_thing.name,
-                "image":first_thing.image.url if first_thing.image else None
-            },
-            "thing2": {
-                "name": second_thing.name,
-                "image":second_thing.image.url if second_thing.image else None
-            }
-        })
-    return comparisonJSON
+    RecentListInteraction.objects.filter(id__in=least_recent_ids).delete()

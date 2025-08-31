@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect
-from .models import Thing, List, Profile, Matchup
+from .models import Thing, List, Profile, Matchup, RecentListInteraction
 from .forms import ListForm, ThingForm, ProfileForm
 from django.forms import modelformset_factory
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET
-from .rank_systems import generate_matchup_json, process_matchup_result
+from .rank_systems import generate_matchup_json, process_matchup_result, initialize_list_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.utils.http import urlencode
@@ -24,9 +24,18 @@ def home(request):
     return render(request, 'createList/home.html')
 
 def explore(request):
-    return redirect('home')
+    recent_lists = List.objects.filter(recentlistinteraction__user=request.user
+                    ).order_by('-recentlistinteraction__interaction_time')[:3]
+    new_lists = List.objects.order_by("-date_created")[:3]
+    
+    return render(request, 'createList/explore.html', {
+        'recent_compared_lists': recent_lists,
+        'new_lists': new_lists,
+    })
 
 def recent(request):
+    
+    
     return redirect('home')
 
 
@@ -163,6 +172,7 @@ def create_or_edit_list(request, list_type, slug=None):
             list.user = request.user
             list.num_things = len(things)
             list.type = list_type
+            initialize_list_model(list)
             list.save()
             print("List Saved", list)
             for form in things:
@@ -215,7 +225,7 @@ def list_rank(request, slug):
     #        notdone = False
     
     list = List.objects.get(slug=slug)
-    initial_things = generate_matchup_json(request.user, list)
+    initial_things = generate_matchup_json(request.user, list, additional_matchups_required=2)
     return render(request, 'createList/rank.html', {"initial_things": initial_things, "list_slug": slug})
 
 def get_comparisons(request, slug):
@@ -226,12 +236,12 @@ def get_comparisons(request, slug):
     sent_matchups = []
     if request.GET.get("ids", ""):
         ids = request.GET.get("ids").split(",")
+        print(ids)
         if ids:
             uuids = [uuid.UUID(id) for id in ids if id]
             sent_matchups = Matchup.objects.filter(id__in=uuids)
 
-    Matchup.objects.filter(id__in=ids)
-    comparisons = generate_matchup_json(request.user, list, sent_matchups)
+    comparisons = generate_matchup_json(request.user, list, sent_matchups=sent_matchups)
     return JsonResponse({'comparisons': comparisons})
 
 def complete_comparison(request, slug):
@@ -246,8 +256,8 @@ def complete_comparison(request, slug):
 def list_info(request, slug):
     tlist = List.objects.get(slug=slug)
     all_things = Thing.objects.filter(list=tlist)  
-    top_five = list(all_things.order_by('-rating')[:5])
-    bottom_five = list(all_things.order_by('rating')[:5])[::-1] 
+    top_five = list(all_things.order_by('-rating', 'pk')[:5])
+    bottom_five = list(all_things.order_by('rating', 'pk')[:5])[::-1] 
     
     top_five_matchups = [get_matchups(thing) for thing in top_five]
     bottom_five_matchups = [get_matchups(thing) for thing in bottom_five]
@@ -264,9 +274,9 @@ def get_all_things(request, slug):
     list = List.objects.get(slug=slug)
     num_things_loaded = int(request.GET.get("loaded"))
     if num_things_loaded + NUM_LOADED_THINGS_PER_REQUEST >= list.num_things:
-        things = Thing.objects.filter(list=list).order_by("-rating")[num_things_loaded:]
+        things = Thing.objects.filter(list=list).order_by("-rating", "pk")[num_things_loaded:]
     else:
-        things = Thing.objects.filter(list=list).order_by("-rating")[num_things_loaded:num_things_loaded + NUM_LOADED_THINGS_PER_REQUEST]
+        things = Thing.objects.filter(list=list).order_by("-rating", "pk")[num_things_loaded:num_things_loaded + NUM_LOADED_THINGS_PER_REQUEST]
     
     things_array = []
     for thing in things:
@@ -281,7 +291,7 @@ def get_all_things(request, slug):
 def get_matchups_from_thing(request, slug):
     list = List.objects.get(slug=slug)
     ranking = int(request.GET.get("ranking")) - 1 # Account for zero-indexing
-    thing = Thing.objects.filter(list=list).order_by("-rating")[ranking]
+    thing = Thing.objects.filter(list=list).order_by("-rating", "pk")[ranking]
     
     matchups = get_matchups(thing)
     matchups_array = []
@@ -290,11 +300,18 @@ def get_matchups_from_thing(request, slug):
         matchups_array.append({
             "result": "win" if matchup_won else "loss",
             "opponent": matchup.loser.name if matchup_won else matchup.winner.name,
-            "username": matchup.user.profile.username,
+            "username": get_username_or_none(matchup),
         })
     return JsonResponse({"matchups": matchups_array})
     
-        
+def get_username_or_none(obj):
+    user = getattr(obj, 'user', None)
+    if user:
+        profile = getattr(user, 'profile', None)
+        if profile:
+            return profile.username
+    return None
+
 
 def get_matchups(thing):
     matches = Matchup.objects.filter(awaiting_response=False, winner_id=thing.id) | \
@@ -307,24 +324,36 @@ def get_matchups(thing):
 
 @login_required
 def my_profile(request):
-    lists = List.objects.filter(user=request.user)
+    created_lists = List.objects.filter(user=request.user)
+    recent_lists = List.objects.filter(recentlistinteraction__user=request.user
+                    ).order_by('-recentlistinteraction__interaction_time')
+
     context = {
         "profile": request.user.profile,
-        "recent_lists": None,
-        "user_lists": lists,
+        "recent_lists": recent_lists,
+        "user_lists": created_lists,
         "owner": True,
     }
+    
+    print(created_lists, "\n\n")
+    print(recent_lists)
+    
     return render(request, 'createList/profile.html', context)
 
 def view_profile(request, slug):
     profile = Profile.objects.get(slug=slug)
+    if profile == request.user.profile:
+        redirect('my_profile')
     if not profile:
         not_found(request, "That user does not exist.")
-    lists = List.objects.filter(user=profile.user)
+    
+    created_lists = List.objects.filter(user=profile.user)
+    recent_lists = List.objects.filter(recentlistinteraction__user=profile.user
+                    ).order_by('-recentlistinteraction__interaction_time')
     context = {
         "profile": profile,
-        "recent_lists": None,
-        "user_lists": lists,
+        "recent_lists": recent_lists,
+        "user_lists": created_lists,
     }
     return render(request, 'createList/profile.html', context)
 

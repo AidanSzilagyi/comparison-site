@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 async function fetchComparisons() {
-    if (comparisonQueue.length < 5 && !loadingComparisons) {
+    if (comparisonQueue.length < 2 && !loadingComparisons) {
         loadingComparisons = true;
         let matchupIDs = currentMatchupID;
         comparisonQueue.forEach((comparison) => {
@@ -36,6 +36,8 @@ async function fetchComparisons() {
 }
 function loadNewComparison() {
     const comparison = comparisonQueue.shift();
+    console.log("loadNewComparison - CompQueue.len: " + comparisonQueue.length)
+
     if (comparison) {
         let comparisonThings = [comparison.thing1, comparison.thing2];
         for (let i = 0; i < 2; i++) {
@@ -60,25 +62,38 @@ function loadNewComparison() {
                 `;
             }
         }
-        currentMatchupID = comparison.id
+        currentMatchupID = comparison.id;
     } else {
-        currentMatchupID = ""
-        // Load next matchup after fetch
+        for (let i = 0; i < 2; i++) {
+            thingBoxes[i].innerHTML = "";
+        }
+        currentMatchupID = "";
+        fetchComparisons();
     }
 }
 
+let submitting = false;
 function handleChoice(choice) {
-    console.log(comparisonQueue)
+    const id = currentMatchupID;
+    if (submitting || !id) return;
+    
+    submitting = true;
+    loadNewComparison();
+    submitting = false; 
+
+    console.log("HandleChoice - CompQueue.len: " + comparisonQueue.length);
     fetch(`/${listSlug}/complete-comparison/`, {
         method: 'POST',
         headers: {'Content-Type': 'application/json', 'X-CSRFToken': csrftoken},
         body: JSON.stringify({
-            "id": currentMatchupID,
+            "id": id,
             "choice": choice,
         })
+    }).then(() => {
+        fetchComparisons();
+    }).then(() => {
+        if (!currentMatchupID && comparisonQueue.length > 0) {
+            loadNewComparison();
+        }
     });
-    fetchComparisons();
-    loadNewComparison();
 }
-
-//<img class="thing-image" src="${comparison.thing2.image}"></img>

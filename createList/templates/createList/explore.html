@@ -1,0 +1,44 @@
+{% extends "./base.html" %}
+{% block extra_head %}
+    <style>
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .section-heading {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+    </style>
+{% endblock %}
+{% block main %}
+<main class="main-container">
+    <div>
+        <div class="section-heading">
+            Recently Compared Lists
+        </div>
+        <div class=""></div>
+        <div class="list-grid">
+            {% for list in recent_compared_lists %}
+                {% include "./list-card.html" with list=list %}
+            {% empty %}
+                <div><i>No lists compared</i></div>
+            {% endfor %}
+        </div>
+    </div>
+    <div>
+        <div class="section-heading">
+            New Lists
+        </div>
+        <div class="list-grid">
+            {% for list in new_lists %}
+                {% include "./list-card.html" with list=list %}
+            {% empty %}
+                <div><i>No lists created</i></div>
+            {% endfor %}
+        </div>
+    </div>
+    <!-- Recent, Popular, By Authors you've interacted with -->
+</main>
+{% endblock %}

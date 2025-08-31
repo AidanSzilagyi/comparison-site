@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 
-from .models import List, Thing, Matchup, Profile, SeenThing
+from .models import List, Thing, Matchup, Profile
 
 
 class ListAdmin(admin.ModelAdmin):
@@ -12,4 +12,3 @@ admin.site.register(Profile)
 admin.site.register(List)
 admin.site.register(Thing)
 admin.site.register(Matchup)
-admin.site.register(SeenThing)

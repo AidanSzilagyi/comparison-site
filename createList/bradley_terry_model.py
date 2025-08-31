@@ -1,8 +1,8 @@
 import math
-from .models import List, Thing, Matchup, SeenThing
+from .models import List, Thing, Matchup
 from django.db.models import Q
 from collections import defaultdict
-from .ranking_util import get_available_things, exclude_used_comparisons, get_matchups_awaiting_response
+from .ranking_util import get_available_things, exclude_used_comparisons, get_random_comparisons
 import decimal
 
 # TODO: Test for floating point inaccuracy
@@ -10,21 +10,47 @@ lr = 0.01 # Learning Rate
 random_rounds = 3  # The first few rounds, matchups are randomly chosen
 batch_reset_percent = 0.05 # A batch update is performed after the this many comparisons,  
                            # as a percent of the total number of things in the list
-min_batch_reset = 1
+min_batch_reset = 10
 MIN_PROB = 1e-10
-class BradleyTerryModel:
+class BradleyTerryModel: 
+    @staticmethod
+    def initialize_list_model(list):
+        list.comparisons_needed = list.num_things * 20 # Refine this
+        BradleyTerryModel.batch_countdown_reset(list)
+    
+    @staticmethod
+    def batch_countdown_reset(list):
+        list.batch_countdown = max((int) (batch_reset_percent * list.num_things), min_batch_reset)   
+    
+    @staticmethod
+    def get_num_matchups_to_send(list):
+        if list.num_things >= 100:
+            return 5
+        elif list.num_things >= 40:
+            return list.num_things // 20
+        return 1
+    
     @staticmethod
     def get_comparisons(user, list, sent_matchups):
         comparisons = []
-        available_things = get_available_things(user, list)
+        available_things = get_available_things(list, sent_matchups)
         
+        # Builds a dict with key = available_things index and value = information value
+        # from comparing it and the item with the next highest rating
         info_dict = {}
         for i in range(len(available_things) - 1):
             info_dict[i] = BradleyTerryModel.calculate_info(available_things[i], available_things[i + 1])
+        
+        # Sort the dict based on information value, yielding the most information at the lower indices
         info_list = sorted(info_dict.items(), key=lambda item: item[1], reverse=True)
-        for entry in info_list:
+        for entry in info_list[:50]:
             comparisons.append([available_things[entry[0]], available_things[entry[0] + 1]])
+        #print("pre-exclusion: ", comparisons)
         comparisons = exclude_used_comparisons(comparisons, sent_matchups)
+        #print("final: ", comparisons)
+        
+        if len(comparisons) == 0:
+            comparisons = get_random_comparisons(list)
         return comparisons
 
     @staticmethod
@@ -38,9 +64,8 @@ class BradleyTerryModel:
         matchup.loser.save()
         if list.batch_countdown > 0:
             list.batch_countdown -= 1
-        if (list.batch_countdown == 0 and list.comparisons_made > list.num_things * random_rounds): # subtract the parallelize buffer later
-            BradleyTerryModel.batch_update(list)
-            list.batch_countdown = max((int) (batch_reset_percent * list.num_things), min_batch_reset)
+        #if (list.batch_countdown == 0 and list.comparisons_made > list.num_things * random_rounds): # subtract the parallelize buffer later
+        BradleyTerryModel.batch_update(list)
         list.save()
 
     @staticmethod
@@ -65,16 +90,22 @@ class BradleyTerryModel:
             thing = Thing.objects.get(id=index_to_id[i])
             thing.rating = decimal.Decimal(ratings[i])
             thing.save()
+        BradleyTerryModel.batch_countdown_reset(list)
+        
 
     def gradient_ascent(matchup_records, num_things):
-        ratings = [0.0 for _ in num_things]
-        gradients = [0.0 for _ in num_things]
-        log_likelihood = 0.0
-        prev_log_likelihood = 1.0
+        ratings = [0.0 for _ in range(num_things)]
+        log_likelihood = 1.0
+        prev_log_likelihood = 0.0
         iterations = 0
-        while(abs(log_likelihood - prev_log_likelihood) < 1e-5 and iterations < 1000):
+        while(abs(log_likelihood - prev_log_likelihood) > 1e-5 and iterations < 1000):
+            prev_log_likelihood = log_likelihood
+            log_likelihood = 0.0
+            gradients = [0.0 for _ in range(num_things)]
+            
             for (i, j), record in matchup_records.items():
-                wins = record['wins'], losses = record['losses']
+                wins = record['wins']
+                losses = record['losses']
                 num_matchups = wins + losses
                 # Is num_matchups ever 0?
                 
@@ -82,8 +113,7 @@ class BradleyTerryModel:
                 win_prob = max(min(win_prob, 1 - MIN_PROB), MIN_PROB)
 
                 gradients[i] += wins - num_matchups * win_prob
-                gradients[i] += losses - num_matchups * win_prob
-                prev_log_likelihood = log_likelihood
+                gradients[j] += losses - num_matchups * (1 - win_prob)
                 log_likelihood += wins * math.log(win_prob) + losses * math.log(1 - win_prob)
             
             for i in range(num_things):

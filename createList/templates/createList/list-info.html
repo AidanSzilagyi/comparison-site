@@ -113,7 +113,8 @@
                 <div class="list-description">{{list.description}}</div>
                 {% endif %}
                 <div class="list-details">
-                    <div class="list-detail-stat-name">Comparisons Made:</div><div class="list-detail-stat-value">{{list.comparisons_made}} / {{list.comparisons_needed}} (*11%)</div><br>
+                    <div class="list-detail-stat-name">Comparisons Made:</div><div class="list-detail-stat-value">{{list.comparisons_made}} / {{list.comparisons_needed}} ({{ list.comparisons_made|div:list.comparisons_needed|mul:100 }}%)</div><br>
+                    <!-- May have to rewrite this percent system thing -->
                     <div class="list-detail-stat-name">Comparison Model:</div><div class="list-detail-stat-value">{{list.get_comparison_method_display }}</div><br>
                     <div class="list-detail-stat-name">Last Comparison:</div><div class="list-detail-stat-value">{{ list.last_updated|date:"F jS, Y"}} (*11 years ago)</div><br>
                     <div class="list-detail-stat-name">List Created:</div><div class="list-detail-stat-value">{{list.date_created|date:"F jS, Y"}} (*11 days ago)</div><br>

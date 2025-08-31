@@ -41,15 +41,37 @@ class List(models.Model):
     comparisons_needed = models.IntegerField(default=0)
     date_created = models.DateTimeField(default=timezone.now)
     last_updated = models.DateTimeField(auto_now=True)
-    permission = models.CharField(
-        choices = [
-            ('private', 'Private'),
-            ('protected', 'View Only'),
-            ('public', 'Public'),
-        ],
-        default='private'
-    )
     # ^ Must call model.save() when any element of List is updated
+    
+    
+    class Permission(models.TextChoices):
+        PRIVATE = 'private', 'Private'
+        PROTECTED = 'protected', 'View Only'
+        INVITE_RANK = 'invite-rank', 'Invite to Rank'
+        INVITE_VIEW = 'invite-view', 'Invite to View + Rank'
+        PUBLIC = 'public', 'Public'
+
+        @classmethod
+        def descriptions(cls):
+            return {
+                cls.PRIVATE: "Only you can view and rank this list.",
+                cls.PROTECTED: "Anyone can view, but not rank.",
+                cls.INVITE_RANK: "Invited users can rank, but everyone can view.",
+                cls.INVITE_VIEW: "Invited users can view and rank, but others cannot view.",
+                cls.PUBLIC: "Anyone can view and rank this list."
+            }
+
+    permission = models.CharField(
+        max_length=20,
+        choices=Permission.choices,
+        default=Permission.PRIVATE,
+        help_text="Controls who can view or participate in ranking this list."
+    )
+    # permitted_users field only used with invite only permissions
+    permitted_users = models.ManyToManyField(User, related_name="permitted_lists")
+    
+    
+    
     slug = models.SlugField(unique=True)
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -82,14 +104,19 @@ class Matchup(models.Model):
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
     date_created = models.DateTimeField(auto_now_add=True)
     awaiting_response = models.BooleanField(default=True)
+    
     def __str__(self):
         return f"{self.winner.name} vs {self.loser.name}"
-class SeenThing(models.Model):
+        
+class RecentListInteraction(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    thing = models.ForeignKey(Thing, on_delete=models.CASCADE)
-    date_created = models.DateTimeField(auto_now_add=True)
+    list = models.ForeignKey(List, on_delete=models.CASCADE)
+    interaction_time = models.DateTimeField(auto_now=True)
+    
     class Meta:
-        unique_together = [('user', 'thing')]
+        unique_together = ('user', 'list')
+        ordering = ['-interaction_time']
+
 
 from django.db.models import Q
 
