@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
+    // Adding and removing List image
     const selectedListImage = document.querySelector('.js-selected-list-image');
     const unselectedListImage = document.querySelector('.js-unselected-list-image');
     const imageListInput = document.querySelector(".js-list-image-input");
@@ -22,6 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // Adding and removing Things with Add Thing and Trash Can, respectively
     const formContainer = document.getElementById("js-list-of-things");
     const emptyForm = document.getElementById("empty-form-template").innerHTML;
     const totalFormNum = document.querySelector('input[name="form-TOTAL_FORMS"]');
@@ -47,6 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
     });
+    // Adding and removing Thing images
     formContainer.addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -88,5 +91,21 @@ document.addEventListener("DOMContentLoaded", () => {
                 removeImageButton.style.display = 'none';
             }
         }
+    });
+
+    // Descriptions for Permissions
+    const radios = document.querySelectorAll('input[name="permission"]');
+    const descriptionBox = document.getElementById("permission-details");
+    
+    function updateDescription() {
+        const checked = document.querySelector('input[name="permission"]:checked');
+        if (checked) {
+            descriptionBox.textContent = checked.dataset.description;
+        }
+    }
+
+    updateDescription(); 
+    radios.forEach(radio => {
+        radio.addEventListener("change", updateDescription);
     });
 });

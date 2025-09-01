@@ -111,6 +111,16 @@
     gap: 10px;
     align-items: flex-start;
 }
+.permissions-container {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    gap: 4px;
+}
+.permission-details {
+    width: 168px;
+    margin: 0;
+}
 
 .error-text {
     color: var(--error-red);
@@ -126,6 +136,9 @@
     font-size: 20px;
 }
 
+.permissions-container .radio-input label {
+    width: 168px;
+}
 
 /* Radio Inputs */
 .radio-input-container { 
@@ -160,7 +173,7 @@
   align-items: center;
   gap: 15px;
   padding: 0px 20px;
-  width: 220px;
+  width: 230px;
   cursor: pointer;
   height: var(--input-height);
   position: relative;

@@ -51,29 +51,25 @@ class List(models.Model):
         PRIVATE = 'private', 'Private'
         PROTECTED = 'protected', 'View Only'
         INVITE_RANK = 'invite-rank', 'Invite to Rank'
-        INVITE_VIEW = 'invite-view', 'Invite to View + Rank'
+        INVITE_VIEW = 'invite-view', 'Invite to View'
         PUBLIC = 'public', 'Public'
 
-        @classmethod
-        def descriptions(cls):
-            return {
-                cls.PRIVATE: "Only you can view and rank this list.",
-                cls.PROTECTED: "Anyone can view, but not rank.",
-                cls.INVITE_RANK: "Invited users can rank, but everyone can view.",
-                cls.INVITE_VIEW: "Invited users can view and rank, but others cannot view.",
-                cls.PUBLIC: "Anyone can view and rank this list."
-            }
+    permission_descriptions = {
+        Permission.PRIVATE: "Only you can view and rank this list.",
+        Permission.PROTECTED: "Anyone with the link can view, but not rank.",
+        Permission.INVITE_RANK: "Only invited users can rank. Others can view.",
+        Permission.INVITE_VIEW: "Only invited users can view and rank.",
+        Permission.PUBLIC: "Anyone can view and rank this list.",
+    }
 
     permission = models.CharField(
         max_length=20,
         choices=Permission.choices,
         default=Permission.PRIVATE,
-        help_text="Controls who can view or participate in ranking this list."
+        help_text="Controls who can view or rank this list."
     )
     # permitted_users field only used with invite only permissions
     permitted_users = models.ManyToManyField(User, related_name="permitted_lists")
-    
-    
     
     slug = models.SlugField(unique=True)
     def save(self, *args, **kwargs):

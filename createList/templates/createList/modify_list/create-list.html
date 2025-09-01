@@ -1,5 +1,6 @@
 {% extends "../base.html" %}
 {% load static %}
+{% load permissions %}
 {% block extra_head %}  
     <script src="{% static 'scripts/createList.js' %}"></script>
     <link rel="stylesheet" href="{% static 'styles/modify_list/createList.css' %}">
@@ -78,18 +79,24 @@
                 </div>
 
                 <div class="multiple-choice-options">
-                    <div class="radio-input-container">
-                        <div class="radio-input-title">Visibility</div>
-                        <div class="radio-input">
-                            {% for value, label in list_form.fields.permission.choices %}
-                                <label class="label">
-                                    <input type="radio" 
-                                        name="{{ list_form.permission.html_name }}" value="{{ value }}"
-                                        {% if list_form.permission.value == value %}checked{% endif %}>
-                                    <p class="radio-input-text">{{ label }}</p>
-                                </label>
-                            {% endfor %}
+                    <div class="permissions-container">
+                        <div class="radio-input-container">
+                            <div class="radio-input-title">Visibility</div>
+                            <div class="radio-input">
+                                {% for value, label in list_form.fields.permission.choices %}
+                                    <label class="label">
+                                        <input type="radio" 
+                                            name="permission" value="{{ value }}"
+                                            data-description="{{ value|permission_description }}"
+                                            {% if list_form.permission.value == value %}checked{% endif %}>
+                                        <p class="radio-input-text">{{ label }}</p>
+                                    </label>
+                                {% endfor %}
                             </div>
+                        </div>
+                        <div>
+                            <p class="permission-details" id="permission-details"></p>
+                        </div>
                     </div>
                     <div class="radio-input-container">
                         <div class="radio-input-title">Comparison Model</div>
