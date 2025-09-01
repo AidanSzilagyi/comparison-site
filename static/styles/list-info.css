@@ -8,18 +8,21 @@
 .list-metadata{
     display: flex;
     margin-bottom: 8px;
+    gap: 5px;
 }
 .list-image-container {
     width: 300px;
     display: flex;
     justify-content: right;
     border-radius: 8px;
+    text-align: right; 
     overflow: hidden;
+    align-items: flex-start;
 }
 .list-image {
     object-fit: contain;
-    max-width: 100%;
-    max-height: 100%;
+    width: 100%;
+    height: auto;
     border-radius: 8px;
 }
 .list-detail-container {

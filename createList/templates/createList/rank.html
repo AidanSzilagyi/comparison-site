@@ -56,6 +56,16 @@
             width: 100%;
             border-radius: 8px;
         }
+        .info-back-button {
+            position: absolute;
+            top: 54px;
+            right: 7px;
+            margin-top: 3px;
+            display: inline-block;
+            border-radius: 8px;
+            background-color: var(--secondary);
+            padding: 5px 5px;
+        }
     </style>
 {% endblock %}
 {% block main %}
@@ -66,4 +76,9 @@
         <div>or</div>
         <div id="thing-box-2" class="thing-box">
     </div>
+    <a href="{% url 'list_info' list_slug %}">
+        <div class="info-back-button">
+            Back to Info
+        </div>
+    </a>
 {% endblock %}
