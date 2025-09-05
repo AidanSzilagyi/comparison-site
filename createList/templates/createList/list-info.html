@@ -120,12 +120,16 @@
                     <div class="list-detail-stat-name">List Created:</div><div class="list-detail-stat-value">{{list.date_created|date:"F jS, Y"}} (*11 days ago)</div><br>
                 </div>
                 <div>
-                    <a href="{% url 'list_rank' list.slug %}">
-                        <div class="rank-button">Rank</div>
-                    </a>
+                    {% if can_rank %}
+                        <a href="{% url 'list_rank' list.slug %}">
+                            <div class="rank-button">Rank</div>
+                        </a>
+                    {% endif %}
+                    {% if can_edit %}
                     <a href="{% url 'list_edit' list.slug %}">
                         <div class="edit-button">Edit</div>
                     </a>
+                    {% endif %}
                 </div> 
             </div>
             {% if list.image %}

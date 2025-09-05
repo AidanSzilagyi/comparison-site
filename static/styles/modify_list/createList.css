@@ -136,11 +136,34 @@
     font-size: 20px;
 }
 
+/* Permissions Invite Popup */
+.invite-users-container {
+    display: none;
+    padding: 1.5px 3px 1.5px 3px; 
+    border-radius: 10px; 
+    border: 1px solid var(--secondary);
+}
+.invite-users-title {
+    text-align: center;
+    font-size: 18px;
+}
+.invite-users-instructions {
+    text-align: center;
+}
+.invite-username-input {
+    width: 220px;
+    height: 198px;
+    flex: 1;
+    font-size: 18px;
+    resize: none;
+    background-color: var(--secondary);
+}
+
+/* Radio Inputs */
 .permissions-container .radio-input label {
     width: 168px;
 }
 
-/* Radio Inputs */
 .radio-input-container { 
     padding: 1.5px 1.5px; 
     border-radius: 10px; 

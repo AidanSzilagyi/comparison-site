@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Thing, List, Profile, Matchup, RecentListInteraction
+from django.contrib.auth.models import User
 from .forms import ListForm, ThingForm, ProfileForm
 from django.forms import modelformset_factory
 from django.http import HttpResponse
@@ -15,6 +16,7 @@ import random
 import csv
 from io import TextIOWrapper
 from django.db.models import Q
+from .permissions import permission_check, AccessLevel
 
 NUM_STARTING_FORMS = 10
 NUM_MATCHUPS_SENT = 20
@@ -23,6 +25,7 @@ NUM_LOADED_THINGS_PER_REQUEST = 3
 def home(request):
     return render(request, 'createList/home.html')
 
+@login_required
 def explore(request):
     recent_lists = List.objects.filter(recentlistinteraction__user=request.user
                     ).order_by('-recentlistinteraction__interaction_time')[:3]
@@ -34,8 +37,6 @@ def explore(request):
     })
 
 def recent(request):
-    
-    
     return redirect('home')
 
 
@@ -135,6 +136,8 @@ def list_edit(request, slug):
     list = List.objects.get(slug=slug)
     if not list:
         return not_found(request, "That list does not exist")
+    if not permission_check(request.user, list, AccessLevel.EDIT):
+        return forbidden_403(request)
     return create_or_edit_list(request, list.type, slug)
 
 @login_required
@@ -149,12 +152,7 @@ def create_or_edit_list(request, list_type, slug=None):
     if request.method == 'POST':
         list_form = ListForm(request.POST, request.FILES, instance=list)
         thing_forms = thing_form_set(request.POST, request.FILES, queryset=existing_things)
-        for i, form in enumerate(thing_forms):
-            if not form.is_valid():
-                print(f"Form {i} errors:", form.errors)
-        print("Form may be valid")
-        print(list_form.is_valid())
-        print(thing_forms.is_valid())
+        invited_users = request.POST.get('invited-users')
         if thing_forms.is_valid() and list_form.is_valid():
             print("form maybebe valid")
             things = [form for form in thing_forms if form.cleaned_data and not form.cleaned_data.get('DELETE')]
@@ -164,6 +162,7 @@ def create_or_edit_list(request, list_type, slug=None):
                     'thing_forms': thing_forms,
                     'new_list': list == None,
                     'list_type': list_type,
+                    'invited_users': invited_users,
                     'error': 'You must include at least 3 things.'
                 })
             print("form is valid!")
@@ -172,6 +171,8 @@ def create_or_edit_list(request, list_type, slug=None):
             list.user = request.user
             list.num_things = len(things)
             list.type = list_type
+            
+            update_permitted_users(list, invited_users)
             initialize_list_model(list)
             list.save()
             print("List Saved", list)
@@ -191,8 +192,28 @@ def create_or_edit_list(request, list_type, slug=None):
         'thing_forms': thing_forms,
         'new_list': list == None,
         'list_type': list_type,
+        'invited_users': get_invited_users_text(list) if list else invited_users,
     }) 
     return HttpResponse("Neither GET nor POST")
+
+def get_invited_users_text(list):
+    users = list.permitted_users.all()
+    users_text = ""
+    for user in users:
+        users_text += user.profile.username + ", "
+    return users_text
+
+def update_permitted_users(list, invited_users_text):
+    list.permitted_users.clear()
+    for text in invited_users_text.split(","):
+        profile = Profile.objects.filter(username__iexact=text.strip().lower()).first()
+        if profile:
+            list.permitted_users.add(profile.user)
+        user = User.objects.filter(email__iexact=text.strip()).first() # TODO: This field should be case-insensitive
+        if user:
+            list.permitted_users.add(user)
+            
+    
 
 @login_required
 def images_only_create_list(request):
@@ -215,6 +236,7 @@ def all_lists(request):
     all_lists = List.objects.all()
     return render(request, 'createList/all-lists.html', {"all_lists": all_lists})
 
+@login_required
 def list_rank(request, slug):
     #matchups = Matchup.objects.all()
     #notdone = True
@@ -223,15 +245,20 @@ def list_rank(request, slug):
     #        print(matchup.winner.name)
     #        matchup.delete()
     #        notdone = False
-    
     list = List.objects.get(slug=slug)
+    if not permission_check(request.user, list, AccessLevel.RANK):
+        return forbidden_403(request)
+    
     initial_things = generate_matchup_json(request.user, list, additional_matchups_required=2)
     return render(request, 'createList/rank.html', {"initial_things": initial_things, "list_slug": slug})
 
+@login_required
 def get_comparisons(request, slug):
     list = List.objects.get(slug=slug)
     if not list:
         return JsonResponse({'error': 'Unknown list slug'}, status=400)
+    if not permission_check(request.user, list, AccessLevel.RANK):
+        return forbidden_403(request)
     
     sent_matchups = []
     if request.GET.get("ids", ""):
@@ -244,8 +271,13 @@ def get_comparisons(request, slug):
     comparisons = generate_matchup_json(request.user, list, sent_matchups=sent_matchups)
     return JsonResponse({'comparisons': comparisons})
 
+@login_required
 def complete_comparison(request, slug):
     list = List.objects.get(slug=slug)
+    if not permission_check(request.user, list, AccessLevel.RANK):
+        return forbidden_403(request)
+    # Should make sure that the comparison completed is from the corrrect user instead of this^
+    
     body = json.loads(request.body)
     if not body.get('id'):
         return JsonResponse({'error': 'Missing matchup ID'}, status=400)
@@ -255,6 +287,9 @@ def complete_comparison(request, slug):
 # Note the slicing and list() calls. Allowing lazy evaluation can lead to incorrect results
 def list_info(request, slug):
     tlist = List.objects.get(slug=slug)
+    if not permission_check(request.user, tlist, AccessLevel.VIEW):
+        return forbidden_403(request)
+    
     all_things = Thing.objects.filter(list=tlist)  
     top_five = list(all_things.order_by('-rating', 'pk')[:5])
     bottom_five = list(all_things.order_by('rating', 'pk')[:5])[::-1] 
@@ -267,11 +302,16 @@ def list_info(request, slug):
         "list": tlist,
         "top_five": list(zip(top_five, top_five_matchups)),
         "bottom_five": list(zip(bottom_five, bottom_five_matchups)),
+        "can_rank": permission_check(request.user, tlist, AccessLevel.RANK),
+        "can_edit": permission_check(request.user, tlist, AccessLevel.EDIT),
     }
     return render(request, 'createList/list-info.html', context)
 
 def get_all_things(request, slug):
     list = List.objects.get(slug=slug)
+    if not permission_check(request.user, list, AccessLevel.VIEW):
+        return forbidden_403(request)
+    
     num_things_loaded = int(request.GET.get("loaded"))
     if num_things_loaded + NUM_LOADED_THINGS_PER_REQUEST >= list.num_things:
         things = Thing.objects.filter(list=list).order_by("-rating", "pk")[num_things_loaded:]
@@ -290,6 +330,9 @@ def get_all_things(request, slug):
 
 def get_matchups_from_thing(request, slug):
     list = List.objects.get(slug=slug)
+    if not permission_check(request.user, list, AccessLevel.VIEW):
+        return forbidden_403(request)
+    
     ranking = int(request.GET.get("ranking")) - 1 # Account for zero-indexing
     thing = Thing.objects.filter(list=list).order_by("-rating", "pk")[ranking]
     
@@ -359,6 +402,9 @@ def view_profile(request, slug):
 
 def list_card_test(request):
     return render(request, 'createList/list-card-prototype.html')
+
+def forbidden_403(request):
+    return JsonResponse({'error': 'You do not have permission to do that'}, status=403)
 
 def not_found(request, reason):
     if not reason:

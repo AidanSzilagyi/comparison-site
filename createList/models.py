@@ -10,7 +10,7 @@ from django.dispatch import receiver
 # Create your models here.
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    username = models.CharField(max_length=20, blank=True, null=True) # REMOVE LATER
+    username = models.CharField(max_length=20, blank=True, null=True) # REMOVE LATER, add unique, no commas or @
     image = models.ImageField(upload_to='profile_images/', blank=True, null=True)
     slug = models.SlugField(unique=True)
     def save(self, *args, **kwargs):
@@ -46,13 +46,16 @@ class List(models.Model):
     last_updated = models.DateTimeField(auto_now=True)
     # ^ Must call model.save() when any element of List is updated
     
-    
     class Permission(models.TextChoices):
         PRIVATE = 'private', 'Private'
         PROTECTED = 'protected', 'View Only'
         INVITE_RANK = 'invite-rank', 'Invite to Rank'
         INVITE_VIEW = 'invite-view', 'Invite to View'
         PUBLIC = 'public', 'Public'
+        
+        @property
+        def requires_invite(self):
+            return self in {self.INVITE_RANK, self.INVITE_VIEW}
 
     permission_descriptions = {
         Permission.PRIVATE: "Only you can view and rank this list.",

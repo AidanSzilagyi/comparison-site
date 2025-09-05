@@ -9,6 +9,24 @@
     {% elif list_type == "image" %}
         <link rel="stylesheet" href="{% static 'styles/modify_list/image-create.css' %}">
     {% endif %}
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            /* Handle invite users popup when invite radio selector is changed */
+            const inviteContainer = document.getElementById("invite-users-container");
+            const radios = document.querySelectorAll('.js-permission-radio');
+
+            function handleChange(event) {
+                const requiresInvite = event.target.dataset.requiresInvite === "True";
+                inviteContainer.style.display = requiresInvite ? "block" : "none";
+            }
+            radios.forEach(radio => {
+                radio.addEventListener("change", handleChange);
+            });
+
+            handleChange({ target: document.querySelector('.js-permission-radio:checked') });
+        });
+
+    </script>
 {% endblock %}
 
 {% block main %}
@@ -79,25 +97,6 @@
                 </div>
 
                 <div class="multiple-choice-options">
-                    <div class="permissions-container">
-                        <div class="radio-input-container">
-                            <div class="radio-input-title">Visibility</div>
-                            <div class="radio-input">
-                                {% for value, label in list_form.fields.permission.choices %}
-                                    <label class="label">
-                                        <input type="radio" 
-                                            name="permission" value="{{ value }}"
-                                            data-description="{{ value|permission_description }}"
-                                            {% if list_form.permission.value == value %}checked{% endif %}>
-                                        <p class="radio-input-text">{{ label }}</p>
-                                    </label>
-                                {% endfor %}
-                            </div>
-                        </div>
-                        <div>
-                            <p class="permission-details" id="permission-details"></p>
-                        </div>
-                    </div>
                     <div class="radio-input-container">
                         <div class="radio-input-title">Comparison Model</div>
                         <div class="radio-input">
@@ -111,7 +110,34 @@
                             {% endfor %}
                             </div>
                     </div>
+                    <div class="permissions-container">
+                        <div class="radio-input-container">
+                            <div class="radio-input-title">Visibility</div>
+                            <div class="radio-input">
+                                {% for value, label in list_form.fields.permission.choices %}
+                                    <label class="label">
+                                        <input type="radio" 
+                                            name="{{ list_form.permission.html_name }}" value="{{ value }}"
+                                            class="js-permission-radio"
+                                            data-description="{{ value|permission_description }}"
+                                            data-requires-invite="{{ value|requires_invite }}"
+                                            {% if list_form.permission.value == value %}checked{% endif %}>
+                                        <p class="radio-input-text">{{ label }}</p>
+                                    </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div>
+                            <p class="permission-details" id="permission-details"></p>
+                        </div>
+                    </div>
+                    <div id="invite-users-container" class="invite-users-container">
+                        <div class="invite-users-title">Invite Users</div>
+                        <div class="invite-users-instructions">Enter usernames or emails<br>(comma-seperated):</div>
+                        <textarea class="invite-username-input text-input" name="invited-users">{{invited_users}}</textarea>
+                    </div>
                 </div>
+
                 <div class="error-text">
                     {{ error }}
                     {% for error in list_form.non_field_errors %}
