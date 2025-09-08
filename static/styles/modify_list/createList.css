@@ -21,17 +21,21 @@
 .page-title {
     font-size: 28px;
 }
-.create-list-button-container {
-    
+.header-control-buttons-container {
+    display: flex;
+    gap: 10px;
 }
-.create-list-button {
+.header-control-buttons {
     background-color: var(--important);
     color: var(--highlight);
     border-style: none;
     border-radius: 8px;
-    padding: 4px 4px;
-    font-size: 16px;
+    padding: 6px 6px;
+    font-size: 18px;
     cursor: pointer;
+}
+.cancel-button {
+    background-color: var(--greyedout);
 }
 
 /* Body */

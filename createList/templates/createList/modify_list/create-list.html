@@ -36,18 +36,25 @@
             {{ thing_forms.management_form }}
             <div class="page-header">
                 <div class="page-title">
-                    {% if new_list %}
-                        Create a New List
-                    {% else %}
+                    {% if list_slug %}
                         Edit List
+                    {% else %}
+                        Create a New List
                     {% endif %}
                 </div>
-                <div class="create-list-button-container">
-                    <button class="create-list-button" type="submit">
-                        {% if new_list %}
-                            Create
-                        {% else %}
+                <div class="header-control-buttons-container">
+                    {% if list_slug %}
+                    <a href="{% url 'list_info' list_slug %}">
+                        <button class="header-control-buttons cancel-button">
+                            Cancel
+                        </button>
+                    </a>
+                    {% endif %}
+                    <button class="header-control-buttons" type="submit">
+                        {% if list_slug %}
                             Save
+                        {% else %}
+                            Create
                         {% endif %}
                     </button>
                 </div>

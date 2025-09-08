@@ -118,7 +118,7 @@ def list_type_choices(request):
         return render(request, 'createList/create-list.html', {
             'list_form': list_form, 
             'thing_forms': thing_forms,
-            'new_list': True,
+            'list_slug': None,
             'list_type': "text", 
         })
     return render(request, 'createList/modify_list/list-type-choices.html')
@@ -195,7 +195,7 @@ def create_or_edit_list(request, list_type, slug=None):
     return render(request, 'createList/modify_list/create-list.html', {
         'list_form': list_form,
         'thing_forms': thing_forms,
-        'new_list': list == None,
+        'list_slug': list.slug if list != None else None,
         'list_type': list_type,
         'invited_users': get_invited_users_text(list) if list else invited_users,
     }) 
