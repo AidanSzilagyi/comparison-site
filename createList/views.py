@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import Thing, List, Profile, Matchup, RecentListInteraction
 from django.contrib.auth.models import User
-from .forms import ListForm, ThingForm, ProfileForm
+from .forms import ListForm, ThingForm, ProfileForm, BaseThingFormSet
 from django.forms import modelformset_factory
 from django.http import HttpResponse
 from django.http import JsonResponse
@@ -144,49 +144,47 @@ def list_edit(request, slug):
 def create_or_edit_list(request, list_type, slug=None):
     list = List.objects.get(slug=slug) if slug else None
     existing_things = Thing.objects.filter(list=list) if list else Thing.objects.none()
-        
-    thing_form_set = modelformset_factory(Thing, form=ThingForm, extra=0, can_delete=True)
+    invited_users = ""
+    
+    thing_form_set = modelformset_factory(Thing, form=ThingForm, formset=BaseThingFormSet, extra=0, can_delete=True)
     if request.method == 'GET':
         list_form = ListForm(instance=list)
         thing_forms = thing_form_set(queryset=existing_things)
     if request.method == 'POST':
         list_form = ListForm(request.POST, request.FILES, instance=list)
-        thing_forms = thing_form_set(request.POST, request.FILES, queryset=existing_things)
         invited_users = request.POST.get('invited-users')
-        if thing_forms.is_valid() and list_form.is_valid():
-            print("form maybebe valid")
-            things = [form for form in thing_forms if form.cleaned_data and not form.cleaned_data.get('DELETE')]
-            if len(things) < 3:
-                return render(request, 'createList/modify_list/create-list.html', {
-                    'list_form': list_form,
-                    'thing_forms': thing_forms,
-                    'new_list': list == None,
-                    'list_type': list_type,
-                    'invited_users': invited_users,
-                    'error': 'You must include at least 3 things.'
-                })
-            print("form is valid!")
-            
+        if list_form.is_valid():
             list = list_form.save(commit=False)
-            list.user = request.user
-            list.num_things = len(things)
             list.type = list_type
+            thing_forms = thing_form_set(request.POST, request.FILES, queryset=existing_things)
+            for form in thing_forms:
+                form.instance.list = list
             
-            update_permitted_users(list, invited_users)
-            initialize_list_model(list)
-            list.save()
-            print("List Saved", list)
-            for form in things:
-                thing = form.save(commit=False)
-                thing.list = list
-                thing.save()
+            if thing_forms.is_valid():
+                things = [form for form in thing_forms if form.cleaned_data and not form.cleaned_data.get('DELETE')]
+                list.user = request.user
+                list.num_things = len(things)
+                
+                num_things = 0
+                update_permitted_users(list, invited_users)
+                initialize_list_model(list)
+                list.save()
+                for form in things:
+                    thing = form.save(commit=False)
+                    thing.list = list
+                    thing.save()
+                    num_things += 1
+                
+                for form in thing_forms.deleted_forms:
+                    if form.instance.pk:
+                        form.instance.delete()
+                        num_things += 1
+                        
+                list.num_things = num_things
+                return redirect('list_info', list.slug)
+        else:
+            thing_forms = thing_form_set(request.POST, request.FILES, queryset=existing_things)
             
-            for form in thing_forms.deleted_forms:
-                if form.instance.pk:
-                    form.instance.delete()
-            
-            return redirect('list_info', list.slug)
-        
     return render(request, 'createList/modify_list/create-list.html', {
         'list_form': list_form,
         'thing_forms': thing_forms,
@@ -194,7 +192,6 @@ def create_or_edit_list(request, list_type, slug=None):
         'list_type': list_type,
         'invited_users': get_invited_users_text(list) if list else invited_users,
     }) 
-    return HttpResponse("Neither GET nor POST")
 
 def get_invited_users_text(list):
     users = list.permitted_users.all()

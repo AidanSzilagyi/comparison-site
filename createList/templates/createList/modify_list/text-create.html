@@ -46,8 +46,18 @@
             value="{{thing_form.name.value}}"
             type="text" placeholder="Enter a thing">
        {{ thing_form.id }}
+       <div class="error-text">
+            {% for errors in thing_form.errors.values %}
+                {% for error in errors %}
+                    {{ error }} <br>
+                {% endfor %}
+            {% endfor %}
+
+            {% for error in form.non_field_errors %}
+                {{ error }} <br>
+            {% endfor %}
+        </div>
     </div>
-    {{thing_form.name.errors}} {{thing_form.image.errors}}
     {% endfor %}
     <div class="add-new-thing-container" id="js-add-thing-button">
         <label class="add-new-thing-text">Add new thing</label>

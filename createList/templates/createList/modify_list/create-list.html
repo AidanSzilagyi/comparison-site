@@ -139,20 +139,17 @@
                 </div>
 
                 <div class="error-text">
-                    {{ error }}
-                    {% for error in list_form.non_field_errors %}
-                        {{ error }}
-                    {% endfor %}
-                    {% if thing_forms.errors %}
-                        {% for field in thing_forms %}
-                            {% for error in field.errors %}
-                                    {{field.label}}: {{ error|escape }}
-                            {% endfor %}
+                    {% for errors in list_form.errors.values %}
+                        {% for error in errors %}
+                            {{ error }} <br>
                         {% endfor %}
-                    {% endif %}
-                    {{list_form.name.errors}}
-                    {{list_form.image.errors}}
-                    {{list_form.description.errors}}
+                    {% endfor %}
+                    {% for error in list_form.non_field_errors %}
+                        {{ error }} <br>
+                    {% endfor %}
+                    {% for error in thing_forms.non_form_errors %}
+                        {{ error }} <br>
+                    {% endfor %}
                 </div>
             </div>
             <div class="list-of-things-header">1321 Things</div>
@@ -163,4 +160,15 @@
             {% endif %}
         </form>
 	</main>
+    <div class="error-text">
+        {% for errors in form.errors.values %}
+            {% for error in errors %}
+                {{ error }} <br>
+            {% endfor %}
+        {% endfor %}
+
+        {% for error in form.non_field_errors %}
+            {{ error }} <br>
+        {% endfor %}
+    </div>
 {% endblock %}

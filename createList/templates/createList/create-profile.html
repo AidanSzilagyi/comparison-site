@@ -9,6 +9,7 @@
             justify-content: center;
         }
         .form-box {
+            width: 220px;
             border-radius: 15px;
             padding: 15px 15px;
             background-color: var(--secondary);
@@ -19,17 +20,26 @@
             margin-bottom: 50px;
         }
         .profile-name-input {
-            margin: 20px;
+            margin-top: 15px;
             color: var(--highlight);
-            background-color: var(--secondary);
+            border-width: 0px;
+            border-radius: 8px;
+            background-color: var(--tertiary);
+            font-size: 16px;
+            padding: 5px 5px;
         }
         .profile-name-input:hover {
             outline: 1px solid var(--selected);
         }
 
         .profile-form-submit {
+            margin-top: 15px;
             color: var(--hightlight);
             background-color: var(--important);
+            border-radius: 5px;
+            border-width: 0px;
+            padding: 5px 5px;
+            font-size: 16px;
         }
 
         .profile-image-container {
@@ -56,6 +66,10 @@
             border-bottom-left-radius: 50%;
             border-bottom-right-radius: 80px;
             pointer-events: none;
+        }
+        .error-text {
+            color: var(--error-red);
+            text-align: center;
         }
     </style>
     <script>
@@ -89,12 +103,23 @@
                         value="{{profile_form.image.value}}" 
                         type="file" accept="image/*">
 
-                <label style="display: none;" for="{{profile_form.username.id_for_label}}">List Title</label>
+                <label style="display: none;" for="{{profile_form.username.id_for_label}}">Username</label>
                     <input class="profile-name-input" 
                         id="{{profile_form.username.id_for_label}}" 
                         name="{{profile_form.username.name}}" 
                         value="{{profile_form.username.value|default_if_none:''}}"
-                        type="text" placeholder="Username">
+                        type="text" placeholder="Enter a Username">
+                
+                {% if profile_form.errors %}
+                    <div class="error-text">
+                        {% for errors in profile_form.errors.values %}
+                            {% for error in errors %}
+                                {{ error }} <br>
+                            {% endfor %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
                 <input class="profile-form-submit" type="submit">
             </div>
         </form>
