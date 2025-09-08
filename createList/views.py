@@ -171,6 +171,13 @@ def create_or_edit_list(request, list_type, slug=None):
                 list.save()
                 for form in things:
                     thing = form.save(commit=False)
+                    
+                    # Check if remove_image flag was set
+                    remove_flag = request.POST.get(f"remove_image_{form.prefix}")
+                    if remove_flag == "true":
+                        if thing.image:
+                            thing.image.delete(save=False)
+                        thing.image = None
                     thing.list = list
                     thing.save()
                     num_things += 1
@@ -179,7 +186,7 @@ def create_or_edit_list(request, list_type, slug=None):
                     if form.instance.pk:
                         form.instance.delete()
                         num_things += 1
-                        
+   
                 list.num_things = num_things
                 return redirect('list_info', list.slug)
         else:

@@ -45,6 +45,9 @@
             name="{{thing_form.name.html_name}}" 
             value="{{thing_form.name.value}}"
             type="text" placeholder="Enter a thing">
+
+        <!-- Flag for image to be removed when "Remove Image" button is clicked -->
+        <input type="hidden" name="remove_image_{{thing_form.prefix}}" class="js-remove-image-flag" value="false">
        {{ thing_form.id }}
        <div class="error-text">
             {% for errors in thing_form.errors.values %}

@@ -57,7 +57,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const container = e.target.closest('.thing-container');
             const selectedImage = container.querySelector('.js-selected-thing-image');
             const unselectedImage = container.querySelector('.js-unselected-thing-image');
-            
+            const removeFlag = container.querySelector(".js-remove-image-flag");
+
             console.log("change detected");
             console.log(container);
             console.log(selectedImage)
@@ -68,6 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 selectedImage.src = URL.createObjectURL(file);
                 selectedImage.style.display = 'block';
                 unselectedImage.style.display = 'none';
+                removeFlag.value = "false";
             }
 
             const removeImageButton = container.querySelector('.js-remove-image-button')
@@ -83,12 +85,17 @@ document.addEventListener("DOMContentLoaded", () => {
             const selectedImage = container.querySelector('.js-selected-thing-image');
             const unselectedImage = container.querySelector('.js-unselected-thing-image');
             const imageInput = container.querySelector(".js-image-input");
+            const removeFlag = container.querySelector(".js-remove-image-flag");
+
             if (selectedImage && unselectedImage && imageInput) {
                 selectedImage.src = "";
                 selectedImage.style.display = 'none';
                 unselectedImage.style.display = 'flex';
                 imageInput.value = "";
                 removeImageButton.style.display = 'none';
+                if (removeFlag) {
+                    removeFlag.value = "true";
+                }
             }
         }
     });
