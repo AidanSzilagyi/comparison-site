@@ -1,4 +1,5 @@
 {% extends "../base.html" %}
+{% load static %}
 {% block extra_head %}
 <style>
     
@@ -32,61 +33,74 @@
         display: flex;
         flex-direction: column;
         gap: 10px;
+        cursor: pointer;
     }
     .option-name {
         font-size: 34px;
         margin-top: 10px;
     }
     .option-image-container {
-
+        height: 120px;
     }
     .option-image {
-        height: 130px;
+        height: 120px;
     }
     .option-description {
         text-wrap: balance;
         font-size: 18px;
     }
-    .below-option-box{
-        display: flex;
-        justify-content: center;
-    }
-    .csv-upload-form {
-        display: none;
-    }
     .upload-form-container{
+        height: 120px;
         border-radius: 8px;
         background-color: var(--secondary);
+        color: var(--highlight);
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: center;
         gap: 8px;
         width: 250px;
+        cursor: auto;
     }
     .file-input {
-        width: 100px;
-        border-radius: 5px;
+        border-radius: 8px;
+        padding: 6px 6px;
         color: var(--highlight);
-        margin-left: 50px;
         background-color: var(--tertiary);
+        cursor: pointer;
     }
     .file-submit {
-        width: 100px;
-        border-radius: 5px;
+        border-radius: 8px;
+        padding: 6px 6px;
         color: var(--highlight);
-        background-color: var(--tertiary);
-        border-style: none;
+        background-color: var(--important);
+        border-width: 0px;
+        cursor: pointer;
     }
 </style>
 <script>
     document.addEventListener("DOMContentLoaded", () => {
-        document.getElementById("js-import-file").addEventListener("click", () => {
-            if (document.getElementById("js-csv-reveal").style.display === "none") {
-                document.getElementById("js-csv-reveal").style.display = 'flex';
+        const csvReveal = document.getElementById("js-popup-container")
+        const uploadFileImage = document.getElementById("js-upload-file-image")
+
+        document.getElementById("js-import-file").addEventListener("click", (e) => {
+            if (e.target.closest("#js-popup-container")) return;
+            if (csvReveal.style.display === "none") {
+                csvReveal.style.display = 'flex';
+                uploadFileImage.style.display = 'none';
             } else {
-                document.getElementById("js-csv-reveal").style.display = 'none';
+                csvReveal.style.display = 'none';
+                uploadFileImage.style.display = 'block';
             }
         });
+        const fileInput = document.getElementById("file-input");
+        const fileName = document.getElementById("file-name");
+        fileInput.addEventListener("change", () => {
+            fileName.textContent = fileInput.files.length > 0
+                ? fileInput.files[0].name
+                : "No file selected";
+        });
+
     });
 </script>
 {% endblock %}
@@ -96,10 +110,10 @@
     <div class="all-option-boxes">
         <a class="single-option-box" href="{% url 'create_text_list' %}">
             <div class="option-name">
-                Manually Create
+                Manual Create
             </div>
             <div class="option-image-container">
-                <img class="option-image" src="../../../static/images/L-Square.png">
+                <img class="option-image" src="{% static 'images/L-Square.png' %}">
             </div>
             <div class="option-description">
                 Create a list from scratch
@@ -109,11 +123,22 @@
             <div class="option-name">
                 Import File
             </div>
-            <div class="option-image-container">
-                <img class="option-image" src="../../../static/images/L-Square.png">
+            <!-- Toggles between these two -->
+            <div class="option-image-container" id="js-upload-file-image">
+                <img class="option-image" src="{% static 'images/L-Square.png' %}">
             </div>
+            <form method="post" enctype="multipart/form-data" style="display: none;" id="js-popup-container">
+                {% csrf_token %}
+                <div class="upload-form-container">
+                    <label for="file-input" class="file-input">Upload File</label>
+                    <input type="file" name="file-input" id="file-input" style="display: none;" accept="text/plain">
+                    <span id="file-name">No file selected</span>
+                    <button type="submit" class="file-submit">Create</button>
+                </div>
+            </form>
+            <!-- End Toggle -->
             <div class="option-description">
-                Upload a .txt file to generate the text automatically
+                Upload a file to populate the list automatically
             </div>
         </div>
         <a class="single-option-box" href="{% url 'create_image_list' %}">
@@ -121,22 +146,12 @@
                 Images Only
             </div>
             <div class="option-image-container">
-                <img class="option-image" src="../../../static/images/L-Square.png">
+                <img class="option-image" src="{% static 'images/L-Square.png' %}">
             </div>
             <div class="option-description">
                 Create a list that uses images and no text
             </div>
         </a>
-    </div>
-    <div class="below-option-box">
-        <form method="post" enctype="multipart/form-data" class="csv-upload-form" id="js-csv-reveal">
-            {% csrf_token %}
-            <div class="upload-form-container">
-                <div>Upload .txt File</div>
-                <input type="file" name="file-input" class="Upload">
-                <button type="submit" class="file-submit">Submit</button>
-            </div>
-        </form>
     </div>
 </main>
 {% endblock %}

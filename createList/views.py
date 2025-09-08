@@ -110,12 +110,12 @@ def list_type_choices(request):
             for line in file_wrapper:
                 file_data.append({"name": line.strip(), "image": None})
         else:
-            return render(request, 'createList/list-type-choices.html', {"error": "You may only upload a .csv or .txt file"})
+            return render(request, 'createList/modify_list/list-type-choices.html', {"error": "You may only upload a .txt file"})
         list_form = ListForm()
         blank_forms_needed = NUM_STARTING_FORMS if len(file_data) < NUM_STARTING_FORMS else len(file_data)
         thing_form_set = modelformset_factory(Thing, form=ThingForm, extra=blank_forms_needed, can_delete=True)
         thing_forms = thing_form_set(queryset=Thing.objects.none(), initial=file_data)
-        return render(request, 'createList/create-list.html', {
+        return render(request, 'createList/modify_list/create-list.html', {
             'list_form': list_form, 
             'thing_forms': thing_forms,
             'list_slug': None,

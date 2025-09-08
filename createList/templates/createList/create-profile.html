@@ -104,11 +104,11 @@
                         type="file" accept="image/*">
 
                 <label style="display: none;" for="{{profile_form.username.id_for_label}}">Username</label>
-                    <input class="profile-name-input" 
-                        id="{{profile_form.username.id_for_label}}" 
-                        name="{{profile_form.username.name}}" 
-                        value="{{profile_form.username.value|default_if_none:''}}"
-                        type="text" placeholder="Enter a Username">
+                <input class="profile-name-input" 
+                    id="{{profile_form.username.id_for_label}}" 
+                    name="{{profile_form.username.name}}" 
+                    value="{{profile_form.username.value|default_if_none:''}}"
+                    type="text" placeholder="Enter a Username">
                 
                 {% if profile_form.errors %}
                     <div class="error-text">
