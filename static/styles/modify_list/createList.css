@@ -34,11 +34,24 @@
     font-size: 18px;
     cursor: pointer;
 }
+/* Body */
+.other-options-buttons{
+    display: flex;
+    justify-content: right;
+    gap: 10px;
+}
 .cancel-button {
     background-color: var(--greyedout);
 }
+.copy-button {
+    background-color: var(--important);
+}
+.delete-button {
+    background-color: var(--error-red);
+}
 
-/* Body */
+
+
 .text-input {
     padding: 5px 5px;
     border-style: hidden;

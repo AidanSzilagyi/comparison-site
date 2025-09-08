@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Thing, List, Profile, Matchup, RecentListInteraction
+from .models import Thing, List, Profile, Matchup, generate_list_slug
 from django.contrib.auth.models import User
 from .forms import ListForm, ThingForm, ProfileForm, BaseThingFormSet
 from django.forms import modelformset_factory
@@ -217,24 +217,40 @@ def update_permitted_users(list, invited_users_text):
         if user:
             list.permitted_users.add(user)
             
-    
+@login_required
+def list_delete(request, slug):
+    list = List.objects.get(slug=slug) if slug else None
+    if not permission_check(request.user, list, AccessLevel.EDIT):
+        return forbidden_403(request)
+    list.delete()
+    return redirect('my_profile')
 
 @login_required
-def images_only_create_list(request):
-    return render(request, 'createList/home.html')
+def list_copy(request, slug):
+    og_list = List.objects.get(slug=slug) if slug else None
+    if not og_list:
+        return not_found(request, "That list does not exist")
+    if not permission_check(request.user, og_list, AccessLevel.VIEW):
+        return forbidden_403(request)
 
-# @login_required
-# def list_edit(request, slug):
-#     list = List.objects.get(slug=slug)
-#     thing_form_set = modelformset_factory(Thing, form=ThingForm, extra=0, can_delete=True)
-#     thing_forms = thing_form_set(queryset=Thing.objects.filter(list=list))
-#    
-#     list_form = ListForm(instance=list)
-#     return render(request, 'createList/create-list.html', {
-#             'list_form': list_form,
-#             'thing_forms': thing_forms,
-#             'empty_form': thing_forms.empty_form,
-#         }) 
+    things = Thing.objects.filter(list=og_list) # Must do this first, for some reason
+    new_list = og_list
+    new_list.pk = None  # Django treats this list as new, effectively copying it
+    new_list.id = uuid.uuid4()
+    new_list.name = f"{og_list.name} (Copy)"
+    new_list.slug = f"{generate_list_slug(og_list)}-copy" #helps prevents multiple "-copy" on end of slugs
+    new_list.user = request.user
+    new_list.permitted_users.set([])
+    new_list.comparisons_made = 0
+    new_list.save()
+    
+    for thing in things:
+        Thing.objects.create(
+            name=thing.name,
+            image=thing.image,
+            list=new_list,
+        )
+    return redirect('list_info', new_list.slug)
 
 def all_lists(request):
     all_lists = List.objects.all()

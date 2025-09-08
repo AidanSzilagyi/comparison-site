@@ -45,7 +45,7 @@
                 <div class="header-control-buttons-container">
                     {% if list_slug %}
                     <a href="{% url 'list_info' list_slug %}">
-                        <button class="header-control-buttons cancel-button">
+                        <button type="button" class="header-control-buttons cancel-button">
                             Cancel
                         </button>
                     </a>
@@ -60,6 +60,20 @@
                 </div>
             </div>
             <div class="list-details">
+                {% if list_slug %}
+                    <div class="other-options-buttons">
+                        <a href="{% url 'list_delete' list_slug %}">
+                            <button type="button" class="header-control-buttons delete-button">
+                                Delete
+                            </button>
+                        </a>
+                        <a href="{% url 'list_copy' list_slug %}">
+                            <button type="button" class="header-control-buttons copy-button">
+                                Copy
+                            </button>
+                        </a>
+                    </div>
+                {% endif %}
                 <label style="display: none;" for="{{list_form.name.id_for_label}}">List Title</label>
                 <input class="list-name-input text-input" 
                     id="{{list_form.name.id_for_label}}" 

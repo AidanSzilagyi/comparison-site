@@ -124,6 +124,9 @@
                         <a href="{% url 'list_rank' list.slug %}">
                             <div class="rank-button">Rank</div>
                         </a>
+                        <a href="{% url 'list_copy' list.slug %}">
+                            <div class="rank-button">Copy</div>
+                        </a>
                     {% endif %}
                     {% if can_edit %}
                     <a href="{% url 'list_edit' list.slug %}">
