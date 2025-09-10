@@ -37,6 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const newFormNode = newFormElement.content.firstChild;
         formContainer.insertBefore(newFormNode, document.getElementById("js-add-thing-button"));
         totalFormNum.value = formCount + 1;
+        updateThingNumbering();
     });
 
     formContainer.addEventListener('click', (e) => {
@@ -47,9 +48,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 container.style.display = 'none';
                 deleteCheckbox.checked = true;
             }
+            updateThingNumbering();
         }
     });
-    // Adding and removing Thing images
+    // Adding Thing images
     formContainer.addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -78,6 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
     });
+    // Removing Thing images
     formContainer.addEventListener('click', (e) => {
         removeImageButton = e.target.closest('.js-remove-image-button');
         if (removeImageButton) {
@@ -115,4 +118,35 @@ document.addEventListener("DOMContentLoaded", () => {
     radios.forEach(radio => {
         radio.addEventListener("change", updateDescription);
     });
+
+
+    // Numbers on each thing
+    const numThingsHeader = document.getElementById("num-things-header");
+    function updateThingNumbering() {
+        console.log("updating the numbering")
+        const thingContainers = formContainer.querySelectorAll('.thing-container');
+        let numThings = 0
+        thingContainers.forEach((thingContainer) => {
+            if (thingContainer.style.display !== 'none') {
+                thingContainer.querySelector('.thing-number').textContent = numThings + 1;
+                numThings += 1;
+            }
+        });
+        numThingsHeader.innerText = numThings;
+    }
+    updateThingNumbering();
+
+    /* Handle invite users popup when invite radio selector is changed */
+    const inviteContainer = document.getElementById("invite-users-container");
+    const permissionRadio = document.querySelectorAll('.js-permission-radio');
+
+    function handleChange(event) {
+        const requiresInvite = event.target.dataset.requiresInvite === "True";
+        inviteContainer.style.display = requiresInvite ? "block" : "none";
+    }
+    permissionRadio.forEach(radio => {
+        radio.addEventListener("change", handleChange);
+    });
+
+    handleChange({ target: document.querySelector('.js-permission-radio:checked') });
 });

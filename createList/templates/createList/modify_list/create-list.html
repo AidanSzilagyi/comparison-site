@@ -9,24 +9,6 @@
     {% elif list_type == "image" %}
         <link rel="stylesheet" href="{% static 'styles/modify_list/image-create.css' %}">
     {% endif %}
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            /* Handle invite users popup when invite radio selector is changed */
-            const inviteContainer = document.getElementById("invite-users-container");
-            const radios = document.querySelectorAll('.js-permission-radio');
-
-            function handleChange(event) {
-                const requiresInvite = event.target.dataset.requiresInvite === "True";
-                inviteContainer.style.display = requiresInvite ? "block" : "none";
-            }
-            radios.forEach(radio => {
-                radio.addEventListener("change", handleChange);
-            });
-
-            handleChange({ target: document.querySelector('.js-permission-radio:checked') });
-        });
-
-    </script>
 {% endblock %}
 
 {% block main %}
@@ -173,7 +155,7 @@
                     {% endfor %}
                 </div>
             </div>
-            <div class="list-of-things-header">1321 Things</div>
+            <div class="list-of-things-header"><span id="num-things-header">1321</span>&MediumSpace;Things</div>
             {% if list_type == 'text' %}
                 {% include "./text-create.html" with thing_forms=thing_forms %}
             {% elif list_type == 'image' %}
