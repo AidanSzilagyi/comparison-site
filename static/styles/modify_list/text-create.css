@@ -1,15 +1,15 @@
 .list-of-things-container {
-    --thing-width: 336px;
+    --thing-width: 504px;
     display: grid;
-    gap: 15px;
+    gap: 22.5px;
     grid-template-columns: repeat(auto-fit, var(--thing-width));
-    max-width: min(calc(100vw - 30px), calc(2 * var(--thing-width) + 1 * 15px));
+    max-width: min(calc(100vw - 45px), calc(2 * var(--thing-width) + 1 * 22.5px));
     justify-items: start;
     grid-auto-flow: row;
-    padding-bottom: 120px;
+    padding-bottom: 180px;
 }
 .thing-container {
-    border-radius: 10px;
+    border-radius: 15px;
     width: var(--thing-width);
     box-sizing: border-box;
     /* border-width: 1px;
@@ -17,8 +17,8 @@
     background-color: var(--secondary);
     display: flex;
     flex-direction: column;
-    gap: 5px;
-    padding: 8px 8px;
+    gap: 7.5px;
+    padding: 12px 12px;
 }
 
 .top-row-buttons {
@@ -29,31 +29,31 @@
 .utility-button-container {
     display: flex;
     align-items: center;
-    padding-left: 2px;
-    margin-top: -2px;
-    gap: 8px;
+    padding-left: 3px;
+    margin-top: -3px;
+    gap: 12px;
 }
 .thing-image-options-container {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 7.5px;
 }
 .thing-remove-image-button {
     background-color: var(--primary);
-    height: 34px;
-    width: 60px;
-    border-radius: 8px;
-    font-size: 12px;
+    height: 51px;
+    width: 90px;
+    border-radius: 12px;
+    font-size: 18px;
     text-align: center;
     display: flex;
     align-items: center;
 }
 
 .thing-image-container {
-    height: 34px;
+    height: 51px;
     aspect-ratio: 16 / 9;
-    font-size: 12px;
-    border-radius: 8px;
+    font-size: 18px;
+    border-radius: 12px;
     /* background-color: var(--primary); */
     display: flex;
     align-items: center;
@@ -63,7 +63,7 @@
 .selected-thing-image {
     width: 100%;
     height: 100%;
-    border-radius: 8px;
+    border-radius: 12px;
     object-fit: contain;
     background-color: var(--primary);
 }
@@ -74,43 +74,43 @@
     flex-direction: column;
     justify-content: center;
     text-align: center;
-    border-radius: 8px;
-    border: 1.5px dotted var(--highlight);
+    border-radius: 12px;
+    border: 2.25px dotted var(--highlight);
 }
 .thing-number {
     text-align: center;
 }
 
 .trash-can-icon-container {
-    height: 26px;
-    border-radius: 8px;
+    height: 39px;
+    border-radius: 12px;
     background-color: var(--primary);
 }
 .trash-can-icon-image {
-    height: 26px;
+    height: 39px;
 }
 .info-icon-container {
-    height: 26px;
-    border-radius: 8px;
+    height: 39px;
+    border-radius: 12px;
     background-color: var(--primary);
 }
 .info-icon-image {
-    height: 26px;
+    height: 39px;
 } 
 
 .thing-name-input {
     background-color: var(--primary);
-    height: 22px;
-    width: calc(100% - 8px);
+    height: 33px;
+    width: calc(100% - 12px);
 }
 
 
 .add-new-thing-container {
     /* margin-left: 1.5px; */
     border-style: dashed;
-    border-radius: 8px;
-    border-width: 1.5px;
-    height: 87px;
+    border-radius: 12px;
+    border-width: 2.25px;
+    height: 130.5px;
     width: var(--thing-width);
     border-color: var(--highlight);
     color: var(--highlight);

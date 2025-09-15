@@ -1,20 +1,20 @@
 .main-container {
-    width: 750px;
+    width: 1125px;
 }
 .list-name {
-    font-size: 40px;
-    margin: 5px 0px;
+    font-size: 60px;
+    margin: 7.5px 0px;
 }
 .list-metadata{
     display: flex;
-    margin-bottom: 8px;
-    gap: 5px;
+    margin-bottom: 12px;
+    gap: 7.5px;
 }
 .list-image-container {
-    width: 300px;
+    width: 450px;
     display: flex;
     justify-content: right;
-    border-radius: 8px;
+    border-radius: 12px;
     text-align: right; 
     overflow: hidden;
     align-items: flex-start;
@@ -23,13 +23,13 @@
     object-fit: contain;
     width: 100%;
     height: auto;
-    border-radius: 8px;
+    border-radius: 12px;
 }
 .list-detail-container {
-    width: 410px;
+    width: 615px;
 }
 .list-description {
-    margin: 4px 0px;
+    margin: 6px 0px;
 }
 .list-details {
     display: inline-block;
@@ -37,13 +37,13 @@
 .important-details, .list-author-link {
     display: flex;
     align-items: center;
-    font-size: 18px;
-    gap: 5px;
+    font-size: 27px;
+    gap: 7.5px;
 }
 .profile-picture {
-    height: 18px;
-    width: 18px;
-    border-radius: 9px;
+    height: 27px;
+    width: 27px;
+    border-radius: 13.5px;
 }
 .list-author {
     display: inline-block;
@@ -53,7 +53,7 @@
 }
 .list-detail-stat-name {
     display: inline-block;
-    padding: 2px 5px 2px 0px;
+    padding: 3px 7.5px 3px 0px;
     color: #6e7895;
 }
 .list-detail-stat-value {
@@ -62,11 +62,11 @@
 }
 
 .rank-button, .edit-button, .all-things-button {
-    margin-top: 3px;
+    margin-top: 4.5px;
     display: inline-block;
-    border-radius: 8px;
+    border-radius: 12px;
     background-color: var(--secondary);
-    padding: 5px 5px;
+    padding: 7.5px 7.5px;
 }
 .multiple-highlight-container {
     display: flex;
@@ -77,9 +77,9 @@
     text-align: center;
 }
 .highlight-five-things-group {
-    width: 360px;
-    border-radius: 8px;
-    border: 1px solid var(--secondary);
+    width: 540px;
+    border-radius: 12px;
+    border: 1.5px solid var(--secondary);
 }
 .highlight-five-things-group:empty {
     border-width: 0px;
@@ -87,9 +87,9 @@
 .highlight-thing {
     display: flex;
     align-items: center;
-    gap: 5px;
-    border-bottom: 1px solid var(--secondary);
-    padding: 2px 5px;
+    gap: 7.5px;
+    border-bottom: 1.5px solid var(--secondary);
+    padding: 3px 7.5px;
 }
 .highlight-thing:last-child {
     border-width: 0px;
@@ -97,10 +97,10 @@
 .highlight-position-number {
     display: inline;
     text-align: center;
-    width: 40px;
+    width: 60px;
 }
 .highlight-thing-name {
-    width: 148px;
+    width: 222px;
     text-align: left;
 }
 .highlight-image-container {
@@ -108,18 +108,18 @@
     justify-content: center;
 }
 .highlight-thing-image {
-    height: 30px;
-    width: 54px;
+    height: 45px;
+    width: 81px;
     object-fit: contain;
 }
 .highlight-thing-name-only {
-    width: 207px;
+    width: 310.5px;
     text-align: left;
 }
 
 
 .highlight-thing-record {
-    width: 90px;
+    width: 135px;
     display: inline-block;
     text-align: right;
 }
@@ -130,34 +130,34 @@
 .wins-losses-text {
     display: inline-block;
     font-family: "Google Sans Code", monospace;
-    margin-top: -1px;
+    margin-top: -1.5px;
 }
 .W-win {
-    height: 11.5px;
+    height: 17.25px;
     display: inline-block;
-    margin: 0px 3px;
+    margin: 0px 4.5px;
 }
 .l-lose {
-    height: 12px;
+    height: 18px;
     display: inline-block;
-    margin: 0px 3px;
+    margin: 0px 4.5px;
 }
 .record-dash {
     display: inline-block;
-    margin-left: 3px;
+    margin-left: 4.5px;
     position: relative;
     z-index: 0;
-    top: -2px;
+    top: -3px;
 }
 
 .past-matchup-author {
-    font-size: 14px;
+    font-size: 21px;
     color: var(--greyedout);
 }
 
 .all-things-container {
     width: 100%;
-    margin-top: 10px;
+    margin-top: 15px;
     display: flex;
     justify-content: center;
 }
@@ -168,13 +168,13 @@
     opacity: 0;
     transition: opacity 0.15s;
     position: absolute;
-    transform: translateX(-20px);
-    margin-top: 5px;
+    transform: translateX(-30px);
+    margin-top: 7.5px;
     pointer-events: none;
     white-space: nowrap;
     background-color: var(--secondary);
-    padding: 8px 8px;
-    border-radius: 8px;
+    padding: 12px 12px;
+    border-radius: 12px;
 }
 .highlight-thing-record:hover .past-matchup-sheet {
     opacity: 1;
@@ -184,9 +184,9 @@
   content: "";
   position: absolute;
   bottom: 100%;
-  right: 20px;
-  margin-left: -5px;
-  border-width: 5px;
+  right: 30px;
+  margin-left: -7.5px;
+  border-width: 7.5px;
   border-style: solid;
   border-color: transparent transparent var(--secondary) transparent;
 }

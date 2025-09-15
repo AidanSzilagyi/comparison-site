@@ -9,10 +9,10 @@
     <script type="module" src="{% static 'scripts/rank.js' %}"></script>
     <style>
         .instruction-text {
-            font-size: 18px;
+            font-size: 27px;
         }
         .comparison-boxes {
-            height: calc(100vh - 90px);
+            height: calc(100vh - 135px);
             justify-content: center;
             align-items: center;
             display: flex;
@@ -21,19 +21,18 @@
             text-align: center;
         }
         .thing-box {
-            padding: 8px 8px 8px 8px;
+            padding: 12px 12px 12px 12px;
             background-color: var(--secondary);
-            border-radius: 8px;
-            height: calc(50% - (84px / 2));
-            width: 400px;
-            /* aspect-ratio: 12 / 9; */
+            border-radius: 12px;
+            height: calc(50% - (126px / 2));
+            width: 600px;
         }
         .thing-box:hover {
             border-color: var(--selected);
         }
 
         .thing-image {
-            border-radius: 8px;
+            border-radius: 12px;
             max-width: 100%;
             max-height: 80%;  
         }
@@ -54,17 +53,17 @@
             object-fit: contain;
             height: 100%;
             width: 100%;
-            border-radius: 8px;
+            border-radius: 12px;
         }
         .info-back-button {
             position: absolute;
-            top: 54px;
-            right: 7px;
-            margin-top: 3px;
+            top: 81px;
+            right: 10.5px;
+            margin-top: 4.5px;
             display: inline-block;
-            border-radius: 8px;
+            border-radius: 12px;
             background-color: var(--secondary);
-            padding: 5px 5px;
+            padding: 7.5px 7.5px;
         }
     </style>
 {% endblock %}

@@ -54,7 +54,7 @@ function loadNewComparison() {
                     <span class="thing-text-only" id="text-${i}">${comparisonThings[i].name}</span>
                 `;
                 BigText(`span#text-${i}`, {
-                    maximumFontSize: 100,
+                    maximumFontSize: 200,
                 });
             } else {
                 thingBoxes[i].innerHTML = `

@@ -10,7 +10,7 @@
     position: sticky;
     z-index: 10;
     top: 0px;
-    padding: 5px 0px;
+    padding: 7.5px 0px;
     background-color: var(--primary);
     color: var(--highlight);
     font-weight: 500;
@@ -19,19 +19,19 @@
     align-items: center;
 }
 .page-title {
-    font-size: 28px;
+    font-size: 42px;
 }
 .header-control-buttons-container {
     display: flex;
-    gap: 10px;
+    gap: 15px;
 }
 .header-control-buttons {
     background-color: var(--important);
     color: var(--highlight);
     border-style: none;
     border-radius: 8px;
-    padding: 6px 6px;
-    font-size: 18px;
+    padding: 9px 9px;
+    font-size: 27px;
     cursor: pointer;
 }
 /* Body */
@@ -53,7 +53,7 @@
 
 
 .text-input {
-    padding: 5px 5px;
+    padding: 7.5px 7.5px;
     border-style: hidden;
     border-radius: 8px;
     font-weight: 300;
@@ -63,36 +63,36 @@
 .list-details {
     display: flex;
     flex-direction: column;
-    gap: 5px;
-    margin-top: 4px;
+    gap: 7.5px;
+    margin-top: 6px;
 }
 
 .list-name-input {
     width: 100%;
     box-sizing: border-box;
-    font-size: 24px;
+    font-size: 36px;
     display: block;
     background-color: var(--secondary);
 }
 
 .horizontal-input-container {
     display: flex;
-    gap: 5px;
+    gap: 7.5px;
 }
 
 .list-image-container {
     display: flex;
     flex-direction: column;
-    gap: 5px;
-    --image-height: 97px; 
+    gap: 7.5px;
+    --image-height: 145.5px; 
 }
 .list-file-input {}
 .unselected-list-image {
-    height: calc(var(--image-height) - 2px + 33px);
-    width: calc(var(--image-height) * 16 / 9 - 2px);
+    height: calc(var(--image-height) - 3px + 49.5px);
+    width: calc(var(--image-height) * 16 / 9 - 3px);
     color: var(--highlight);
-    border: 1px dotted var(--highlight); 
-    border-radius: 8px;
+    border: 1.5px dotted var(--highlight); 
+    border-radius: 12px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -102,13 +102,13 @@
     height: var(--image-height);
     width: calc(var(--image-height) * 16 / 9);
     background-color: var(--secondary);
-    border-radius: 8px;
+    border-radius: 12px;
     object-fit: contain;
 }
 .remove-list-image-button {
-    height: 28px;
+    height: 42px;
     width: calc(var(--image-height) * 16 / 9);
-    border-radius: 8px;
+    border-radius: 12px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -116,26 +116,26 @@
     background-color: var(--secondary);
 }
 .list-description-input {
-    height: 120px;
+    height: 180px;
     flex: 1;
-    font-size: 18px;
+    font-size: 27px;
     resize: none;
     background-color: var(--secondary);
 }
 
 .multiple-choice-options {
     display: flex;
-    gap: 10px;
+    gap: 15px;
     align-items: flex-start;
 }
 .permissions-container {
     display: flex;
     flex-direction: column;
     text-align: center;
-    gap: 4px;
+    gap: 6px;
 }
 .permission-details {
-    width: 168px;
+    width: 252px;
     margin: 0;
 }
 
@@ -144,60 +144,60 @@
 }
 
 .list-of-things-header {
-    margin: 10px 0px;
+    margin: 15px 0px;
     width: 100%;
     display: flex;
     justify-content: center;
-    font-size: 20px;
+    font-size: 30px;
 }
 
 /* Permissions Invite Popup */
 .invite-users-container {
     display: none;
-    padding: 1.5px 3px 1.5px 3px; 
-    border-radius: 10px; 
-    border: 1px solid var(--secondary);
+    padding: 2.25px 4.5px 2.25px 4.5px; 
+    border-radius: 15px; 
+    border: 1.5px solid var(--secondary);
 }
 .invite-users-title {
     text-align: center;
-    font-size: 18px;
+    font-size: 27px;
 }
 .invite-users-instructions {
     text-align: center;
 }
 .invite-username-input {
-    width: 220px;
-    height: 198px;
+    width: 330px;
+    height: 297px;
     flex: 1;
-    font-size: 18px;
+    font-size: 27px;
     resize: none;
     background-color: var(--secondary);
 }
 
 /* Radio Inputs */
 .permissions-container .radio-input label {
-    width: 168px;
+    width: 252px;
 }
 
 .radio-input-container { 
-    padding: 1.5px 1.5px; 
-    border-radius: 10px; 
-    border: 1px solid var(--secondary);
+    padding: 2.25px 2.25px; 
+    border-radius: 15px; 
+    border: 1.5px solid var(--secondary);
 } 
 
 .radio-input-title {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 4px 0px 6px;
-    font-size: 18px;
+    padding: 6px 0px 9px;
+    font-size: 27px;
 }
 
 .radio-input {
-    --input-height: 34px;
+    --input-height: 51px;
     display: flex;
     flex-direction: column;
-    gap: 7px;
+    gap: 10.5px;
 }
 
 .radio-input * {
@@ -209,9 +209,9 @@
 .radio-input label {
   display: flex;
   align-items: center;
-  gap: 15px;
-  padding: 0px 20px;
-  width: 230px;
+  gap: 22.5px;
+  padding: 0px 30px;
+  width: 345px;
   cursor: pointer;
   height: var(--input-height);
   position: relative;
@@ -223,12 +223,12 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 220px;
-  height: calc(var(--input-height) - 5px); 
+  width: 330px;
+  height: calc(var(--input-height) - 7.5px); 
   z-index: -1;
   transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  border-radius: 10px;
-  border: 2px solid transparent;
+  border-radius: 15px;
+  border: 3px solid transparent;
 }
 .radio-input label:hover::before {
   transition: all 0.2s ease;
@@ -247,8 +247,8 @@
 .radio-input .label input[type="radio"] {
   background-color: #202030;
   appearance: none;
-  width: 17px;
-  height: 17px;
+  width: 25.5px;
+  height: 25.5px;
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -262,8 +262,8 @@
 
 .radio-input .label input[type="radio"]:before {
   content: "";
-  width: 6px;
-  height: 6px;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
   transition: all 0.1s cubic-bezier(0.165, 0.84, 0.44, 1);
   background-color: #fff;
