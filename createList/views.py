@@ -246,6 +246,7 @@ def list_copy(request, slug):
     new_list.id = uuid.uuid4()
     new_list.name = f"{og_list.name} (Copy)"
     new_list.slug = f"{generate_list_slug(og_list)}-copy" #helps prevents multiple "-copy" on end of slugs
+    # TODO: Fix line above
     new_list.user = request.user
     new_list.permitted_users.set([])
     new_list.comparisons_made = 0
@@ -277,7 +278,7 @@ def list_rank(request, slug):
         return forbidden_403(request)
     
     initial_things = generate_matchup_json(request.user, list, additional_matchups_required=2)
-    return render(request, 'createList/rank.html', {"initial_things": initial_things, "list_slug": slug})
+    return render(request, 'createList/rank.html', {"initial_things": initial_things, "list": list})
 
 @login_required
 def get_comparisons(request, slug):
@@ -424,6 +425,7 @@ def view_profile(request, slug):
         "profile": profile,
         "recent_lists": recent_lists,
         "user_lists": created_lists,
+        "owner": False,
     }
     return render(request, 'createList/profile.html', context)
 

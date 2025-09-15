@@ -3,7 +3,7 @@
 {% csrf_token %}
 {% block extra_head %}
     <script>
-        window.listSlug = "{{ list_slug }}";
+        window.listSlug = "{{ list.slug }}";
         window.initialThings = {{ initial_things|safe }}
     </script>
     <script type="module" src="{% static 'scripts/rank.js' %}"></script>
@@ -66,6 +66,7 @@
             padding: 7.5px 7.5px;
         }
     </style>
+    <title>Rank {{list.name}} - Head2Head</title>
 {% endblock %}
 {% block main %}
     <div class="comparison-boxes">

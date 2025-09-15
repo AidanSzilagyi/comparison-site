@@ -6,8 +6,10 @@
     <link rel="stylesheet" href="{% static 'styles/modify_list/createList.css' %}">
     {% if list_type == "text" %}
         <link rel="stylesheet" href="{% static 'styles/modify_list/text-create.css' %}">
+        <title>Create Text List - Head2Head</title>
     {% elif list_type == "image" %}
         <link rel="stylesheet" href="{% static 'styles/modify_list/image-create.css' %}">
+        <title>Create Image List - Head2Head</title>
     {% endif %}
 {% endblock %}
 
