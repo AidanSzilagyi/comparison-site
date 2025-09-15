@@ -66,6 +66,7 @@ def generate_matchups(user, tlist, additional_matchups_required, sent_matchups):
 def get_comparison_model(list):
     if list.comparison_method == 'bradley_terry':
         return BradleyTerryModel()
+    return BradleyTerryModel()
 
 
 def update_recent_lists(user, list):
