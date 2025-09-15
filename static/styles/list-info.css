@@ -168,7 +168,7 @@
     opacity: 0;
     transition: opacity 0.15s;
     position: absolute;
-    transform: translateX(-65%);
+    transform: translateX(-20px);
     margin-top: 5px;
     pointer-events: none;
     white-space: nowrap;

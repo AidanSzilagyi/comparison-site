@@ -150,3 +150,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
     handleChange({ target: document.querySelector('.js-permission-radio:checked') });
 });
+
+function addLoadMatchupsListener(thingBox) {
+    thingBox.querySelector(".js-load-matchups").addEventListener("mouseover", async () => {
+        const matchupHistory = thingBox.querySelector(".js-matchup-history");
+        const ranking = thingBox.querySelector(".js-position-number").textContent;
+        const response = await fetch(`/${listSlug}/get-matchups-from-thing?ranking=${ranking}`);
+        const data = await response.json();
+        matchupHistory.innerHTML = "";
+        data.matchups.forEach(matchup => {
+            let matchupBox;
+            if (matchup.result == "win") {
+                matchupBox = wonMatchup.content.cloneNode(true);
+            } else {
+                matchupBox = lostMatchup.content.cloneNode(true);
+            }
+            matchupBox.querySelector(".js-opponent").textContent = matchup.opponent;
+            if (permission == "Public"){
+                matchupBox.querySelector(".js-matchup-username").textContent = `by ${matchup.username}`;
+            }
+            matchupHistory.appendChild(matchupBox);
+        });
+    }, { once: true });
+}

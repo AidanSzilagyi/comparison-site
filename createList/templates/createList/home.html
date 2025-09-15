@@ -1,15 +1,173 @@
 {% extends "./base.html" %}
+{% load static %}
 {% block extra_head %}
+    <style>
+        .primary-container {
+            padding-left: 0;
+            padding-right: 0;
+        }
+        .main-container {
+            height: 100%;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        .title-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .website-name {
+            font-size: 40px;
+        }
+        .big-logo {
+            height: 160px;
+        }
 
+        .create-list-image, .rank-image, .list-info-image {
+            border-radius: 5px;
+        }
+        .first-description-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--secondary);
+            width: 100%;
+            height: 380px;
+        }
+        .second-description-container {
+            width: 490px;
+            height: 360px;
+            position: relative;
+            border-radius: 10px;
+            background-color: var(--primary);
+        }
+        .absolute-container{
+            top: 10px;
+            left: 10px;
+            position: relative;
+            width: 470px;
+            height: 340px;
+            background-color: var(--primary);
+        }
+        .create-list-image {
+            width: 293px;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .create-list-text{
+            text-align: center;
+            position: absolute;
+            left: 300px;
+            top: 20px;
+        }
+        .rank-image {
+            height: 200px;
+            position: absolute;
+            top: 70px;
+            left: 314px;
+        }
+        .rank-text{
+            text-align: center;
+            position: absolute;
+            top: 188px;
+            left: 60px;
+        }
+        .list-info-image {
+            width: 293px;
+            position: absolute;
+            top: 254px;
+            left: 0px;
+        }
+        .list-info-text {
+            text-align: center;
+            position: absolute;
+            top: 280px;
+            left: 300px;
+        }
+
+        .getting-started {
+            
+        }
+        .getting-started-text {
+            margin-bottom: 8px;
+        }
+        .redirect-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            text-align: center;
+        }
+        .large-create-button, .large-explore-button {
+            border-radius: 8px;
+            height: 90px;
+            width: 90px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background-color: var(--secondary);
+        }
+        .large-create-button {
+
+        }
+        .large-explore-button {}
+        .large-plus-icon {
+            height: 60px;
+            aspect-ratio: 1;
+        }
+        .large-explore-icon {
+            height: 60px;
+            width: 60px;
+        }
+    </style>
 {% endblock %}
 {% block main %}
 <main class="main-container">
-    <a href="{% url 'all_lists' %}">All Lists</a>
-    <br>
-    <a href="{% url 'start-login' %}">Login with Google</a>
+    <div class="title-container">
+        <img class="big-logo" src="{% static 'images/arrow-logo.png' %}">
+        <div class="website-name">Head2Head</div>
+        <div>Rank <i>Anything</i></div>
+    </div>
+    <div class="first-description-container">
+        <div class="second-description-container">
+            <div class="website-description">
+                <div class="absolute-container">
+                    <img class="create-list-image" src="{% static 'images/homepage/CreateListExample.png' %}">
+                    <div class="create-list-text">First, Create a List and<br>Invite your Friends</div>
+                    <div class="rank-text">Next, Compare Things in<br>your List One on One</div>
+                    <img class="rank-image" src="{% static 'images/homepage/RankExample.png' %}">
+                    <img class="list-info-image" src="{% static 'images/homepage/ListInfoExample.png' %}">
+                    <div class="list-info-text">Finally, See which things<br>made it to the top</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="getting-started">
+        <div class="getting-started-text">To get started, create a list or visit an existing one.</div>
+        <div class="redirect-buttons">
+            <a href="{% url 'list_type_choices' %}">
+                <div class="large-create-button">
+                    <img class="large-plus-icon" src="{% static 'images/plus-icon.png' %}">
+                    Create
+                </div>
+            </a>
+            <a href="{% url 'explore' %}">
+                <div class="large-explore-button">
+                    <img class="large-explore-icon" src="{% static 'images/explore-icon.png' %}">
+                    Explore
+                </div>
+            </a>
+        </div>
+    </div>
 
-    Head2Head
-    Find the best <i>anything</i> with your friends
+    
+
     <!-- Recent, Popular, By Authors you've interacted with -->
 </main>
 {% endblock %}

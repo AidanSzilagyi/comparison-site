@@ -18,6 +18,8 @@ def process_matchup_result(user, list, matchup_id, choice):
     matchup.save()
     matchup.winner.wins += 1
     matchup.loser.losses += 1
+    matchup.winner.times_compared += 1
+    matchup.loser.times_compared += 1
     print(f"winner: {matchup.winner} --- loser: {matchup.loser}")
     matchup.winner.save()
     matchup.loser.save()

@@ -312,7 +312,7 @@ def list_info(request, slug):
     
     all_things = Thing.objects.filter(list=tlist)  
     top_five = list(all_things.order_by('-rating', 'pk')[:5])
-    bottom_five = list(all_things.order_by('rating', 'pk')[:5])[::-1] 
+    bottom_five = list(all_things.order_by('rating', '-pk')[:5])[::-1] 
     
     top_five_matchups = [get_matchups(thing) for thing in top_five]
     bottom_five_matchups = [get_matchups(thing) for thing in bottom_five]
