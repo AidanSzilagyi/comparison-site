@@ -21,6 +21,7 @@ from .permissions import permission_check, AccessLevel
 NUM_STARTING_FORMS = 10
 NUM_MATCHUPS_SENT = 20
 NUM_LOADED_THINGS_PER_REQUEST = 3
+MAX_FORMS = 5000
 
 def home(request):
     return render(request, 'createList/home.html')
@@ -114,7 +115,7 @@ def list_type_choices(request):
             return render(request, 'createList/modify_list/list-type-choices.html', {"error": "You may only upload a .txt file"})
         list_form = ListForm()
         extra_forms = len(file_data) if len(file_data) < 10 else 10
-        thing_form_set = modelformset_factory(Thing, form=ThingForm, formset=BaseThingFormSet, extra=extra_forms, can_delete=True)
+        thing_form_set = modelformset_factory(Thing, form=ThingForm, formset=BaseThingFormSet, extra=extra_forms, max_num=MAX_FORMS, can_delete=True)
         thing_forms = thing_form_set(queryset=Thing.objects.none(), initial=file_data)
         print(thing_forms)
         return render(request, 'createList/modify_list/create-list.html', {
@@ -151,7 +152,7 @@ def create_or_edit_list(request, list_type, slug=None, new=False):
     invited_users = ""
     
     extra_forms = 10 if new else 0
-    thing_form_set = modelformset_factory(Thing, form=ThingForm, formset=BaseThingFormSet, extra=extra_forms, can_delete=True)
+    thing_form_set = modelformset_factory(Thing, form=ThingForm, formset=BaseThingFormSet, extra=extra_forms, max_num=MAX_FORMS, can_delete=True)
         
     if request.method == 'GET':
         list_form = ListForm(instance=list)

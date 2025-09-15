@@ -15,7 +15,8 @@ MIN_PROB = 1e-10
 class BradleyTerryModel: 
     @staticmethod
     def initialize_list_model(list):
-        list.comparisons_needed = list.num_things * 20 # Refine this
+        # Takes roughly n*log(n) comparisons to fully sort the list
+        list.comparisons_needed = list.num_things * (int(math.log(list.num_things, 2)) + 1)
         BradleyTerryModel.batch_countdown_reset(list)
     
     @staticmethod
