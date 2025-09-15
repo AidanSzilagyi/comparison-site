@@ -93,7 +93,7 @@ class List(models.Model):
         return self.name
 
 class Thing(models.Model):
-    name = models.CharField(max_length=100, blank=True, null=True)
+    name = models.CharField(max_length=100, blank=True, null=True, default="") #default is for blank forms, not for actual storage
     image = models.ImageField(upload_to='thing_images/', blank=True, null=True)
     list = models.ForeignKey(List, on_delete=models.CASCADE)
     date_created = models.DateTimeField(auto_now_add=True)

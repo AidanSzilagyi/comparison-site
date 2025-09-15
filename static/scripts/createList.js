@@ -45,6 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const container = e.target.closest('.thing-container');
             const deleteCheckbox = container.querySelector('.delete-checkbox');
             if (container && deleteCheckbox) {
+                console.log("we checking now")
                 container.style.display = 'none';
                 deleteCheckbox.checked = true;
             }

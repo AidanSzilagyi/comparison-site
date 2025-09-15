@@ -64,24 +64,45 @@ class ThingForm(forms.ModelForm):
         if list.type == "text":
             if not name:
                 self.add_error("name", "Please enter a name for this thing.")
-            if Thing.objects.filter(list=list, name__iexact=name).exclude(pk=self.instance.pk).exists():
-                self.add_error("name", "A Thing with this name already exists.")
         if list.type == "image":
             if not image:
                 self.add_error("image", "Please add an image for this thing.")
-            if self.image and Thing.objects.filter(list=list, image=image).exclude(pk=self.instance.pk).exists():
-                self.add_error("image", "A Thing with this image already exists.")
         return cleaned_data
 
-NUM_THINGS_REQUIRED = 4
-class BaseThingFormSet(forms.BaseModelFormSet):
+NUM_THINGS_REQUIRED = 8
+class BaseThingFormSet(forms.BaseModelFormSet):    
+    # Require all lists to have at least NUM_THINGS_REQUIRED Things.
     def clean(self):
         super().clean()
         if any(self.errors):
-            return  # Don’t re-check if individual forms already invalid
+            return
 
-        # Count non-deleted, non-empty forms
         valid_forms = [form for form in self.forms
             if form.cleaned_data and not form.cleaned_data.get("DELETE")]
         if len(valid_forms) < NUM_THINGS_REQUIRED:
             raise ValidationError(f"You must include at least {NUM_THINGS_REQUIRED} things.")
+        
+        # Check for duplicates within this submission
+        seen_names = set()
+        seen_images = set()
+        for form in valid_forms:
+            list_obj = form.instance.list
+            if not list_obj:
+                continue
+
+            if list_obj.type == "text":
+                name = form.cleaned_data.get("name")
+                if name:
+                    normalized = name.strip().lower()
+                    if normalized in seen_names:
+                        form.add_error("name", "A Thing with this name already exists.")
+                    else:
+                        seen_names.add(normalized)
+
+            if list_obj.type == "image":
+                image = form.cleaned_data.get("image")
+                if image:
+                    if image in seen_images:
+                        form.add_error("image", "A Thing with this image already exists.")
+                    else:
+                        seen_images.add(image)

@@ -102,6 +102,7 @@ def edit_profile(request):
 
 @login_required
 def list_type_choices(request):
+    # Takes POST requests for File upload
     if request.method == 'POST' and 'file-input' in request.FILES:
         input_file = request.FILES['file-input']
         file_wrapper = TextIOWrapper(input_file.file, encoding='utf-8')
@@ -112,24 +113,27 @@ def list_type_choices(request):
         else:
             return render(request, 'createList/modify_list/list-type-choices.html', {"error": "You may only upload a .txt file"})
         list_form = ListForm()
-        blank_forms_needed = NUM_STARTING_FORMS if len(file_data) < NUM_STARTING_FORMS else len(file_data)
-        thing_form_set = modelformset_factory(Thing, form=ThingForm, extra=blank_forms_needed, can_delete=True)
+        extra_forms = len(file_data) if len(file_data) < 10 else 10
+        thing_form_set = modelformset_factory(Thing, form=ThingForm, formset=BaseThingFormSet, extra=extra_forms, can_delete=True)
         thing_forms = thing_form_set(queryset=Thing.objects.none(), initial=file_data)
+        print(thing_forms)
         return render(request, 'createList/modify_list/create-list.html', {
-            'list_form': list_form, 
+            'list_form': list_form,
             'thing_forms': thing_forms,
             'list_slug': None,
-            'list_type': "text", 
+            'list_type': "text",
         })
+    if request.method == 'POST':
+        return create_or_edit_list(request, 'text')
     return render(request, 'createList/modify_list/list-type-choices.html')
 
 @login_required
 def create_text_list(request, slug=None):
-    return create_or_edit_list(request, 'text', slug)
+    return create_or_edit_list(request, 'text', slug, new=True)
 
 @login_required
 def create_images_list(request, slug=None):
-    return create_or_edit_list(request, 'image', slug)
+    return create_or_edit_list(request, 'image', slug, new=True)
     
 @login_required
 def list_edit(request, slug):
@@ -141,12 +145,14 @@ def list_edit(request, slug):
     return create_or_edit_list(request, list.type, slug)
 
 @login_required
-def create_or_edit_list(request, list_type, slug=None):
+def create_or_edit_list(request, list_type, slug=None, new=False):
     list = List.objects.get(slug=slug) if slug else None
     existing_things = Thing.objects.filter(list=list) if list else Thing.objects.none()
     invited_users = ""
     
-    thing_form_set = modelformset_factory(Thing, form=ThingForm, formset=BaseThingFormSet, extra=0, can_delete=True)
+    extra_forms = 10 if new else 0
+    thing_form_set = modelformset_factory(Thing, form=ThingForm, formset=BaseThingFormSet, extra=extra_forms, can_delete=True)
+        
     if request.method == 'GET':
         list_form = ListForm(instance=list)
         thing_forms = thing_form_set(queryset=existing_things)
