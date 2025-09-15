@@ -101,6 +101,7 @@
 .thing-name-input {
     background-color: var(--primary);
     height: 33px;
+    font-size: 24px;
     width: calc(100% - 12px);
 }
 
