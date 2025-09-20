@@ -1,0 +1,32 @@
+{% extends "./base.html" %}
+{% block extra_head %}
+    <style>
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .section-heading {
+            font-size: 36px;
+            margin-bottom: 7.5px;
+        }
+    </style>
+    <title>Results for "{{search_query}}" - Head2Head</title>
+{% endblock %}
+{% block main %}
+<main class="main-container">
+    <div>
+        <div class="section-heading">
+            Showing results for "{{search_query}}"
+        </div>
+        <div class=""></div>
+        <div class="list-grid">
+            {% for list in lists %}
+                {% include "./list-card.html" with list=list %}
+            {% empty %}
+                <div><i>No results found</i></div>
+            {% endfor %}
+        </div>
+    </div>
+</main>
+{% endblock %}

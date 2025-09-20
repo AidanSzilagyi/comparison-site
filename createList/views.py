@@ -22,6 +22,7 @@ NUM_STARTING_FORMS = 10
 NUM_MATCHUPS_SENT = 20
 NUM_LOADED_THINGS_PER_REQUEST = 3
 MAX_FORMS = 5000
+NUM_LISTS_SENT_ON_SEARCH = 10
 
 def home(request):
     return render(request, 'createList/home.html')
@@ -428,6 +429,39 @@ def view_profile(request, slug):
         "owner": False,
     }
     return render(request, 'createList/profile.html', context)
+
+# @Require_POST
+def search(request):
+    search_query = request.POST.get('search-query')
+    lists = List.objects.filter(name__icontains=search_query).order_by("-last_updated")
+    final_lists = []
+    for list in lists:
+        if permission_check(request.user, list, AccessLevel.VIEW):
+            final_lists.append(list)
+        if len(final_lists) >= NUM_LISTS_SENT_ON_SEARCH:
+            break
+    
+    if len(final_lists) < NUM_LISTS_SENT_ON_SEARCH:
+        lists = List.objects.filter(user__profile__username__icontains=search_query).order_by("-last_updated")
+        for list in lists:
+            if permission_check(request.user, list, AccessLevel.VIEW):
+                final_lists.append(list)
+            if len(final_lists) >= NUM_LISTS_SENT_ON_SEARCH:
+                break
+    
+    if len(final_lists) < NUM_LISTS_SENT_ON_SEARCH:
+        lists = List.objects.filter(description__icontains=search_query).order_by("-last_updated")
+        for list in lists:
+            if permission_check(request.user, list, AccessLevel.VIEW):
+                final_lists.append(list)
+            if len(final_lists) >= NUM_LISTS_SENT_ON_SEARCH:
+                break
+        
+    context = {
+        "lists": final_lists,
+        "search_query": search_query,
+    }
+    return render(request, 'createList/search-results.html', context)
 
 def list_card_test(request):
     return render(request, 'createList/list-card-prototype.html')

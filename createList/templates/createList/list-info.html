@@ -2,6 +2,7 @@
 {% block extra_head %}
     {% load static %}
     {% load mathfilters %}
+    {% load datetimes %}
     <link rel="stylesheet" href="{% static 'styles/list-info.css' %}">
     <div style="display: none;" id="list-slug">{{list.slug}}</div>
     <div style="display: none;" id="total-num-things">{{list.num_things}}</div>
@@ -34,8 +35,8 @@
                 <div class="list-details">
                     <div class="list-detail-stat-name">Comparisons Made:</div><div class="list-detail-stat-value">{{list.comparisons_made}} / {{list.comparisons_needed}} ({{ list.comparisons_made|div:list.comparisons_needed|mul:100|floatformat:2 }}%)</div><br>
                     <div class="list-detail-stat-name">Comparison Model:</div><div class="list-detail-stat-value">{{list.get_comparison_method_display }}</div><br>
-                    <div class="list-detail-stat-name">Last Comparison:</div><div class="list-detail-stat-value">{{ list.last_updated|date:"F jS, Y"}} (*11 years ago)</div><br>
-                    <div class="list-detail-stat-name">List Created:</div><div class="list-detail-stat-value">{{list.date_created|date:"F jS, Y"}} (*11 days ago)</div><br>
+                    <div class="list-detail-stat-name">Last Comparison:</div><div class="list-detail-stat-value">{{ list.last_updated|date:"F jS, Y"}} ({{list.last_updated|shortened_timesince}} ago)</div><br>
+                    <div class="list-detail-stat-name">List Created:</div><div class="list-detail-stat-value">{{list.date_created|date:"F jS, Y"}} ({{list.date_created|shortened_timesince}} ago)</div><br>
                 </div>
                 <div>
                     {% if can_rank %}
