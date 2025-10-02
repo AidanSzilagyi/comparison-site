@@ -3,12 +3,19 @@ import { getCookie, BigText } from './util.js'
 let comparisonQueue = [];
 let loadingComparisons = false;
 let csrftoken = getCookie('csrftoken');
-const listSlug = window.listSlug;
-comparisonQueue.push(...window.initialThings);
+let listSlug;
+//comparisonQueue.push(...window.initialThings);
 let currentMatchupID = 0;
 let thingBoxes = [];
 
 document.addEventListener('DOMContentLoaded', async () => {
+    listSlug = document.getElementById("slug").innerText;
+    //document.getElementById("initial-things").innerText;
+    //document.getElementById("slug").innerText;
+    console.log(document.getElementById("initial-things").innerText)
+    comparisonQueue.push(...JSON.parse(document.getElementById("initial-things").innerText));
+    console.log(comparisonQueue)
+
     thingBoxes[0] = document.getElementById('thing-box-1');
     thingBoxes[1] = document.getElementById('thing-box-2');
     loadNewComparison();

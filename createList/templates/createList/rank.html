@@ -2,15 +2,17 @@
 {% load static %}
 {% csrf_token %}
 {% block extra_head %}
-    <script>
+    <!--<script>
         window.listSlug = "{{ list.slug }}";
         window.initialThings = {{ initial_things|safe }}
-    </script>
+    </script>-->
     <script type="module" src="{% static 'scripts/rank.js' %}"></script>
     <link rel="stylesheet" href="{% static 'styles/rank.css' %}">
     <title>Rank {{list.name}} - Head2Head</title>
 {% endblock %}
 {% block main %}
+    <div class="no-display" id="slug">{{ list.slug }}</div>
+    <div class="no-display" id="initial-things">{{ initial_things|safe }}</div>
     <div class="comparison-boxes">
         <div class="instruction-text">Choose the better thing</div>
         <div id="thing-box-1" class="thing-box">
@@ -18,7 +20,7 @@
         <div>or</div>
         <div id="thing-box-2" class="thing-box">
     </div>
-    <a href="{% url 'list_info' list_slug %}">
+    <a href="{% url 'list_info' list.slug %}">
         <div class="info-back-button">
             Back to Info
         </div>
