@@ -1,108 +1,9 @@
 {% extends "../base.html" %}
-{% load static %}
 {% block extra_head %}
-<style>
-    
-    html {
-        height: 100%;
-        width: 100%;
-        background-color: rgb(0, 0, 68);
-    }
-    .main-container {
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        gap: 15px;
-        text-align: center;
-
-    }
-    .body-heading {
-        font-size: 60px;
-    }
-    .all-option-boxes{
-        display: flex;
-        gap: 15px;
-        flex-wrap: wrap;
-    }
-    .single-option-box {
-        width: 375px;
-        height: 375px;
-        border: 1.5px solid white;
-        border-radius: 12px;
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-        cursor: pointer;
-    }
-    .option-name {
-        font-size: 51px;
-        margin-top: 15px;
-    }
-    .option-image-container {
-        height: 180px;
-    }
-    .option-image {
-        height: 180px;
-    }
-    .option-description {
-        text-wrap: balance;
-        font-size: 27px;
-    }
-    .upload-form-container{
-        height: 180px;
-        border-radius: 12px;
-        background-color: var(--secondary);
-        color: var(--highlight);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 12px;
-        width: 375px;
-        cursor: auto;
-    }
-    .file-input {
-        border-radius: 12px;
-        padding: 9px 9px;
-        color: var(--highlight);
-        background-color: var(--tertiary);
-        cursor: pointer;
-    }
-    .file-submit {
-        border-radius: 12px;
-        padding: 9px 9px;
-        color: var(--highlight);
-        background-color: var(--important);
-        border-width: 0px;
-        cursor: pointer;
-    }
-</style>
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const csvReveal = document.getElementById("js-popup-container")
-        const uploadFileImage = document.getElementById("js-upload-file-image")
-
-        document.getElementById("js-import-file").addEventListener("click", (e) => {
-            if (e.target.closest("#js-popup-container")) return;
-            if (csvReveal.style.display === "none") {
-                csvReveal.style.display = 'flex';
-                uploadFileImage.style.display = 'none';
-            } else {
-                csvReveal.style.display = 'none';
-                uploadFileImage.style.display = 'block';
-            }
-        });
-        const fileInput = document.getElementById("file-input");
-        const fileName = document.getElementById("file-name");
-        fileInput.addEventListener("change", () => {
-            fileName.textContent = fileInput.files.length > 0
-                ? fileInput.files[0].name
-                : "No file selected";
-        });
-
-    });
-</script>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles/modify_list/list-type-choices.css' %}">
+    <script src="{% static 'scripts/list-type-choices.js' %}"></script>
+    <title>Choose List Type - Head2Head</title>
 {% endblock %}
 {% block main %}
 <main class="main-container">
@@ -127,11 +28,11 @@
             <div class="option-image-container" id="js-upload-file-image">
                 <img class="option-image" src="{% static 'images/L-Square.png' %}">
             </div>
-            <form method="post" enctype="multipart/form-data" style="display: none;" id="js-popup-container">
+            <form method="post" enctype="multipart/form-data" class="no-display" id="js-popup-container">
                 {% csrf_token %}
                 <div class="upload-form-container">
                     <label for="file-input" class="file-input">Upload File</label>
-                    <input type="file" name="file-input" id="file-input" style="display: none;" accept="text/plain">
+                    <input type="file" name="file-input" id="file-input" class="no-display" accept="text/plain">
                     <span id="file-name">No file selected</span>
                     <button type="submit" class="file-submit">Create</button>
                 </div>

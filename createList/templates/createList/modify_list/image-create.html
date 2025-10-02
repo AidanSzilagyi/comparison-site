@@ -8,7 +8,7 @@
                 <!--
                 <div class="info-icon-container js-load-matchups">
                     <img class="info-icon-image" src="{% static 'images/info-icon-a.png' %}">
-                    <div class="past-matchup-sheet js-matchup-history" style="display: none;">
+                    <div class="past-matchup-sheet js-matchup-history no-display">
                         Loading Matchups...
                     </div>
                 </div>
@@ -22,14 +22,14 @@
         <div>
             <label class="thing-image-container" for="{{thing_form.image.id_for_label}}">
                 {% if thing_form.image.value %}
-                <div class="unselected-thing-image js-unselected-thing-image" style="display: none;">Choose Image</div>
+                <div class="unselected-thing-image js-unselected-thing-image no-display">Choose Image</div>
                 <img class="selected-thing-image js-selected-thing-image" src="{{thing_form.image.value.url}}">
                 {% else %}
                 <div class="unselected-thing-image js-unselected-thing-image">Choose Image</div>
-                <img class="selected-thing-image js-selected-thing-image" style="display: none;" src="">
+                <img class="selected-thing-image js-selected-thing-image no-display" src="">
                 {% endif %}
             </label>
-            <input style="display: none;" class="js-image-input"
+            <input class="js-image-input no-display"
                 id="{{thing_form.image.id_for_label}}"
                 name="{{thing_form.image.html_name}}" 
                 value="{{thing_form.image.value}}"
@@ -53,7 +53,7 @@
         <label class="add-new-thing-text">Add new thing</label>
     </div>
 </div>
-<div id="empty-form-template" style="display: none;">
+<div id="empty-form-template" class="no-display">
     <div class="thing-container">
         <div class="vertical-buttons">
             <div class="thing-number">1321</div>
@@ -67,9 +67,9 @@
         <div>
             <label class="thing-image-container" for="{{thing_forms.empty_form.image.id_for_label}}">
                 <div class="unselected-thing-image js-unselected-thing-image">Choose Image</div>
-                <img class="selected-thing-image js-selected-thing-image" style="display: none;" src="{{thing_form.empty_form.image.value.url}}">
+                <img class="selected-thing-image js-selected-thing-image no-display" src="{{thing_form.empty_form.image.value.url}}">
             </label>
-            <input style="display: none;" class="js-image-input"
+            <input class="js-image-input no-display"
                 id="{{thing_forms.empty_form.image.id_for_label}}"
                 name="{{thing_forms.empty_form.image.html_name}}" 
                 value="{{thing_forms.empty_form.image.value}}"

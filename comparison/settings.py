@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'storages',
     'social_django',
     'mathfilters',
+    'csp',
     #'allauth', # REMOVE
     #'allauth.account', # REMOVE
     #'allauth.socialaccount', # REMOVE
@@ -66,6 +67,7 @@ MIDDLEWARE = [
     #'createList.middleware.SaveURLBeforeAuthMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'csp.middleware.CSPMiddleware',
 ]
 ROOT_URLCONF = 'comparison.urls'
 
@@ -216,6 +218,31 @@ if not DEBUG:
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
+    CSRF_COOKIE_HTTPONLY = True
+    CSRF_COOKIE_SAMESITE = "Strict"
+    SESSION_COOKIE_SAMESITE = "Strict"
 
     SECURE_HSTS_SECONDS = 3600
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    
+    
+from csp.constants import SELF, NONE, NONCE
+
+# CONTENT_SECURITY_POLICY_REPORT_ONLY
+CONTENT_SECURITY_POLICY = {
+    "EXCLUDE_URL_PREFIXES": [
+        # optional: list of URL prefixes for which CSP should not be applied
+        # e.g. for some views or endpoints
+    ],
+    "DIRECTIVES": {
+        # directive names follow CSP spec naming (lowercase, hyphen-separated)
+        "default-src": [SELF],
+        "script-src": [SELF, "https://apis.google.com", "https://apis.google.com", NONCE],
+        "style-src": [SELF, "https://fonts.googleapis.com"],
+        "font-src": [SELF, "https://fonts.gstatic.com"],
+        "img-src": [SELF, "https://head2head-comparison-site.s3.amazonaws.com", "data:"],
+        "connect-src": [SELF, "https://accounts.google.com", "https://www.googleapis.com"],
+        "frame-src": [SELF, "https://accounts.google.com"],
+        # optional: more CSP directives like frame-ancestors, form-action, media-src, etc. 
+    },
+}

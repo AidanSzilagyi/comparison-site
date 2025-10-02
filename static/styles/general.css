@@ -55,6 +55,9 @@ a:link, a:visited, a:hover, a:active {
     object-fit: cover;
     object-position: center;
 }
+.no-display {
+    display: none;
+}
 
 .list-grid {
     display: grid;

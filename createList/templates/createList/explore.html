@@ -1,16 +1,9 @@
 {% extends "./base.html" %}
 {% block extra_head %}
-    <style>
-        .main-container {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        .section-heading {
-            font-size: 36px;
-            margin-bottom: 7.5px;
-        }
-    </style>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles/explore.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/list-card.css' %}">
+    <script src="{% static 'scripts/list-card.js' %}"></script>
     <title>Explore - Head2Head</title>
 {% endblock %}
 {% block main %}

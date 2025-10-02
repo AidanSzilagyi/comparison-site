@@ -1,0 +1,38 @@
+.main-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.profile-heading {
+    display: flex;
+    align-items: end;
+    gap: 15px;
+}
+.profile-image-container {
+}
+.profile-image {
+    height: 150px;
+    width: 150px;
+    border-radius: 75px;
+}
+.profile-name {
+    font-size: 60px;
+}
+.profile-buttons-container {
+    display: flex;
+    gap: 22.5px;
+}
+.profile-button {
+    border-radius: 7.5px;
+    background-color: var(--secondary);
+    padding: 7.5px 7.5px;
+    font-size: 30px;
+}
+
+.recently-compared-lists {
+
+}
+.section-heading {
+    font-size: 36px;
+    margin-bottom: 7.5px;
+}

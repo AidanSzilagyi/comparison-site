@@ -68,6 +68,11 @@
     background-color: var(--secondary);
     padding: 7.5px 7.5px;
 }
+.all-things-button-container {
+    display: flex; 
+    justify-content: center;
+}
+
 .multiple-highlight-container {
     display: flex;
     justify-content: space-between;
@@ -189,4 +194,14 @@
   border-width: 7.5px;
   border-style: solid;
   border-color: transparent transparent var(--secondary) transparent;
+}
+
+.width-810 {
+    width: 810px;
+}
+.width-492 {
+    width: 492px;
+}
+.width-580 {
+    width: 580.5px;
 }

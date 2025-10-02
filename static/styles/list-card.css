@@ -1,0 +1,93 @@
+.list-preview-box {
+    max-width: 525px;
+    aspect-ratio: 1.6 / 1;
+    height: 345px;
+
+    padding: 12px 12px 12px 12px;
+    border-radius: 12px;
+    border-color: var(--tertiary);
+    background-color: var(--secondary);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 6px;
+
+    position: relative;
+}
+.list-title {
+    font-weight: 500;
+    text-align: center;
+    text-wrap: balance;
+    overflow: hidden;
+    font-size: 30px;
+}
+.non-title-info {
+    display: flex;
+    justify-content: space-between;
+    gap: 7.5px;
+    height: calc(100% - 120px); /* subtract bottom-items height */
+}
+.text-info {
+    width: 50%;
+}
+.list-author {
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+
+    position: relative;
+    z-index: 2;
+}
+.author-pfp {
+    height: 30px;
+    width: 30px;
+    object-fit: cover;
+    border-radius: 15px;
+    display: inline;
+}
+.author-name {
+    display: inline;
+    font-size: 21px;
+    font-weight: 400;
+}
+
+.list-description {
+    height: calc(100% - 40px); /* subtract author height, prevent partial lines */
+    text-wrap: balance;
+    overflow: hidden;
+    font-size: 21px;
+    margin-top: 4.5px;
+    font-weight: 300;
+    /* Add  text-overflow: ellipsis; via django? */
+}
+.image-container {
+    width: 100%;
+}
+.list-image {
+    width: 100%;
+    max-height: 100%;
+    border-radius: 12px;
+    object-fit: contain;
+}
+.disable {
+    display: inline-block;
+}
+.bottom-items {
+    display: flex;
+    justify-content: center;
+    gap: 22.5px;
+}
+.num-things {
+    display: inline-block;
+}
+.num-comparisons {
+    display: inline-block;
+}
+.card-overlay-link{
+    position: absolute;
+    width: 549px;
+    height: 369px;
+    border-radius: 12px;
+    z-index: 1;
+}

@@ -4,8 +4,8 @@
     {% load mathfilters %}
     {% load datetimes %}
     <link rel="stylesheet" href="{% static 'styles/list-info.css' %}">
-    <div style="display: none;" id="list-slug">{{list.slug}}</div>
-    <div style="display: none;" id="total-num-things">{{list.num_things}}</div>
+    <div class="no-display" id="list-slug">{{list.slug}}</div>
+    <div class="no-display" id="total-num-things">{{list.num_things}}</div>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -111,9 +111,9 @@
             </div>
         </div>
         <div class="all-things-container">
-            <div id="all-things-list" class="highlight-five-things-group" style="width: 810px;"></div>
+            <div id="all-things-list" class="highlight-five-things-group width-810"></div>
         </div>
-        <div style="display: flex; justify-content: center;">
+        <div class="all-things-button-container">
             <div id="all-things-button" class="all-things-button">Load All Things</div>
         </div>
         
@@ -129,11 +129,11 @@
             </div>
         </template>
         <template id="text-and-image">
-            <div style="width: 492px;" class="highlight-thing-name js-thing-name"></div>
+            <div class="highlight-thing-name js-thing-name width-492"></div>
             <img class="highlight-thing-image js-thing-image" src="">
         </template>
         <template id="text-only">
-            <div style="width: 580.5px;" class="highlight-thing-name-only js-thing-name-only"></div>
+            <div class="highlight-thing-name-only js-thing-name-only width-580"></div>
         </template>
 
         <template id="won-matchup">
