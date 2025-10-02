@@ -237,8 +237,8 @@ CONTENT_SECURITY_POLICY = {
     "DIRECTIVES": {
         # directive names follow CSP spec naming (lowercase, hyphen-separated)
         "default-src": [SELF],
-        "script-src": [SELF, "https://apis.google.com", "https://apis.google.com", NONCE],
-        "style-src": [SELF, "https://fonts.googleapis.com"],
+        "script-src": [SELF, "https://head2head-comparison-site.s3.amazonaws.com", "https://apis.google.com", NONCE],
+        "style-src": [SELF, "https://head2head-comparison-site.s3.amazonaws.com", "https://fonts.googleapis.com"],
         "font-src": [SELF, "https://fonts.gstatic.com"],
         "img-src": [SELF, "https://head2head-comparison-site.s3.amazonaws.com", "data:"],
         "connect-src": [SELF, "https://accounts.google.com", "https://www.googleapis.com"],
