@@ -14,9 +14,9 @@
                 Manual Create
             </div>
             <div class="option-image-container">
-                <img class="option-image" src="{% static 'images/L-Square.png' %}">
+                <img class="option-image manual-create-image" src="{% static 'images/manual-create.svg' %}">
             </div>
-            <div class="option-description">
+            <div class="option-description manual-create-text">
                 Create a list from scratch
             </div>
         </a>
@@ -26,7 +26,7 @@
             </div>
             <!-- Toggles between these two -->
             <div class="option-image-container" id="js-upload-file-image">
-                <img class="option-image" src="{% static 'images/L-Square.png' %}">
+                <img class="option-image upload-file-image" src="{% static 'images/upload-file.svg' %}">
             </div>
             <form method="post" enctype="multipart/form-data" class="no-display" id="js-popup-container">
                 {% csrf_token %}
@@ -47,7 +47,7 @@
                 Images Only
             </div>
             <div class="option-image-container">
-                <img class="option-image" src="{% static 'images/L-Square.png' %}">
+                <img class="option-image" src="{% static 'images/images-only.svg' %}">
             </div>
             <div class="option-description">
                 Create a list that uses images and no text

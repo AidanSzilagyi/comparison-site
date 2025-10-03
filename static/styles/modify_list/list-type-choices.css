@@ -27,25 +27,32 @@ html {
     border-radius: 12px;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 5px;
     cursor: pointer;
 }
 .option-name {
     font-size: 51px;
     margin-top: 15px;
 }
-.option-image-container {
-    height: 180px;
-}
 .option-image {
-    height: 180px;
+    height: 200px;
 }
 .option-description {
     text-wrap: balance;
     font-size: 27px;
 }
+
+
+.manual-create-image {
+    padding-left: 28px;
+}
+.manual-create-text {
+    padding-top: 16px;
+}
+
+
 .upload-form-container{
-    height: 180px;
+    height: 206.4px;
     border-radius: 12px;
     background-color: var(--secondary);
     color: var(--highlight);
@@ -65,6 +72,9 @@ html {
     cursor: pointer;
 }
 .file-submit {
+    height: 50px;
+    width: 80px;
+    font-size: 18px;
     border-radius: 12px;
     padding: 9px 9px;
     color: var(--highlight);

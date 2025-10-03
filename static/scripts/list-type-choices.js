@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("js-import-file").addEventListener("click", (e) => {
         if (e.target.closest("#js-popup-container")) return;
-        if (csvReveal.style.display === "none") {
+        if (csvReveal.style.display === "none" || csvReveal.style.display === "") {
             csvReveal.style.display = 'flex';
             uploadFileImage.style.display = 'none';
         } else {
